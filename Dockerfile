@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 LABEL maintainer="shifujun@foxmail.com" \
       reference="https://github.com/mindrunner/docker-android-sdk" \
-      flavour="only-sdk-tools" \
+      flavour="shadow-build-cache" \
       sdk-tools-version="sdk-tools-linux-4333796"
 
 ENV ANDROID_SDK_HOME /opt/android-sdk-linux
@@ -50,3 +50,13 @@ COPY licenses /opt/licenses
 WORKDIR /opt/android-sdk-linux
 
 RUN /opt/tools/install-sdk-with-user-android.sh
+
+# clone Shadow的源码
+RUN git clone https://github.com/Tencent/Shadow.git /opt/shadow
+
+# 构建Shadow以自动安装所需的SDK，并缓存依赖
+RUN cd /opt/shadow \
+  && ./gradlew build \
+  && ./gradlew -p projects/sdk/core :transform:test \
+  && ./gradlew -p projects/sdk/core :gradle-plugin:test \
+  && cd / && rm -rf /opt/shadow
