@@ -5,5 +5,5 @@ before_install:
   - docker pull shifujun/shadow-ci
 
 script:
-  - docker run -v shifujun/Shadow:/opt/Shadow shifujun/shadow-ci /bin/sh -c "cd /opt/Shadow; ./gradlew build"
+  - docker run -v $TRAVIS_BUILD_DIR/shifujun/Shadow:/opt/Shadow shifujun/shadow-ci /bin/sh -c "cd /opt/Shadow; ./gradlew build"
 
