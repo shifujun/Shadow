@@ -51,6 +51,15 @@ WORKDIR /opt/android-sdk-linux
 
 RUN /opt/tools/install-sdk-with-user-android.sh
 
+# 安装虚拟机
+RUN $ANDROID_HOME/tools/bin/sdkmanager "emulator"
+
+# 安装API24虚拟镜像
+RUN $ANDROID_HOME/tools/bin/sdkmanager "system-images;android-24;default;armeabi-v7a"
+
+# 创建虚拟机
+RUN echo "no" |$ANDROID_HOME/tools/bin/avdmanager create avd -n test -k "system-images;android-24;default;armeabi-v7a" -f
+
 # clone Shadow的源码
 RUN git clone https://github.com/Tencent/Shadow.git /opt/shadow
 
