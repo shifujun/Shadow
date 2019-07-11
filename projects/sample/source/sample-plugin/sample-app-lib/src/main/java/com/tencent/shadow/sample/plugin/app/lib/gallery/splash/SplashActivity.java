@@ -19,12 +19,11 @@
 package com.tencent.shadow.sample.plugin.app.lib.gallery.splash;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.tencent.shadow.sample.plugin.app.lib.R;
-import com.tencent.shadow.sample.plugin.app.lib.gallery.MainActivity;
 
 public class SplashActivity extends Activity {
 
@@ -43,7 +42,7 @@ public class SplashActivity extends Activity {
             public void onAnimationEnd() {
                 finish();
 
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                ARouter.getInstance().build("/main/MainActivity").navigation();
             }
         });
     }

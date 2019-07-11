@@ -20,6 +20,8 @@ package com.tencent.shadow.sample.plugin.app.lib.gallery;
 
 import android.app.Application;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+import com.tencent.shadow.sample.plugin.app.lib.BuildConfig;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager;
 
 public class TestApplication extends Application {
@@ -33,6 +35,11 @@ public class TestApplication extends Application {
         sInstence = this;
         isOnCreate = true;
         super.onCreate();
+        if (BuildConfig.DEBUG) {
+            ARouter.openLog();
+            ARouter.openDebug();
+        }
+        ARouter.init(this);
         UseCaseManager.initCase();
     }
 

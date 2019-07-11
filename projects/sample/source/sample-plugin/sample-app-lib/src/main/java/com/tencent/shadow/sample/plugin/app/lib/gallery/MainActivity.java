@@ -32,6 +32,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView.OnHeaderUpdateListener;
@@ -45,6 +46,7 @@ import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCaseCate
 
 import java.util.List;
 
+@Route(path = "/main/MainActivity")
 public class MainActivity extends Activity implements
         ExpandableListView.OnChildClickListener,
         ExpandableListView.OnGroupClickListener,
