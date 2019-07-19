@@ -53,7 +53,7 @@ dependencies {
 def createCopyTask(projectName, buildType, name, apkName, inputFile, taskName) {
     def outputFile = file("${getBuildDir()}/generated/assets/${name}/${buildType}/${apkName}")
     outputFile.getParentFile().mkdirs()
-    return tasks.create("copy${buildType.capitalize()}${name.capitalize()}Task", Copy) {
+    return tasks.create("copy${buildType.capitalize()}${name.capitalize()}${apkName}Task", Copy) {
         group = 'build'
         description = "复制${name}到assets中."
         from(inputFile.getParent()) {
@@ -87,12 +87,20 @@ def generateAssets(generateAssetsTask, buildType) {
             ':sample-plugin-app',
             buildType,
             'plugin-zip',
-            "plugin-${buildType}.zip",
+            "plugin-${buildType}-plugin-app.zip",
             pluginZip,
             "package${buildType.capitalize()}Plugin"
     )
 
 
+    generateAssetsTask.dependsOn createCopyTask(
+            ':sample-plugin-app-2',
+            buildType,
+            'plugin-zip',
+            "plugin-${buildType}-plugin-app-2.zip",
+            pluginZip,
+            "package${buildType.capitalize()}Plugin"
+    )
 }
 
 tasks.whenTaskAdded { task ->
@@ -101,5 +109,16 @@ tasks.whenTaskAdded { task ->
     }
     if (task.name == "generateReleaseAssets") {
         generateAssets(task, 'release')
+    }
+}
+
+task genUUID()  {
+    doFirst {
+        def uuidFile = file(rootProject.projectDir.absolutePath + '/build/uuid.txt')
+        uuidFile.getParentFile().mkdirs()
+        BufferedWriter writer = new BufferedWriter(new FileWriter(uuidFile))
+        writer.write(UUID.randomUUID().toString().toUpperCase())
+        writer.flush()
+        writer.close()
     }
 }

@@ -57,7 +57,10 @@ def includeSample() {
             'slidingmenu',
             'sample-app-lib',
             'sample-normal-app',
-            'sample-plugin-app'
+            'sample-plugin-app',
+            'sample-app-2-lib',
+            'sample-normal-app-2',
+            'sample-plugin-app-2'
     project(':sample-constant').projectDir = file('projects/sample/source/sample-constant')
     project(':sample-host').projectDir = file('projects/sample/source/sample-host')
     project(':sample-host-lib').projectDir = file('projects/sample/source/sample-host-lib')
@@ -69,4 +72,8 @@ def includeSample() {
     project(':sample-app-lib').projectDir = file('projects/sample/source/sample-plugin/sample-app-lib')
     project(':sample-normal-app').projectDir = file('projects/sample/source/sample-plugin/sample-normal-app')
     project(':sample-plugin-app').projectDir = file('projects/sample/source/sample-plugin/sample-plugin-app')
+
+    project(':sample-app-2-lib').projectDir = file('projects/sample/source/sample-plugin/sample-app-2-lib')
+    project(':sample-normal-app-2').projectDir = file('projects/sample/source/sample-plugin/sample-normal-app-2')
+    project(':sample-plugin-app-2').projectDir = file('projects/sample/source/sample-plugin/sample-plugin-app-2')
 }

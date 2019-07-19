@@ -51,7 +51,8 @@ public class MainActivity extends Activity {
         final Spinner partKeySpinner = new Spinner(this);
         ArrayAdapter<String> partKeysAdapter = new ArrayAdapter<>(this, R.layout.part_key_adapter);
         partKeysAdapter.addAll(
-                Constant.PART_KEY_PLUGIN_MAIN_APP
+                Constant.PART_KEY_PLUGIN_MAIN_APP,
+                Constant.PART_KEY_PLUGIN_MAIN_APP_2
         );
         partKeySpinner.setAdapter(partKeysAdapter);
 
@@ -67,7 +68,12 @@ public class MainActivity extends Activity {
                 intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, partKey);
                 switch (partKey) {
                     case Constant.PART_KEY_PLUGIN_MAIN_APP:
+                        intent.putExtra(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
                         intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity");
+                        break;
+                    case Constant.PART_KEY_PLUGIN_MAIN_APP_2:
+                        intent.putExtra(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().plugin2ZipFile.getAbsolutePath());
+                        intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app_2.lib.MainActivity");
                         break;
                 }
                 startActivity(intent);

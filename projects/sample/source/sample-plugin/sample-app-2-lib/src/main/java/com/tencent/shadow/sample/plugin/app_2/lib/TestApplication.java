@@ -16,15 +16,25 @@
  *
  */
 
-package com.tencent.shadow.sample.constant;
+package com.tencent.shadow.sample.plugin.app_2.lib;
 
-final public class Constant {
-    public static final String KEY_PLUGIN_ZIP_PATH = "pluginZipPath";
-    public static final String KEY_ACTIVITY_CLASSNAME = "KEY_ACTIVITY_CLASSNAME";
-    public static final String KEY_EXTRAS = "KEY_EXTRAS";
-    public static final String KEY_PLUGIN_PART_KEY = "KEY_PLUGIN_PART_KEY";
-    public static final String PART_KEY_PLUGIN_MAIN_APP = "sample-plugin-app";
-    public static final String PART_KEY_PLUGIN_MAIN_APP_2 = "sample-plugin-app-2";
-    public static final int FROM_ID_NOOP = 1000;
-    public static final int FROM_ID_START_ACTIVITY = 1002;
+import android.app.Application;
+
+public class TestApplication extends Application {
+
+    private static TestApplication sInstence;
+
+    public boolean isOnCreate;
+
+    @Override
+    public void onCreate() {
+        sInstence = this;
+        isOnCreate = true;
+        super.onCreate();
+
+    }
+
+    public static TestApplication getInstance() {
+        return sInstence;
+    }
 }

@@ -38,11 +38,15 @@ public class PluginHelper {
     /**
      * 动态加载的插件包，里面包含以下几个部分，插件apk，插件框架apk（loader apk和runtime apk）, apk信息配置关系json文件
      */
-    public final static String sPluginZip = BuildConfig.DEBUG ? "plugin-debug.zip" : "plugin-release.zip";
+    public final static String sPluginZip = BuildConfig.DEBUG ? "plugin-debug-plugin-app.zip" : "plugin-release-plugin-app.zip";
+    public final static String sPlugin2Zip = BuildConfig.DEBUG ? "plugin-debug-plugin-app-2.zip" : "plugin-release-plugin-app-2.zip";
+
 
     public File pluginManagerFile;
 
     public File pluginZipFile;
+
+    public File plugin2ZipFile;
 
     public ExecutorService singlePool = Executors.newSingleThreadExecutor();
 
@@ -60,6 +64,7 @@ public class PluginHelper {
     public void init(Context context) {
         pluginManagerFile = new File(context.getFilesDir(), sPluginManagerName);
         pluginZipFile = new File(context.getFilesDir(), sPluginZip);
+        plugin2ZipFile = new File(context.getFilesDir(), sPlugin2Zip);
 
         mContext = context.getApplicationContext();
 
@@ -80,6 +85,8 @@ public class PluginHelper {
             InputStream zip = mContext.getAssets().open(sPluginZip);
             FileUtils.copyInputStreamToFile(zip, pluginZipFile);
 
+            InputStream zip2 = mContext.getAssets().open(sPlugin2Zip);
+            FileUtils.copyInputStreamToFile(zip2, plugin2ZipFile);
         } catch (IOException e) {
             throw new RuntimeException("从assets中复制apk出错", e);
         }
