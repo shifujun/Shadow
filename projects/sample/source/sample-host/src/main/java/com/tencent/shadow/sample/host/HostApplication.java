@@ -19,18 +19,24 @@
 package com.tencent.shadow.sample.host;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.StrictMode;
 
 import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.dynamic.host.DynamicRuntime;
 import com.tencent.shadow.dynamic.host.PluginManager;
+import com.tencent.shadow.sample.constant.Constant;
+import com.tencent.shadow.sample.host.lib.HostApplicationInterface;
+import com.tencent.shadow.sample.host.lib.HostApplicationProxy;
 import com.tencent.shadow.sample.host.lib.HostUiLayerProvider;
+import com.tencent.shadow.sample.host.lib.PluginHelper;
 import com.tencent.shadow.sample.host.manager.Shadow;
 
 import java.io.File;
 
-public class HostApplication extends Application {
+public class HostApplication extends Application implements HostApplicationInterface {
     private static HostApplication sApp;
 
     private PluginManager mPluginManager;
@@ -39,7 +45,7 @@ public class HostApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApp = this;
-
+        HostApplicationProxy.setApp(this);
         detectNonSdkApiUsageOnAndroidP();
 
         LoggerFactory.setILoggerFactory(new AndroidLogLoggerFactory());
@@ -76,5 +82,15 @@ public class HostApplication extends Application {
 
     public PluginManager getPluginManager() {
         return mPluginManager;
+    }
+
+    @Override
+    public void callPluginService(Context context) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
+        bundle.putString(Constant.KEY_PLUGIN_PART_KEY, "sample-plugin-app");
+        bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.MyService");
+        loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
+        getPluginManager().enter(context, Constant.FROM_ID_CALL_SERVICE, bundle, null);
     }
 }

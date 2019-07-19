@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tencent.shadow.sample.constant.Constant;
+import com.tencent.shadow.sample.host.lib.PluginHelper;
 
 
 public class MainActivity extends Activity {
@@ -73,6 +74,7 @@ public class MainActivity extends Activity {
                         break;
                     case Constant.PART_KEY_PLUGIN_MAIN_APP_2:
                         intent.putExtra(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().plugin2ZipFile.getAbsolutePath());
+                        intent.putExtra(Constant.KEY_PLUGIN_PROCESS, "plugin_2");
                         intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app_2.lib.MainActivity");
                         break;
                 }
@@ -80,6 +82,23 @@ public class MainActivity extends Activity {
             }
         });
         rootView.addView(startPluginButton);
+
+
+        Button callServiceButton = new Button(this);
+        callServiceButton.setText("调用插件Service，结果打印到Log");
+        callServiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
+                bundle.putString(Constant.KEY_PLUGIN_PART_KEY, "sample-plugin-app");
+                bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.MyService");
+                HostApplication.getApp().loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
+                HostApplication.getApp().getPluginManager().enter(MainActivity.this, Constant.FROM_ID_CALL_SERVICE, bundle, null);
+            }
+        });
+
+        rootView.addView(callServiceButton);
 
         setContentView(rootView);
 

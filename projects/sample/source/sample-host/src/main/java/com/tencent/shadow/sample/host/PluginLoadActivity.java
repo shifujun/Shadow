@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 
 import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.sample.constant.Constant;
+import com.tencent.shadow.sample.host.lib.PluginHelper;
 
 
 public class PluginLoadActivity extends Activity {
@@ -57,7 +58,7 @@ public class PluginLoadActivity extends Activity {
                 bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, getIntent().getStringExtra(Constant.KEY_PLUGIN_ZIP_PATH));
                 bundle.putString(Constant.KEY_PLUGIN_PART_KEY, getIntent().getStringExtra(Constant.KEY_PLUGIN_PART_KEY));
                 bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, getIntent().getStringExtra(Constant.KEY_ACTIVITY_CLASSNAME));
-
+                bundle.putString(Constant.KEY_PLUGIN_PROCESS, getIntent().getStringExtra(Constant.KEY_PLUGIN_PROCESS));
                 HostApplication.getApp().getPluginManager()
                         .enter(PluginLoadActivity.this, Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
                             @Override

@@ -94,6 +94,10 @@
             android:process=":plugin"
             />
 
+        <service android:name="com.tencent.shadow.sample.host.Plugin2ProcessPPS"
+            android:process=":plugin_2"
+            />
+
         <activity
             android:name="com.tencent.shadow.sample.host.PluginLoadActivity"
             android:launchMode="standard"
@@ -112,6 +116,16 @@
             android:hardwareAccelerated="true"
             android:theme="@style/troop_Transparent"
             android:process=":plugin"
+            />
+
+        <activity
+            android:name="com.tencent.shadow.sample.plugin.runtime.Plugin2DefaultProxyActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:theme="@style/troop_Transparent"
+            android:process=":plugin_2"
             />
 
         <activity

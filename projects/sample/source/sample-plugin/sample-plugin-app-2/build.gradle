@@ -1,4 +1,4 @@
-apply from: "../sample-normal-app/build.gradle"
+apply from: "../sample-normal-app-2/build.gradle"
 
 android {
     defaultConfig {
@@ -30,8 +30,8 @@ shadow {
     packagePlugin {
         pluginTypes {
             debug {
-//                loaderApkConfig = new Tuple2('sample-loader-debug.apk', ':sample-loader:assembleDebug')
-//                runtimeApkConfig = new Tuple2('sample-runtime-debug.apk', ':sample-runtime:assembleDebug')
+                loaderApkConfig = new Tuple2('sample-loader-debug.apk', ':sample-loader:assembleDebug')
+                runtimeApkConfig = new Tuple2('sample-runtime-debug.apk', ':sample-runtime:assembleDebug')
                 pluginApks {
                     pluginApk1 {
                         businessName = 'sample-plugin-app-2'
@@ -45,8 +45,8 @@ shadow {
             }
 
             release {
-//                loaderApkConfig = new Tuple2('sample-loader-release.apk', ':sample-loader:assembleRelease')
-//                runtimeApkConfig = new Tuple2('sample-runtime-release.apk', ':sample-runtime:assembleRelease')
+                loaderApkConfig = new Tuple2('sample-loader-release.apk', ':sample-loader:assembleRelease')
+                runtimeApkConfig = new Tuple2('sample-runtime-release.apk', ':sample-runtime:assembleRelease')
                 pluginApks {
                     pluginApk1 {
                         businessName = 'sample-plugin-app-2'
@@ -60,9 +60,9 @@ shadow {
             }
         }
 
-//        loaderApkProjectPath = 'projects/sample/source/sample-plugin/sample-loader'
-//
-//        runtimeApkProjectPath = 'projects/sample/source/sample-plugin/sample-runtime'
+        loaderApkProjectPath = 'projects/sample/source/sample-plugin/sample-loader'
+
+        runtimeApkProjectPath = 'projects/sample/source/sample-plugin/sample-runtime'
 
         version = 4
         compactVersion = [1, 2, 3]

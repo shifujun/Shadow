@@ -19,6 +19,7 @@
 package com.tencent.shadow.sample.constant;
 
 final public class Constant {
+    public static final String KEY_PLUGIN_PROCESS = "KEY_PLUGIN_PROCESS";
     public static final String KEY_PLUGIN_ZIP_PATH = "pluginZipPath";
     public static final String KEY_ACTIVITY_CLASSNAME = "KEY_ACTIVITY_CLASSNAME";
     public static final String KEY_EXTRAS = "KEY_EXTRAS";
@@ -27,4 +28,5 @@ final public class Constant {
     public static final String PART_KEY_PLUGIN_MAIN_APP_2 = "sample-plugin-app-2";
     public static final int FROM_ID_NOOP = 1000;
     public static final int FROM_ID_START_ACTIVITY = 1002;
+    public static final int FROM_ID_CALL_SERVICE = 1003;
 }

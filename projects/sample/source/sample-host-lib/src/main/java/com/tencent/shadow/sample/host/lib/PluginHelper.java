@@ -16,7 +16,7 @@
  *
  */
 
-package com.tencent.shadow.sample.host;
+package com.tencent.shadow.sample.host.lib;
 
 import android.content.Context;
 

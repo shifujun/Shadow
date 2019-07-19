@@ -107,16 +107,16 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
     }
 
 
-    public void startPluginActivity(Context context, InstalledPlugin installedPlugin, String partKey, Intent pluginIntent) throws RemoteException, TimeoutException, FailedException {
-        Intent intent = convertActivityIntent(installedPlugin, partKey, pluginIntent);
+    public void startPluginActivity(Context context, InstalledPlugin installedPlugin, String partKey, Intent pluginIntent, String process) throws RemoteException, TimeoutException, FailedException {
+        Intent intent = convertActivityIntent(installedPlugin, partKey, pluginIntent, process);
         if (!(context instanceof Activity)) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         context.startActivity(intent);
     }
 
-    public Intent convertActivityIntent(InstalledPlugin installedPlugin, String partKey, Intent pluginIntent) throws RemoteException, TimeoutException, FailedException {
-        loadPlugin(installedPlugin.UUID, partKey);
+    public Intent convertActivityIntent(InstalledPlugin installedPlugin, String partKey, Intent pluginIntent, String process) throws RemoteException, TimeoutException, FailedException {
+        loadPlugin(installedPlugin.UUID, partKey, process);
         Map map = mPluginLoader.getLoadedPlugin();
         Boolean isCall = (Boolean) map.get(partKey);
         if (isCall == null || !isCall) {
@@ -125,17 +125,17 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
         return mPluginLoader.convertActivityIntent(pluginIntent);
     }
 
-    private void loadPluginLoaderAndRuntime(String uuid) throws RemoteException, TimeoutException, FailedException {
+    private void loadPluginLoaderAndRuntime(String uuid, String process) throws RemoteException, TimeoutException, FailedException {
         if (mPpsController == null) {
-            bindPluginProcessService(getPluginProcessServiceName());
+            bindPluginProcessService(getPluginProcessServiceName(process));
             waitServiceConnected(10, TimeUnit.SECONDS);
         }
         loadRunTime(uuid);
         loadPluginLoader(uuid);
     }
 
-    private void loadPlugin(String uuid, String partKey) throws RemoteException, TimeoutException, FailedException {
-        loadPluginLoaderAndRuntime(uuid);
+    protected void loadPlugin(String uuid, String partKey, String process) throws RemoteException, TimeoutException, FailedException {
+        loadPluginLoaderAndRuntime(uuid, process);
         Map map = mPluginLoader.getLoadedPlugin();
         if (!map.containsKey(partKey)) {
             mPluginLoader.loadPlugin(partKey);
@@ -143,6 +143,6 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
     }
 
 
-    protected abstract String getPluginProcessServiceName();
+    protected abstract String getPluginProcessServiceName(String process);
 
 }

@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,6 +45,7 @@ import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCaseCategory;
 
 import java.util.List;
+import android.os.Process;
 
 public class MainActivity extends Activity implements
         ExpandableListView.OnChildClickListener,
@@ -62,6 +64,7 @@ public class MainActivity extends Activity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("Plugin", "Hello, I am Activity in Plugin 1. Process:"+Process.myPid());
         setContentView(R.layout.layout_main);
         expandableListView = findViewById(R.id.expandablelist);
         stickyLayout = findViewById(R.id.sticky_layout);
