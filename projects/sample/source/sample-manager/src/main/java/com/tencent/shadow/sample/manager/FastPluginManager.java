@@ -19,16 +19,28 @@
 package com.tencent.shadow.sample.manager;
 
 import android.app.Activity;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Process;
 import android.os.RemoteException;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.tencent.shadow.core.common.Logger;
 import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.core.manager.installplugin.InstalledPlugin;
 import com.tencent.shadow.core.manager.installplugin.InstalledType;
+import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.dynamic.host.FailedException;
+import com.tencent.shadow.dynamic.loader.PluginServiceConnection;
 import com.tencent.shadow.dynamic.manager.PluginManagerThatUseDynamicLoader;
+import com.tencent.shadow.sample.constant.Constant;
+import com.tencent.shadow.sample.plugin.app.lib.IMyAidlInterface;
 
 import org.json.JSONException;
 
@@ -51,8 +63,11 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
 
     private ExecutorService mFixedPool = Executors.newFixedThreadPool(4);
 
+    final private Context mCurrentContext;
+
     public FastPluginManager(Context context) {
         super(context);
+        mCurrentContext = context;
     }
 
 
@@ -107,16 +122,16 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
     }
 
 
-    public void startPluginActivity(Context context, InstalledPlugin installedPlugin, String partKey, Intent pluginIntent, String process) throws RemoteException, TimeoutException, FailedException {
-        Intent intent = convertActivityIntent(installedPlugin, partKey, pluginIntent, process);
+    public void startPluginActivity(Context context, InstalledPlugin installedPlugin, String partKey, Intent pluginIntent) throws RemoteException, TimeoutException, FailedException {
+        Intent intent = convertActivityIntent(installedPlugin, partKey, pluginIntent);
         if (!(context instanceof Activity)) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         context.startActivity(intent);
     }
 
-    public Intent convertActivityIntent(InstalledPlugin installedPlugin, String partKey, Intent pluginIntent, String process) throws RemoteException, TimeoutException, FailedException {
-        loadPlugin(installedPlugin.UUID, partKey, process);
+    public Intent convertActivityIntent(InstalledPlugin installedPlugin, String partKey, Intent pluginIntent) throws RemoteException, TimeoutException, FailedException {
+        loadPlugin(installedPlugin.UUID, partKey);
         Map map = mPluginLoader.getLoadedPlugin();
         Boolean isCall = (Boolean) map.get(partKey);
         if (isCall == null || !isCall) {
@@ -125,17 +140,17 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
         return mPluginLoader.convertActivityIntent(pluginIntent);
     }
 
-    private void loadPluginLoaderAndRuntime(String uuid, String process) throws RemoteException, TimeoutException, FailedException {
+    private void loadPluginLoaderAndRuntime(String uuid) throws RemoteException, TimeoutException, FailedException {
         if (mPpsController == null) {
-            bindPluginProcessService(getPluginProcessServiceName(process));
+            bindPluginProcessService(getPluginProcessServiceName());
             waitServiceConnected(10, TimeUnit.SECONDS);
         }
         loadRunTime(uuid);
         loadPluginLoader(uuid);
     }
 
-    protected void loadPlugin(String uuid, String partKey, String process) throws RemoteException, TimeoutException, FailedException {
-        loadPluginLoaderAndRuntime(uuid, process);
+    private void loadPlugin(String uuid, String partKey) throws RemoteException, TimeoutException, FailedException {
+        loadPluginLoaderAndRuntime(uuid);
         Map map = mPluginLoader.getLoadedPlugin();
         if (!map.containsKey(partKey)) {
             mPluginLoader.loadPlugin(partKey);
@@ -143,6 +158,94 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
     }
 
 
-    protected abstract String getPluginProcessServiceName(String process);
+    protected abstract String getPluginProcessServiceName();
 
+    void onStartActivity(final Context context, Bundle bundle, final EnterCallback callback) {
+        final String pluginZipPath = bundle.getString(Constant.KEY_PLUGIN_ZIP_PATH);
+        final String partKey = bundle.getString(Constant.KEY_PLUGIN_PART_KEY);
+        final String className = bundle.getString(Constant.KEY_ACTIVITY_CLASSNAME);
+        if (className == null) {
+            throw new NullPointerException("className == null");
+        }
+        final Bundle extras = bundle.getBundle(Constant.KEY_EXTRAS);
+
+        if (callback != null) {
+            final View view = LayoutInflater.from(mCurrentContext).inflate(R.layout.activity_load_plugin, null);
+            callback.onShowLoadingView(view);
+        }
+
+        mFixedPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    InstalledPlugin installedPlugin = installPlugin(pluginZipPath, null, true);
+                    Intent pluginIntent = new Intent();
+                    pluginIntent.setClassName(
+                            context.getPackageName(),
+                            className
+                    );
+                    if (extras != null) {
+                        pluginIntent.replaceExtras(extras);
+                    }
+
+                    startPluginActivity(context, installedPlugin, partKey, pluginIntent);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                if (callback != null) {
+                    callback.onCloseLoadingView();
+                }
+            }
+        });
+    }
+
+    void callPluginService(final Context context, Bundle bundle) {
+        final String pluginZipPath = bundle.getString(Constant.KEY_PLUGIN_ZIP_PATH);
+        final String partKey = bundle.getString(Constant.KEY_PLUGIN_PART_KEY);
+        final String className = bundle.getString(Constant.KEY_ACTIVITY_CLASSNAME);
+
+        Intent pluginIntent = new Intent();
+        pluginIntent.setClassName(context.getPackageName(), className);
+
+        mFixedPool.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    InstalledPlugin installedPlugin
+                            = installPlugin(pluginZipPath, null, true);//这个调用是阻塞的
+
+                    loadPlugin(installedPlugin.UUID, partKey);
+
+                    Intent pluginIntent = new Intent();
+                    pluginIntent.setClassName(context.getPackageName(), className);
+
+                    boolean callSuccess = mPluginLoader.bindPluginService(pluginIntent, new PluginServiceConnection() {
+                        @Override
+                        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                            IMyAidlInterface iMyAidlInterface = IMyAidlInterface.Stub.asInterface(iBinder);
+                            try {
+                                String s = iMyAidlInterface.basicTypes(1, 2, true, 4.0f, 5.0, "6");
+                                Log.d("SamplePluginManager", "call basicTypes at process:" + Process.myPid());
+                                Log.i("SamplePluginManager", "iMyAidlInterface.basicTypes : " + s);
+//                                Toast.makeText(context, "iMyAidlInterface.basicTypes : " + s, Toast.LENGTH_LONG).show();
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                        @Override
+                        public void onServiceDisconnected(ComponentName componentName) {
+                            throw new RuntimeException("onServiceDisconnected");
+                        }
+                    }, Service.BIND_AUTO_CREATE);
+
+                    if (!callSuccess) {
+                        throw new RuntimeException("bind service失败 className==" + className);
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
 }
