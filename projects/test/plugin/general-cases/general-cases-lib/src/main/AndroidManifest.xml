@@ -10,6 +10,15 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:label="@string/app_name">
 
+        <!--     general-cases-app测试时指定直接启动的Activity   -->
+        <!--        <activity android:name=".usecases.service.REPLACE_ME">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.MAIN" />-->
+
+        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+        <!--            </intent-filter>-->
+        <!--        </activity>-->
+
         <meta-data android:name="test_meta" android:value="test_value" />
 
         <activity android:name=".usecases.activity.TestListActivity"/>
@@ -50,6 +59,9 @@
         <activity android:name=".usecases.packagemanager.TestPackageManagerActivity" />
 
         <service android:name=".usecases.service.TestService" />
+        <service
+            android:name=".usecases.service.SystemExitService"
+            android:process=".SystemExitService" />
 
         <receiver android:name=".usecases.receiver.MyReceiver">
             <intent-filter>
@@ -74,6 +86,7 @@
         <activity android:name=".usecases.context.ApplicationContextSubDirTestActivity" />
         <activity android:name=".usecases.application.TestGetApplicationInfoActivity" />
         <activity android:name=".usecases.activity.ApplicationContextActivity" />
+        <activity android:name=".usecases.service.ServiceConnectionTestActivity" />
 
         <provider
             android:authorities="com.tencent.shadow.provider.test"
