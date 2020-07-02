@@ -6,5 +6,6 @@
     <application tools:ignore="AllowBackup,MissingApplicationIcon">
         <service android:name=".SystemExitService" />
         <service android:name=".SystemExitIntentService" />
+        <service android:name=".CreateHandlerTestService" />
     </application>
 </manifest>
