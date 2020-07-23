@@ -21,6 +21,7 @@ package com.tencent.shadow.sample.plugin.app.lib.gallery;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.ryg.expandable.ui.PinnedHeaderExpandableListView;
@@ -85,6 +87,9 @@ public class MainActivity extends Activity implements
         stickyLayout.setOnGiveUpTouchEventListener(this);
         slidingMenu.showMenu();
 
+        SharedPreferences preferences = getApplication().getBaseContext().getSharedPreferences("user", 0);
+        String name = preferences.getString("name", "defaultname1");
+        Toast.makeText(this, name, Toast.LENGTH_LONG).show();
     }
 
 

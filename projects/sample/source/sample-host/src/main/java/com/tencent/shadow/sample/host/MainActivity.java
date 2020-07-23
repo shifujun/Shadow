@@ -21,6 +21,7 @@ package com.tencent.shadow.sample.host;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.shadow.sample.constant.Constant;
 
@@ -78,6 +80,45 @@ public class MainActivity extends Activity {
             }
         });
         rootView.addView(startPluginButton);
+
+        Button test11 = new Button(this);
+        test11.setText("保存信息11");
+        test11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences preferences = getApplicationContext().getSharedPreferences("user", 0);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("name", "1.以前保存的");
+                editor.apply();
+            }
+        });
+        rootView.addView(test11);
+
+        Button test22 = new Button(this);
+        test22.setText("保存信息22");
+        test22.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences preferences = getApplicationContext().getSharedPreferences("user", 0);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("name", "2.刚更新的");
+                editor.apply();
+            }
+        });
+        rootView.addView(test22);
+
+        Button test33 = new Button(this);
+        test33.setText("获取信息");
+        test33.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences preferences = getBaseContext().getSharedPreferences("user", 0);
+                String name = preferences.getString("name", "defaultname1");
+                String age = preferences.getString("age", "0");
+                Toast.makeText(MainActivity.this, name + " " + age, Toast.LENGTH_LONG).show();
+            }
+        });
+        rootView.addView(test33);
 
         setContentView(rootView);
 
