@@ -135,6 +135,9 @@
             android:multiprocess="true"
 
             />
+        <activity
+            android:name=".TestActivity"
+            android:process=":plugin" />
         <!--dynamic activity注册 end -->
     </application>
 

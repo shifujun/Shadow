@@ -120,6 +120,16 @@ public class MainActivity extends Activity {
         });
         rootView.addView(test33);
 
+        Button test44 = new Button(this);
+        test44.setText("start TestActivity");
+        test44.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TestActivity.class));
+            }
+        });
+        rootView.addView(test44);
+
         setContentView(rootView);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
