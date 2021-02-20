@@ -20,13 +20,17 @@ package com.tencent.shadow.core.runtime;
 
 import android.annotation.TargetApi;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
+import android.content.pm.ResolveInfo;
 import android.content.pm.VersionedPackage;
 import android.os.Build;
+
+import java.util.List;
 
 /**
  * PackageManagerTransform必须把对PackageManager的调用转到到这个处于Runtime层不被Transform作用的类上来，
@@ -53,7 +57,7 @@ public class PackageManagerInvokeRedirect {
 
     @TargetApi(Build.VERSION_CODES.O)
     public static PackageInfo getPackageInfo(ClassLoader classLoaderOfInvokeCode, VersionedPackage versionedPackage,
-                                             int flags) throws PackageManager.NameNotFoundException{
+                                             int flags) throws PackageManager.NameNotFoundException {
         return getPluginPackageManager(classLoaderOfInvokeCode).getPackageInfo(versionedPackage.getPackageName(), flags);
     }
 
@@ -61,5 +65,12 @@ public class PackageManagerInvokeRedirect {
         return getPluginPackageManager(classLoaderOfInvokeCode).resolveContentProvider(name, flags);
     }
 
+    public static List<ProviderInfo> queryContentProviders(ClassLoader classLoaderOfInvokeCode, String processName, int uid, int flags) {
+        return getPluginPackageManager(classLoaderOfInvokeCode).queryContentProviders(processName, uid, flags);
+    }
+
+    public static ResolveInfo resolveActivity(ClassLoader classLoaderOfInvokeCode, Intent intent, int flags) {
+        return getPluginPackageManager(classLoaderOfInvokeCode).resolveActivity(intent, flags);
+    }
 
 }

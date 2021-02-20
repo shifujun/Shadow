@@ -20,59 +20,189 @@ package com.tencent.shadow.test.plugin.general_cases.lib.usecases.packagemanager
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.View;
-import android.widget.TextView;
+import android.view.ViewGroup;
 
-import com.tencent.shadow.test.plugin.general_cases.lib.R;
+import com.tencent.shadow.test.plugin.general_cases.lib.gallery.util.UiUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static android.content.pm.PackageManager.GET_META_DATA;
 
 public class TestPackageManagerActivity extends Activity {
 
-    private TextView mTvTextView;
-
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_packagemanager);
-        mTvTextView = findViewById(R.id.text);
+        ViewGroup viewGroup = UiUtil.setActivityContentView(this);
+
+        getApplicationInfo(viewGroup);
+        getActivityInfo(viewGroup);
+        getPackageInfo(viewGroup);
+        queryContentProviders(viewGroup);
+        resolveActivityByExplicitIntent(viewGroup);
+    }
+
+    private void getApplicationInfo(ViewGroup viewGroup) {
+        String className;
+        String nativeLibraryDir;
+        String metaData;
+        try {
+            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo(getPackageName(), GET_META_DATA);
+            className = applicationInfo.className;
+            nativeLibraryDir = applicationInfo.nativeLibraryDir;
+            metaData = applicationInfo.metaData != null ? applicationInfo.metaData.getString("test_meta") : null;
+        } catch (PackageManager.NameNotFoundException e) {
+            className = nativeLibraryDir = metaData = "NameNotFoundException";
+        }
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "getApplicationInfo/className",
+                        "getApplicationInfo/className",
+                        className
+                )
+        );
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "getApplicationInfo/nativeLibraryDir",
+                        "getApplicationInfo/nativeLibraryDir",
+                        nativeLibraryDir
+                )
+        );
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "getApplicationInfo/metaData",
+                        "getApplicationInfo/metaData",
+                        metaData
+                )
+        );
+    }
+
+    private void getActivityInfo(ViewGroup viewGroup) {
+        String name;
+        String packageName;
+        try {
+            ActivityInfo activityInfo = getPackageManager().getActivityInfo(new ComponentName(this, this.getClass()), 0);
+            name = activityInfo.name;
+            packageName = activityInfo.packageName;
+        } catch (PackageManager.NameNotFoundException e) {
+            name = packageName = "NameNotFoundException";
+        }
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "getActivityInfo/name",
+                        "getActivityInfo/name",
+                        name
+                )
+        );
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "getActivityInfo/packageName",
+                        "getActivityInfo/packageName",
+                        packageName
+                )
+        );
     }
 
 
-    public void getApplicationInfo(View view){
+    private void getPackageInfo(ViewGroup viewGroup) {
+        String versionName;
+        String versionCode;
         try {
-            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo(getPackageName(),0);
-            mTvTextView.setText("ApplicationInfo className:"+applicationInfo.className+
-                    "\nnativeLibraryDir:"+applicationInfo.nativeLibraryDir
-            +"\nmetaData:"+applicationInfo.metaData);
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = packageInfo.versionName;
+            versionCode = Integer.toString(packageInfo.versionCode);
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            versionName = versionCode = "NameNotFoundException";
         }
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "getPackageInfo/versionName",
+                        "getPackageInfo/versionName",
+                        versionName
+                )
+        );
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "getPackageInfo/versionCode",
+                        "getPackageInfo/versionCode",
+                        versionCode
+                )
+        );
     }
 
+    private void queryContentProviders(ViewGroup viewGroup) {
+        PackageManager packageManager = getPackageManager();
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        String processName = applicationInfo.processName;
+        int uid = applicationInfo.uid;
+        List<ProviderInfo> providerInfos = packageManager.queryContentProviders(processName, uid, PackageManager.MATCH_ALL);
 
-    public void getActivityInfo(View view){
-        try {
-            ActivityInfo activityInfo = getPackageManager().getActivityInfo(new ComponentName(this,this.getClass()),0);
-            mTvTextView.setText("activityInfo name:"+activityInfo.name
-                    +"\npackageName:"+activityInfo.packageName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        String size = Integer.toString(providerInfos.size());
+        String name;
+        if (providerInfos.isEmpty()) {
+            name = "";
+        } else {
+            ArrayList<String> names = new ArrayList<>(providerInfos.size());
+            for (ProviderInfo providerInfo : providerInfos) {
+                names.add(providerInfo.name);
+            }
+            Collections.sort(names);
+            name = Arrays.toString(names.toArray());
         }
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "queryContentProviders/size",
+                        "queryContentProviders/size",
+                        size
+                )
+        );
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "queryContentProviders/name",
+                        "queryContentProviders/name",
+                        name
+                )
+        );
     }
 
+    private void resolveActivityByExplicitIntent(ViewGroup viewGroup) {
+        PackageManager packageManager = getPackageManager();
+        Intent intent = new Intent(this, this.getClass());
+        ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
-    public void getPackageInfo(View view){
-        try {
-            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(),0);
-            mTvTextView.setText("packageInfo versionName:"+packageInfo.versionName
-                    +"\nversionCode:"+packageInfo.versionCode);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        String name;
+        if (resolveInfo != null && resolveInfo.activityInfo != null) {
+            name = resolveInfo.activityInfo.name;
+        } else {
+            name = "";
         }
+        viewGroup.addView(
+                UiUtil.makeItem(
+                        this,
+                        "resolveActivity/explicit",
+                        "resolveActivity/explicit",
+                        name
+                )
+        );
     }
 }
