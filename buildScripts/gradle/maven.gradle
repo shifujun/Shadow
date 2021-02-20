@@ -393,7 +393,7 @@ publishing {
         if (propertiesFile.exists()) {
             properties.load(propertiesFile.newDataInputStream())
 
-            if (properties.getProperty('gpr.local').equalsIgnoreCase('true')) {
+            if ("${properties.getProperty('gpr.local')}".equalsIgnoreCase('true')) {
                 def user = properties.getProperty('gpr.user')
                 def key = properties.getProperty('gpr.key')
                 maven {

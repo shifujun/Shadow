@@ -1,4 +1,4 @@
-name: Publish to Github Packages
+name: Publish release
 
 on:
   release:
@@ -34,6 +34,8 @@ jobs:
       PUBLISH_RELEASE: true
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
       - name: checkout
         uses: actions/checkout@v2
       - name: publish
