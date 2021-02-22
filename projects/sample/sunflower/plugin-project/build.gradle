@@ -15,7 +15,7 @@
  */
 
 buildscript {
-    ext.shadow_version = '2.0.12-4de02e2e-SNAPSHOT'
+    ext.shadow_version = 'master-b4632d8f-SNAPSHOT'
     // Define versions in a single place
     ext {
         // Sdk and tools
@@ -72,6 +72,10 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            name = "GitHubPackages"
+            url "https://maven.pkg.github.com/shifujun/shadow"
+        }
         mavenLocal()
     }
 }
