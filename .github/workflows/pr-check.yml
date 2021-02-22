@@ -37,4 +37,28 @@ jobs:
         run: ./gradlew lintSdk
       - name: build sample/source
         run: ./gradlew build
+  build-samples:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: build sample/maven/host-project
+        working-directory: projects/sample/maven/host-project
+        run: ./gradlew assemble
+      - name: build sample/maven/manager-project
+        working-directory: projects/sample/maven/manager-project
+        run: ./gradlew assemble
+      - name: build sample/maven/plugin-project
+        working-directory: projects/sample/maven/plugin-project
+        run: ./gradlew assemble
+      - name: build sunflower/maven/host-project
+        working-directory: projects/sunflower/maven/host-project
+        run: ./gradlew assemble
+      - name: build sunflower/maven/host-project
+        working-directory: projects/sunflower/maven/manager-project
+        run: ./gradlew assemble
+      - name: build sunflower/maven/host-project
+        working-directory: projects/sunflower/maven/plugin-project
+        run: ./gradlew assemble
+
 
