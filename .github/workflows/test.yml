@@ -19,12 +19,12 @@ jobs:
       - name: build sample/maven/plugin-project
         working-directory: projects/sample/maven/plugin-project
         run: ./gradlew assemble
-      - name: build sunflower/maven/host-project
-        working-directory: projects/sunflower/maven/host-project
+      - name: build sample/sunflower/host-project
+        working-directory: projects/sample/sunflower/host-project
         run: ./gradlew assemble
-      - name: build sunflower/maven/host-project
-        working-directory: projects/sunflower/maven/manager-project
+      - name: build sample/sunflower/host-project
+        working-directory: projects/sample/sunflower/manager-project
         run: ./gradlew assemble
-      - name: build sunflower/maven/host-project
-        working-directory: projects/sunflower/maven/plugin-project
+      - name: build sample/sunflower/host-project
+        working-directory: projects/sample/sunflower/plugin-project
         run: ./gradlew assemble
