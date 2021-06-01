@@ -324,9 +324,9 @@ abstract class SubDirContextThemeWrapperTest extends PluginMainAppTest {
     @Test
     public void testDatabaseList() {
         String dbName = EXPECT_NAME + "_bar";
-        matchTextWithViewTag(
+        matchSubstringWithViewTag(
                 "TAG_DATABASE_LIST",
-                "[" + dbName + "]"
+                dbName
         );
     }
 
