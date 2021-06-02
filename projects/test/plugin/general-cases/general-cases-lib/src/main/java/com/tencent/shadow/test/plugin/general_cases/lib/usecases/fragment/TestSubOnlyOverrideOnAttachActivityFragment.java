@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.test.espresso.IdlingRegistry;
-
 public class TestSubOnlyOverrideOnAttachActivityFragment extends OnlyOverrideActivityMethodBaseFragment implements TestFragment {
     public TestSubOnlyOverrideOnAttachActivityFragment() {
         setArguments(new Bundle());//低版本系统上不允许attach后再setArguments
@@ -45,18 +43,6 @@ public class TestSubOnlyOverrideOnAttachActivityFragment extends OnlyOverrideAct
     public void onDetach() {
         commonLogic.onDetach();
         super.onDetach();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        IdlingRegistry.getInstance().register(FragmentStartedActivity.sIdlingResource);
-    }
-
-    @Override
-    public void onDestroy() {
-        IdlingRegistry.getInstance().unregister(FragmentStartedActivity.sIdlingResource);
-        super.onDestroy();
     }
 
     @Override

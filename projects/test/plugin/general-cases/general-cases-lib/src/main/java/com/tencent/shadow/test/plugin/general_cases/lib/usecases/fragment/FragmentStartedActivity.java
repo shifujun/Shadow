@@ -32,7 +32,11 @@ public class FragmentStartedActivity extends Activity {
         });
 
         setContentView(button);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         sIdlingResource.setIdleState(true);
     }
 }

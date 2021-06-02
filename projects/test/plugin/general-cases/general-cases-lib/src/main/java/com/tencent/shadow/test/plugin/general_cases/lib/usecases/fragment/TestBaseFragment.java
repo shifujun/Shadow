@@ -28,8 +28,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.test.espresso.IdlingRegistry;
-
 @SuppressWarnings("deprecation")
 public class TestBaseFragment extends Fragment implements TestFragment {
     public TestBaseFragment() {
@@ -65,18 +63,6 @@ public class TestBaseFragment extends Fragment implements TestFragment {
     public void onDetach() {
         commonLogic.onDetach();
         super.onDetach();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        IdlingRegistry.getInstance().register(FragmentStartedActivity.sIdlingResource);
-    }
-
-    @Override
-    public void onDestroy() {
-        IdlingRegistry.getInstance().unregister(FragmentStartedActivity.sIdlingResource);
-        super.onDestroy();
     }
 
     @Override
