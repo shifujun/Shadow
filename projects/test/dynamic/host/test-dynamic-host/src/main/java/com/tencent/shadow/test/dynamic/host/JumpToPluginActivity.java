@@ -23,9 +23,10 @@ import android.app.Application;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.test.espresso.idling.CountingIdlingResource;
+
 import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.test.lib.constant.Constant;
-import com.tencent.shadow.test.lib.test_manager.SimpleIdlingResource;
 
 public class JumpToPluginActivity extends Activity {
 
@@ -81,8 +82,8 @@ public class JumpToPluginActivity extends Activity {
         }
 
         private void setIdlingResourceTrue() {
-            final SimpleIdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
-            idlingResource.setIdleState(true);
+            final CountingIdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
+            idlingResource.decrement();
         }
     };
 
@@ -109,8 +110,8 @@ public class JumpToPluginActivity extends Activity {
         bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, getIntent().getStringExtra(Constant.KEY_ACTIVITY_CLASSNAME));
         bundle.putBundle(Constant.KEY_EXTRAS, getIntent().getBundleExtra(Constant.KEY_EXTRAS));
 
-        final SimpleIdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
-        idlingResource.setIdleState(false);
+        final CountingIdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
+        idlingResource.increment();
         HostApplication.getApp().getPluginManager()
                 .enter(this, Constant.FROM_ID_START_ACTIVITY, bundle, new EnterCallback() {
                     @Override

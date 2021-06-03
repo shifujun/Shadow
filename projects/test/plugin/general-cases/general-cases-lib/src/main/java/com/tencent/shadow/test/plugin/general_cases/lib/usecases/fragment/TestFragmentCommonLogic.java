@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tencent.shadow.test.plugin.general_cases.lib.R;
+import com.tencent.shadow.test.plugin.general_cases.lib.gallery.TestApplication;
 
 @SuppressLint("SetTextI18n")
 class TestFragmentCommonLogic {
@@ -91,7 +92,7 @@ class TestFragmentCommonLogic {
     private void fragmentStartActivity() {
         Intent intent = new Intent(fragment.getActivity(), FragmentStartedActivity.class);
         fragment.startActivity(intent);
-        FragmentStartedActivity.sIdlingResource.setIdleState(false);
+        TestApplication.getInstance().incrementCountingIdlingResource();
     }
 
     private void addFragmentStartActivityWithOptionsView(LinearLayout rootView) {
@@ -114,7 +115,7 @@ class TestFragmentCommonLogic {
         Intent intent = new Intent(fragment.getActivity(), FragmentStartedActivity.class);
         ActivityOptions activityOptions = ActivityOptions.makeBasic();
         fragment.startActivity(intent, activityOptions.toBundle());
-        FragmentStartedActivity.sIdlingResource.setIdleState(false);
+        TestApplication.getInstance().incrementCountingIdlingResource();
     }
 
     private void addAttachContextView(LinearLayout rootView) {

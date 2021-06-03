@@ -23,6 +23,8 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.webkit.WebView;
 
+import androidx.test.espresso.idling.CountingIdlingResource;
+
 import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.dynamic.host.DynamicRuntime;
 import com.tencent.shadow.dynamic.host.PluginManager;
@@ -35,7 +37,7 @@ public class HostApplication extends Application {
 
     private PluginManager mPluginManager;
 
-    final public SimpleIdlingResourceImpl mIdlingResource = new SimpleIdlingResourceImpl();
+    final public CountingIdlingResource mIdlingResource = new CountingIdlingResource("HostApplication");
 
     @Override
     public void onCreate() {

@@ -27,14 +27,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.tencent.shadow.test.plugin.general_cases.lib.R;
+import com.tencent.shadow.test.plugin.general_cases.lib.gallery.TestApplication;
 import com.tencent.shadow.test.plugin.general_cases.lib.gallery.util.ToastUtil;
-import com.tencent.shadow.test.plugin.general_cases.lib.usecases.WithIdlingResourceActivity;
 
-public class TestReceiverActivity extends WithIdlingResourceActivity {
+public class TestReceiverActivity extends Activity {
 
     private final static String INTENT_NORMAL_ACTION = "com.tencent.test.normal.action";
     private final static String INTENT_DYNAMIC_ACTION = "com.tencent.test.action.DYNAMIC";
@@ -57,7 +56,7 @@ public class TestReceiverActivity extends WithIdlingResourceActivity {
         BroadCastHelper.setNotify(new BroadCastHelper.Notify() {
             @Override
             public void onReceiver(Intent intent, Context context) {
-                mIdlingResource.setIdleState(true);
+                TestApplication.getInstance().decrementCountingIdlingResource();
 
                 boolean isShadowContext = false;
                 try {
@@ -75,14 +74,14 @@ public class TestReceiverActivity extends WithIdlingResourceActivity {
     }
 
     public void TestNormalBraodcast(View view) {
-        mIdlingResource.setIdleState(false);
+        TestApplication.getInstance().incrementCountingIdlingResource();
         Intent intent = new Intent(INTENT_NORMAL_ACTION);
         intent.putExtra("msg", MSG_NORMAL);
         sendBroadcast(intent);
     }
 
     public void TestDynamicBraodcast(View view) {
-        mIdlingResource.setIdleState(false);
+        TestApplication.getInstance().incrementCountingIdlingResource();
         Intent intent = new Intent(INTENT_DYNAMIC_ACTION);
         intent.putExtra("msg", MSG_DYNAMIC);
         sendBroadcast(intent);
@@ -96,7 +95,7 @@ public class TestReceiverActivity extends WithIdlingResourceActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mIdlingResource.setIdleState(true);
+                TestApplication.getInstance().decrementCountingIdlingResource();
             }
         },2000);
     }

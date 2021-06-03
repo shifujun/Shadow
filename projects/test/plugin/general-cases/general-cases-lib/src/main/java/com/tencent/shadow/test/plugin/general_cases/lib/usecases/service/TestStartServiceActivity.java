@@ -18,6 +18,7 @@
 
 package com.tencent.shadow.test.plugin.general_cases.lib.usecases.service;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -35,12 +36,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.shadow.test.plugin.general_cases.lib.R;
+import com.tencent.shadow.test.plugin.general_cases.lib.gallery.TestApplication;
 import com.tencent.shadow.test.plugin.general_cases.lib.gallery.util.ToastUtil;
-import com.tencent.shadow.test.plugin.general_cases.lib.usecases.WithIdlingResourceActivity;
 
-public class TestStartServiceActivity extends WithIdlingResourceActivity {
+public class TestStartServiceActivity extends Activity {
 
-    private Intent serviceIntent ;
+    private Intent serviceIntent;
 
     private TestService.MyLocalServiceBinder binder;
 
@@ -102,13 +103,13 @@ public class TestStartServiceActivity extends WithIdlingResourceActivity {
 
     private void setIdle(){
         mHandler.removeCallbacksAndMessages(null);
-        mIdlingResource.setIdleState(false);
+        TestApplication.getInstance().incrementCountingIdlingResource();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mIdlingResource.setIdleState(true);
+                TestApplication.getInstance().decrementCountingIdlingResource();
             }
-        },2000);
+        }, 2000);
     }
 
     @Override
@@ -127,7 +128,7 @@ public class TestStartServiceActivity extends WithIdlingResourceActivity {
                 text = oldText+"-"+text;
             }
             mTextView.setText(text);
-            mIdlingResource.setIdleState(true);
+            TestApplication.getInstance().decrementCountingIdlingResource();
         }
     };
 }

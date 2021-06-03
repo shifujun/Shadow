@@ -18,6 +18,7 @@
 
 package com.tencent.shadow.test.plugin.general_cases.lib.usecases.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,9 +26,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.shadow.test.plugin.general_cases.lib.R;
-import com.tencent.shadow.test.plugin.general_cases.lib.usecases.WithIdlingResourceActivity;
+import com.tencent.shadow.test.plugin.general_cases.lib.gallery.TestApplication;
 
-public class WindowSoftModeJumpActivity extends WithIdlingResourceActivity {
+public class WindowSoftModeJumpActivity extends Activity {
 
     private TextView mText;
 
@@ -41,7 +42,7 @@ public class WindowSoftModeJumpActivity extends WithIdlingResourceActivity {
     }
 
     public void doClick(View view) {
-        mIdlingResource.setIdleState(false);
+        TestApplication.getInstance().incrementCountingIdlingResource();
         Intent intent = new Intent(this, TestActivityWindowSoftMode.class);
         intent.putExtra(KEY_FROM_JUMP, true);
         startActivityForResult(intent, 1001);
@@ -50,7 +51,7 @@ public class WindowSoftModeJumpActivity extends WithIdlingResourceActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mIdlingResource.setIdleState(true);
+        TestApplication.getInstance().decrementCountingIdlingResource();
         String txt = data.getStringExtra("result");
         mText.setText(txt);
 

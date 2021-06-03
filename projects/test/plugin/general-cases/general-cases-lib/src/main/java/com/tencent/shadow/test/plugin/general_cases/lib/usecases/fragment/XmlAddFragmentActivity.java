@@ -23,8 +23,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import androidx.test.espresso.IdlingRegistry;
-
 import com.tencent.shadow.test.plugin.general_cases.lib.R;
 
 public class XmlAddFragmentActivity extends Activity {
@@ -50,19 +48,6 @@ public class XmlAddFragmentActivity extends Activity {
         }
 
         setContentView(xmlId);
-        boolean success = IdlingRegistry.getInstance().register(FragmentStartedActivity.sIdlingResource);
-        if (!success) {
-            throw new RuntimeException("register FragmentStartedActivity.sIdlingResource failed");
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        boolean success = IdlingRegistry.getInstance().unregister(FragmentStartedActivity.sIdlingResource);
-        if (!success) {
-            throw new RuntimeException("unregister FragmentStartedActivity.sIdlingResource failed");
-        }
-        super.onDestroy();
     }
 
     @Override

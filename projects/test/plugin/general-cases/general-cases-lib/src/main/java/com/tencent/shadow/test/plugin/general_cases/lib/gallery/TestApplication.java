@@ -24,12 +24,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.idling.CountingIdlingResource;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class TestApplication extends Application {
 
     private static TestApplication sInstence;
+
+    private final CountingIdlingResource idlingResource = new CountingIdlingResource("TestApplication");
 
     public boolean isOnCreate;
 
@@ -43,6 +48,10 @@ public class TestApplication extends Application {
         super.onCreate();
 
         registerActivityLifecycleCallbacks(alc);
+        boolean success = IdlingRegistry.getInstance().register(idlingResource);
+        if (!success) {
+            throw new RuntimeException("register idlingResource failed");
+        }
     }
 
     public static TestApplication getInstance() {
@@ -51,6 +60,14 @@ public class TestApplication extends Application {
 
     public List<String> getTestActivityLifecycleCallbacksRecord() {
         return alc.recordList;
+    }
+
+    public void incrementCountingIdlingResource() {
+        idlingResource.increment();
+    }
+
+    public void decrementCountingIdlingResource() {
+        idlingResource.decrement();
     }
 }
 

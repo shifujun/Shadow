@@ -12,10 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.test.espresso.idling.CountingIdlingResource;
+
 import com.tencent.shadow.dynamic.loader.PluginLoader;
 import com.tencent.shadow.dynamic.loader.PluginServiceConnection;
 import com.tencent.shadow.test.UiUtil;
-import com.tencent.shadow.test.lib.test_manager.SimpleIdlingResource;
 import com.tencent.shadow.test.lib.test_manager.TestManager;
 
 import java.util.concurrent.CountDownLatch;
@@ -32,14 +33,14 @@ public class PluginServiceConnectionTestCase {
     private IBinder service;
     final private PluginLoader pluginLoader;
     final private Intent pluginIntent;
-    final private SimpleIdlingResource idlingResource;
+    final private CountingIdlingResource idlingResource;
     final private Handler uiHandler;
 
     public PluginServiceConnectionTestCase(PluginLoader pluginLoader, Intent pluginIntent) {
         this.pluginLoader = pluginLoader;
         this.pluginIntent = pluginIntent;
         viewGroup = (ViewGroup) TestManager.sBindPluginServiceActivityContentView;
-        idlingResource = TestManager.TheSimpleIdlingResource;
+        idlingResource = (CountingIdlingResource) TestManager.sIdlingResource;
         uiHandler = new Handler(Looper.getMainLooper());
     }
 
@@ -113,7 +114,7 @@ public class PluginServiceConnectionTestCase {
     }
 
     private void bindService() {
-        idlingResource.setIdleState(false);
+        idlingResource.increment();
         try {
             pluginLoader.bindPluginService(pluginIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         } catch (RemoteException e) {
@@ -122,7 +123,7 @@ public class PluginServiceConnectionTestCase {
     }
 
     private void stopService() {
-        idlingResource.setIdleState(false);
+        idlingResource.increment();
         try {
             //随便发什么过去都表示杀进程
             service.transact(0, Parcel.obtain(), Parcel.obtain(), 0);
@@ -140,7 +141,7 @@ public class PluginServiceConnectionTestCase {
                     UiUtil.setItemValue(viewGroup, STATUS_VIEW_TAG, "onServiceConnected");
                     UiUtil.setItemValue(viewGroup, PACKAGE_VIEW_TAG, name.getPackageName());
                     UiUtil.setItemValue(viewGroup, CLASS_VIEW_TAG, name.getClassName());
-                    idlingResource.setIdleState(true);
+                    idlingResource.decrement();
                 }
             });
         }
@@ -153,7 +154,7 @@ public class PluginServiceConnectionTestCase {
                     UiUtil.setItemValue(viewGroup, STATUS_VIEW_TAG, "onServiceDisconnected");
                     UiUtil.setItemValue(viewGroup, PACKAGE_VIEW_TAG, name.getPackageName());
                     UiUtil.setItemValue(viewGroup, CLASS_VIEW_TAG, name.getClassName());
-                    idlingResource.setIdleState(true);
+                    idlingResource.decrement();
                 }
             });
         }

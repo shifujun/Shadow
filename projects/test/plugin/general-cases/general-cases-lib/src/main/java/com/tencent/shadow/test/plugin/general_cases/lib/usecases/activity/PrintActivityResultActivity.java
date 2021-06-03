@@ -18,6 +18,7 @@
 
 package com.tencent.shadow.test.plugin.general_cases.lib.usecases.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,9 +26,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.shadow.test.plugin.general_cases.lib.R;
-import com.tencent.shadow.test.plugin.general_cases.lib.usecases.WithIdlingResourceActivity;
+import com.tencent.shadow.test.plugin.general_cases.lib.gallery.TestApplication;
 
-public class PrintActivityResultActivity extends WithIdlingResourceActivity {
+public class PrintActivityResultActivity extends Activity {
 
     private TextView mText;
 
@@ -46,7 +47,7 @@ public class PrintActivityResultActivity extends WithIdlingResourceActivity {
     public void doClick(View view) {
         boolean wait = getIntent().getBooleanExtra(KEY_WAIT_FOR_RESULT, true);
         if (wait) {
-            mIdlingResource.setIdleState(false);
+            TestApplication.getInstance().incrementCountingIdlingResource();
         }
         String className = getIntent().getStringExtra(KEY_TARGET_CLASS);
         Intent intent = new Intent();
@@ -58,7 +59,7 @@ public class PrintActivityResultActivity extends WithIdlingResourceActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mIdlingResource.setIdleState(true);
+        TestApplication.getInstance().decrementCountingIdlingResource();
         String txt = data.getStringExtra("result");
         mText.setText(txt);
 

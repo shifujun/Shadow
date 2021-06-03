@@ -22,9 +22,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.test.espresso.idling.CountingIdlingResource;
+
 import com.tencent.shadow.dynamic.host.EnterCallback;
 import com.tencent.shadow.test.lib.constant.Constant;
-import com.tencent.shadow.test.lib.test_manager.SimpleIdlingResource;
 import com.tencent.shadow.test.lib.test_manager.TestManager;
 
 public class BindPluginServiceActivity extends Activity {
@@ -45,8 +46,8 @@ public class BindPluginServiceActivity extends Activity {
         bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, getIntent().getStringExtra(Constant.KEY_ACTIVITY_CLASSNAME));
         bundle.putBundle(Constant.KEY_EXTRAS, getIntent().getBundleExtra(Constant.KEY_EXTRAS));
 
-        final SimpleIdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
-        idlingResource.setIdleState(false);
+        final CountingIdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
+        idlingResource.increment();
         HostApplication.getApp().getPluginManager()
                 .enter(this, Constant.FROM_ID_BIND_SERVICE, bundle, new EnterCallback() {
                     @Override
@@ -56,7 +57,7 @@ public class BindPluginServiceActivity extends Activity {
 
                     @Override
                     public void onCloseLoadingView() {
-                        idlingResource.setIdleState(true);
+                        idlingResource.decrement();
                     }
 
                     @Override

@@ -33,7 +33,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 import com.tencent.shadow.test.dynamic.host.HostApplication;
 import com.tencent.shadow.test.dynamic.host.JumpToPluginActivity;
 import com.tencent.shadow.test.dynamic.host.R;
-import com.tencent.shadow.test.dynamic.host.SimpleIdlingResourceImpl;
 import com.tencent.shadow.test.lib.constant.Constant;
 import com.tencent.shadow.test.lib.test_manager.TestManager;
 
@@ -71,9 +70,9 @@ public abstract class PluginTest {
 
     @Before
     public void launchActivity() {
-        SimpleIdlingResourceImpl idlingResource = HostApplication.getApp().mIdlingResource;
+        IdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
         IdlingRegistry.getInstance().register(idlingResource);
-        TestManager.TheSimpleIdlingResource = idlingResource;
+        TestManager.sIdlingResource = idlingResource;
         launchJumpActivity(getPartKey(), getLaunchIntent());
 
         Espresso.onView(ViewMatchers.withId(R.id.jump)).perform(ViewActions.click());
@@ -82,7 +81,7 @@ public abstract class PluginTest {
 
     @After
     public void unregisterIdlingResource() {
-        TestManager.TheSimpleIdlingResource = null;
+        TestManager.sIdlingResource = null;
         IdlingResource idlingResource = HostApplication.getApp().mIdlingResource;
         IdlingRegistry.getInstance().unregister(idlingResource);
     }

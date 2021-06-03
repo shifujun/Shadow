@@ -25,20 +25,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import androidx.test.espresso.IdlingRegistry;
-
-import com.tencent.shadow.test.plugin.general_cases.lib.usecases.SimpleIdlingResource;
+import com.tencent.shadow.test.plugin.general_cases.lib.gallery.TestApplication;
 import com.tencent.shadow.test.plugin.general_cases.lib.usecases.service.TestService;
 
 public class ServiceContextSubDirTestActivity extends SubDirContextThemeWrapperTestActivity {
 
-    final private SimpleIdlingResource mIdlingResource = new SimpleIdlingResource();
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mIdlingResource.setIdleState(false);
-        IdlingRegistry.getInstance().register(mIdlingResource);
+        TestApplication.getInstance().incrementCountingIdlingResource();
 
         Intent intent = new Intent(this, TestService.class);
         bindService(intent, new ServiceConnection() {
@@ -47,7 +42,7 @@ public class ServiceContextSubDirTestActivity extends SubDirContextThemeWrapperT
                 TestService.MyLocalServiceBinder binder = (TestService.MyLocalServiceBinder) service;
                 TestService testService = binder.getMyLocalService();
                 fillTestValues(testService);
-                mIdlingResource.setIdleState(true);
+                TestApplication.getInstance().decrementCountingIdlingResource();
             }
 
             @Override
@@ -57,9 +52,4 @@ public class ServiceContextSubDirTestActivity extends SubDirContextThemeWrapperT
         }, BIND_AUTO_CREATE);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        IdlingRegistry.getInstance().unregister(mIdlingResource);
-    }
 }
