@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.test.espresso.idling.CountingIdlingResource;
 
@@ -90,7 +91,18 @@ public class JumpToPluginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_jump_to_plugin);
+
+        Button button = new Button(this);
+        button.setTag("jump");
+        button.setText("jump");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jump(v);
+            }
+        });
+
+        setContentView(button);
 
         getApplication().registerActivityLifecycleCallbacks(lifecycleCallbacks);
     }

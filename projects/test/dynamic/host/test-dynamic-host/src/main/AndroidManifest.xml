@@ -118,6 +118,15 @@
             />
 
         <activity
+            android:name="com.tencent.shadow.test.dynamic.runtime.container.PluginSecondProxyActivity"
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:theme="@style/troop_Transparent"
+            />
+
+        <activity
             android:name="com.tencent.shadow.test.dynamic.runtime.container.PluginSingleInstance1ProxyActivity"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"

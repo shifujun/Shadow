@@ -32,7 +32,6 @@ import androidx.test.espresso.matcher.ViewMatchers;
 
 import com.tencent.shadow.test.dynamic.host.HostApplication;
 import com.tencent.shadow.test.dynamic.host.JumpToPluginActivity;
-import com.tencent.shadow.test.dynamic.host.R;
 import com.tencent.shadow.test.lib.constant.Constant;
 import com.tencent.shadow.test.lib.test_manager.TestManager;
 
@@ -75,7 +74,8 @@ public abstract class PluginTest {
         TestManager.sIdlingResource = idlingResource;
         launchJumpActivity(getPartKey(), getLaunchIntent());
 
-        Espresso.onView(ViewMatchers.withId(R.id.jump)).perform(ViewActions.click());
+        Espresso.onView(ViewMatchers.withTagValue(Matchers.<Object>is("jump")))
+                .perform(ViewActions.click());
     }
 
 

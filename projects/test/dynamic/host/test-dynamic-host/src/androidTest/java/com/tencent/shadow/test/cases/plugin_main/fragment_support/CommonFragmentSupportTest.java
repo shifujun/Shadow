@@ -23,10 +23,13 @@ import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.IdlingRegistry;
+import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers;
 
 import com.tencent.shadow.test.cases.plugin_main.PluginMainAppTest;
+import com.tencent.shadow.test.dynamic.host.HostApplication;
 
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -59,6 +62,7 @@ abstract class CommonFragmentSupportTest extends PluginMainAppTest {
 
     @Test
     public void fragmentStartActivity() {
+        HostApplication.getApp().getCountingIdlingResource().increment();
         Espresso.onView(ViewMatchers.withTagValue(Matchers.<Object>is("fragmentStartActivity"))).perform(ViewActions.click());
         matchTextWithViewTag("finish_button", "finish");
     }

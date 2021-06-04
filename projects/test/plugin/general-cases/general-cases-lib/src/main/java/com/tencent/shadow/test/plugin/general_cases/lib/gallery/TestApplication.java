@@ -24,8 +24,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.idling.CountingIdlingResource;
+
+import com.tencent.shadow.test.lib.plugin_use_host_code_lib.HostIdlingResourceProvider;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class TestApplication extends Application {
 
     private static TestApplication sInstence;
 
-    private final CountingIdlingResource idlingResource = new CountingIdlingResource("TestApplication");
+    private CountingIdlingResource idlingResource;
 
     public boolean isOnCreate;
 
@@ -48,10 +49,8 @@ public class TestApplication extends Application {
         super.onCreate();
 
         registerActivityLifecycleCallbacks(alc);
-        boolean success = IdlingRegistry.getInstance().register(idlingResource);
-        if (!success) {
-            throw new RuntimeException("register idlingResource failed");
-        }
+
+        idlingResource = (CountingIdlingResource) ((HostIdlingResourceProvider) getBaseContext()).getCountingIdlingResource();
     }
 
     public static TestApplication getInstance() {

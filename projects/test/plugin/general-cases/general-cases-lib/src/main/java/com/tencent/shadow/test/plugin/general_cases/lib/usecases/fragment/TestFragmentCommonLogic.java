@@ -92,7 +92,6 @@ class TestFragmentCommonLogic {
     private void fragmentStartActivity() {
         Intent intent = new Intent(fragment.getActivity(), FragmentStartedActivity.class);
         fragment.startActivity(intent);
-        TestApplication.getInstance().incrementCountingIdlingResource();
     }
 
     private void addFragmentStartActivityWithOptionsView(LinearLayout rootView) {

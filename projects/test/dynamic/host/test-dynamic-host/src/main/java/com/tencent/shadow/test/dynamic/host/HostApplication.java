@@ -29,10 +29,11 @@ import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.dynamic.host.DynamicRuntime;
 import com.tencent.shadow.dynamic.host.PluginManager;
 import com.tencent.shadow.test.dynamic.host.manager.Shadow;
+import com.tencent.shadow.test.lib.plugin_use_host_code_lib.HostIdlingResourceProvider;
 
 import java.io.File;
 
-public class HostApplication extends Application {
+public class HostApplication extends Application implements HostIdlingResourceProvider {
     private static HostApplication sApp;
 
     private PluginManager mPluginManager;
@@ -93,5 +94,10 @@ public class HostApplication extends Application {
 
     public PluginManager getPluginManager() {
         return mPluginManager;
+    }
+
+    @Override
+    public CountingIdlingResource getCountingIdlingResource() {
+        return mIdlingResource;
     }
 }

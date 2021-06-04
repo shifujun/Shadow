@@ -5,4 +5,9 @@ public class ProgrammaticallyAddNormalFragmentTest extends ProgrammaticallyAddFr
     protected String fragmentType() {
         return "TestNormalFragment";
     }
+
+    @Override
+    public void fragmentStartActivity() {
+        super.fragmentStartActivity();
+    }
 }

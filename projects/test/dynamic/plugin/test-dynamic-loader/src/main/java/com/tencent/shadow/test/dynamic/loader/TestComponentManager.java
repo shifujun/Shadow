@@ -34,6 +34,7 @@ public class TestComponentManager extends ComponentManager {
      * dynamic-runtime-apk 模块中定义的壳子Activity，需要在宿主AndroidManifest.xml注册
      */
     private static final String DEFAULT_ACTIVITY = "com.tencent.shadow.test.dynamic.runtime.container.PluginDefaultProxyActivity";
+    private static final String SECOND_ACTIVITY = "com.tencent.shadow.test.dynamic.runtime.container.PluginSecondProxyActivity";
     private static final String SINGLE_INSTANCE_ACTIVITY = "com.tencent.shadow.test.dynamic.runtime.container.PluginSingleInstance1ProxyActivity";
     private static final String SINGLE_TASK_ACTIVITY = "com.tencent.shadow.test.dynamic.runtime.container.PluginSingleTask1ProxyActivity";
 
@@ -56,6 +57,8 @@ public class TestComponentManager extends ComponentManager {
             /**
              * 这里配置对应的对应关系
              */
+            case "com.tencent.shadow.test.plugin.general_cases.lib.usecases.fragment.FragmentStartedActivity":
+                return new ComponentName(context, SECOND_ACTIVITY);
         }
         return new ComponentName(context, DEFAULT_ACTIVITY);
     }
