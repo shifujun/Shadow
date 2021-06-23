@@ -81,7 +81,7 @@ public abstract class PluginActivity extends GeneratedPluginActivity {
     }
 
     public LayoutInflater getLayoutInflater() {
-        LayoutInflater inflater = hostActivityDelegator.getWindow().getLayoutInflater();
+        LayoutInflater inflater = hostActivityDelegator.getLayoutInflater();
         return ShadowLayoutInflater.build(inflater, this, mPartKey);
     }
 

@@ -51,10 +51,12 @@ public class ShadowFactory2 implements LayoutInflater.Factory2 {
 
     private static final HashMap<String, String> sCreateSystemMap = new HashMap<>();
 
+    private final LayoutInflater.Factory2 mOriginalFactory2;
 
-    public ShadowFactory2(String partKey, LayoutInflater layoutInflater) {
+    public ShadowFactory2(String partKey, LayoutInflater layoutInflater, LayoutInflater.Factory2 originalFactory2) {
         mPartKey = partKey;
         mLayoutInflater = layoutInflater;
+        mOriginalFactory2 = originalFactory2;
     }
 
     @Override
@@ -70,8 +72,8 @@ public class ShadowFactory2 implements LayoutInflater.Factory2 {
                 view = null;
             }
         } else {
-            if (context instanceof PluginActivity) {//fragment的构造在activity中
-                view = ((PluginActivity) context).onCreateView(parent, name, context, attrs);
+            if (mOriginalFactory2 != null) {//fragment的构造在activity中
+                view = mOriginalFactory2.onCreateView(parent, name, context, attrs);
             } else {
                 view = null;
             }
