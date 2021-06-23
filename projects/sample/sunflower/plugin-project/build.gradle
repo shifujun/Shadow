@@ -15,7 +15,7 @@
  */
 
 buildscript {
-    ext.shadow_version = '2.1.0'
+    ext.shadow_version = 'local-b1f802cf-SNAPSHOT'
     // Define versions in a single place
     ext {
         // Sdk and tools

@@ -16,6 +16,7 @@
 
 package com.google.samples.apps.sunflower
 
+import android.content.res.Resources
 import android.view.MenuItem
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

@@ -26,6 +26,7 @@ android {
         enabled = true
     }
     defaultConfig {
+//        applicationId "com.tencent.shadow.sample.sunflower"
         applicationId "com.tencent.shadow.sample.host"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
