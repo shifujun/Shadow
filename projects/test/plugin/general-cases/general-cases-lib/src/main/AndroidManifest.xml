@@ -88,6 +88,7 @@
         <activity android:name=".usecases.application.ActivityLifecycleCallbacksTestActivity" />
         <activity android:name=".usecases.classloader.TestBootClassloaderActivity" />
         <activity android:name=".usecases.context.TestLayoutInflaterActivity" />
+        <activity android:name=".usecases.context.TestContextGetStringActivity" />
 
         <provider
             android:authorities="com.tencent.shadow.provider.test"
