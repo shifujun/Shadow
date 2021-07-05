@@ -56,7 +56,7 @@ public class SamplePluginManager extends FastPluginManager {
      */
     @Override
     public String getAbi() {
-        return "";
+        return "x86";
     }
 
     /**

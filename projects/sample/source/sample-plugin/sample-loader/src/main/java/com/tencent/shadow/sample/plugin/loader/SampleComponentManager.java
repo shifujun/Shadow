@@ -74,12 +74,6 @@ public class SampleComponentManager extends ComponentManager {
     public List<BroadcastInfo> getBroadcastInfoList(String partKey) {
         List<ComponentManager.BroadcastInfo> broadcastInfos = new ArrayList<>();
         if (partKey.equals(Constant.PART_KEY_PLUGIN_MAIN_APP)) {
-            broadcastInfos.add(
-                    new ComponentManager.BroadcastInfo(
-                            "com.tencent.shadow.sample.plugin.app.lib.usecases.receiver.MyReceiver",
-                            new String[]{"com.tencent.test.action"}
-                    )
-            );
         }
         return broadcastInfos;
     }
