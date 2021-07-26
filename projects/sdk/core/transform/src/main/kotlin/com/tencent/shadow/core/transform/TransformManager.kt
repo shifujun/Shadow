@@ -31,19 +31,20 @@ class TransformManager(ctClassInputMap: Map<CtClass, InputClass>,
 ) : AbstractTransformManager(ctClassInputMap, classPool) {
 
     override val mTransformList: List<SpecificTransform> = listOf(
-            ApplicationTransform(),
-            ActivityTransform(),
-            ServiceTransform(),
-            IntentServiceTransform(),
-            InstrumentationTransform(),
-            FragmentSupportTransform(),
-            DialogSupportTransform(),
-            WebViewTransform(),
-            ContentProviderTransform(),
-            PackageManagerTransform(),
-            PackageItemInfoTransform(),
-            AppComponentFactoryTransform(),
-            LayoutInflaterTransform(),
-            KeepHostContextTransform(useHostContext())
+        ApplicationTransform(),
+        ActivityTransform(),
+        ServiceTransform(),
+        IntentServiceTransform(),
+        JobServiceTransform(),
+        InstrumentationTransform(),
+        FragmentSupportTransform(),
+        DialogSupportTransform(),
+        WebViewTransform(),
+        ContentProviderTransform(),
+        PackageManagerTransform(),
+        PackageItemInfoTransform(),
+        AppComponentFactoryTransform(),
+        LayoutInflaterTransform(),
+        KeepHostContextTransform(useHostContext())
     )
 }

@@ -47,6 +47,7 @@ public class ShadowContext extends SubDirContextThemeWrapper {
     Resources mPluginResources;
     Resources mMixResources;
     LayoutInflater mLayoutInflater;
+    ShadowJobScheduler mShadowJobScheduler;
     ApplicationInfo mApplicationInfo;
     protected String mPartKey;
     private String mBusinessName;
@@ -125,6 +126,12 @@ public class ShadowContext extends SubDirContextThemeWrapper {
                 mLayoutInflater = ShadowLayoutInflater.build(inflater, this, mPartKey);
             }
             return mLayoutInflater;
+        }
+        if (JOB_SCHEDULER_SERVICE.equals(name)) {
+            if (mShadowJobScheduler == null) {
+                mShadowJobScheduler = new ShadowJobScheduler(this);
+            }
+            return mShadowJobScheduler;
         }
         return super.getSystemService(name);
     }
