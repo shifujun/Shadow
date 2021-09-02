@@ -33,6 +33,8 @@ import android.widget.TextView;
 
 import com.tencent.shadow.sample.constant.Constant;
 
+import skin.support.mobile.demo.SplashActivity;
+
 
 public class MainActivity extends Activity {
 
@@ -78,6 +80,17 @@ public class MainActivity extends Activity {
             }
         });
         rootView.addView(startPluginButton);
+
+        Button startSplashActivityButton = new Button(this);
+        startSplashActivityButton.setText("SkinSupportDemo");
+        startSplashActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SplashActivity.class);
+                startActivity(intent);
+            }
+        });
+        rootView.addView(startSplashActivityButton);
 
         setContentView(rootView);
 

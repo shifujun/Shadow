@@ -18,12 +18,16 @@
 
 package com.tencent.shadow.sample.host;
 
+import static android.os.Process.myPid;
+
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 import android.webkit.WebView;
+
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.dynamic.host.DynamicRuntime;
@@ -33,7 +37,11 @@ import com.tencent.shadow.sample.host.manager.Shadow;
 
 import java.io.File;
 
-import static android.os.Process.myPid;
+import skin.support.SkinCompatManager;
+import skin.support.app.SkinAppCompatViewInflater;
+import skin.support.app.SkinCardViewInflater;
+import skin.support.constraint.app.SkinConstraintViewInflater;
+import skin.support.design.app.SkinMaterialViewInflater;
 
 public class HostApplication extends Application {
     private static HostApplication sApp;
@@ -43,6 +51,14 @@ public class HostApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        SkinCompatManager.withoutActivity(this)
+                .addInflater(new SkinAppCompatViewInflater())   // 基础控件换肤
+                .addInflater(new SkinMaterialViewInflater())    // material design
+                .addInflater(new SkinConstraintViewInflater())  // ConstraintLayout
+                .addInflater(new SkinCardViewInflater())        // CardView v7
+                .loadSkin();
+
         sApp = this;
 
         detectNonSdkApiUsageOnAndroidP();
