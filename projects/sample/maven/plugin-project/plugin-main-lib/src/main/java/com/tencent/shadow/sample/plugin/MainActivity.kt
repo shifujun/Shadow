@@ -17,11 +17,11 @@ class MainActivity : AppCompatActivity() {
      *                  b>根据报错信息来看：方式二的viewModel因继承AndroidViewModel(),不能正常创建实例。
      */
 
-    //方式一viewModel继承ViewModel()：
-    private val mViewModel: MainViewModel by viewModels()
+//    //方式一viewModel继承ViewModel()：
+//    private val mViewModel: MainViewModel by viewModels()
 
-    //方式二viewModel继承AndroidViewModel()：
-    //private val mViewModel: MainAndroidViewModel by viewModels()
+    //方式二viewModel继承AndroidViewModel():
+    private val mViewModel: MainAndroidViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
