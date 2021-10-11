@@ -26,6 +26,8 @@ import com.tencent.shadow.sample.plugin.app.lib.R;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.util.ToastUtil;
 
+import org.apache.http.client.utils.URLEncodedUtils;
+
 public class TestActivityOnCreate extends Activity {
 
     public static class Case extends UseCase{
@@ -49,7 +51,7 @@ public class TestActivityOnCreate extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_activity_lifecycle);
-        ToastUtil.showToast(this,"onCreate");
+        ToastUtil.showToast(this, String.valueOf(URLEncodedUtils.class));
     }
 
     @Override
