@@ -109,13 +109,15 @@ public class SamplePluginManager extends FastPluginManager {
                     Intent pluginIntent = new Intent();
                     pluginIntent.setClassName(
                             context.getPackageName(),
-                            className
+                            "com.tencent.shadow.sample.plugin.app.lib.usecases.service.StartActivityService"
                     );
                     if (extras != null) {
                         pluginIntent.replaceExtras(extras);
                     }
 
-                    startPluginActivity(installedPlugin, partKey, pluginIntent);
+                    loadPlugin(installedPlugin.UUID, partKey);
+                    mPluginLoader.callApplicationOnCreate(partKey);
+                    mPluginLoader.startPluginService(pluginIntent);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
