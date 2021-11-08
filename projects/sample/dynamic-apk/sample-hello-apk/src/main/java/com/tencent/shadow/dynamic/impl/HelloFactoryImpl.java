@@ -2,6 +2,7 @@ package com.tencent.shadow.dynamic.impl;
 
 import android.content.Context;
 
+import com.tencent.shadow.dialog.TestDialog;
 import com.tencent.shadow.sample.api.hello.HelloFactory;
 import com.tencent.shadow.sample.api.hello.IHelloWorldImpl;
 import com.tencent.shadow.sample.api.hello.SampleHelloWorld;
@@ -16,6 +17,6 @@ import com.tencent.shadow.sample.api.hello.SampleHelloWorld;
 public final class HelloFactoryImpl implements HelloFactory {
     @Override
     public IHelloWorldImpl build(Context context) {
-        return new SampleHelloWorld();
+        return new SampleHelloWorld(context);
     }
 }

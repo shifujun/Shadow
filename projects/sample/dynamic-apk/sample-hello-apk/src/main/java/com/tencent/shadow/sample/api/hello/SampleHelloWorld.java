@@ -1,8 +1,11 @@
 package com.tencent.shadow.sample.api.hello;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.tencent.shadow.dialog.TestDialog;
 
 /**
  * @author 林学渊
@@ -12,11 +15,19 @@ import android.widget.TextView;
  * @usage null
  */
 public class SampleHelloWorld implements IHelloWorldImpl {
+    public SampleHelloWorld(Context context) {
+        TestDialog.sContetx = context;
+    }
+
     @Override
     public void sayHelloWorld(Context context, TextView textView) {
         String text = "这是apk中的实现：" + SampleHelloWorld.class.toString();
-        if (textView == null) { return; }
+        if (textView == null) {
+            return;
+        }
         textView.setText(text);
+
+        new TestDialog(context).show();
     }
 
     @Override
