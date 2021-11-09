@@ -16,11 +16,12 @@ import com.tencent.shadow.dialog.TestDialog;
  */
 public class SampleHelloWorld implements IHelloWorldImpl {
     public SampleHelloWorld(Context context) {
-        TestDialog.sContetx = context;
+
     }
 
     @Override
     public void sayHelloWorld(Context context, TextView textView) {
+        TestDialog.sContetx = context;
         String text = "这是apk中的实现：" + SampleHelloWorld.class.toString();
         if (textView == null) {
             return;
