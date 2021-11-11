@@ -13,14 +13,13 @@ import android.widget.EditText;
  * * 说明:
  **/
 public class TestDialog extends Dialog {
-    public static Context sContetx;
 
     public TestDialog(Context context) {
         super(context);
 
-        View rootView = getView(sContetx);
+        View rootView = getView(context);
         setContentView(rootView);
-        int id = sContetx.getResources().getIdentifier("clm_test", "id", sContetx.getPackageName());
+        int id = context.getResources().getIdentifier("clm_test", "id", context.getPackageName());
         Log.e("clm ", "view id " + id);
         EditText view = findViewById(id);
         Log.e("clm ", "view " + view);
@@ -34,7 +33,7 @@ public class TestDialog extends Dialog {
     }
 
     private View getView(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         int layoutId = context.getResources().getIdentifier("temp_view", "layout", context.getPackageName());
         Log.e("clm ", layoutId + "");
         return inflater.inflate(layoutId, null);

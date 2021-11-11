@@ -1,8 +1,8 @@
 package com.tencent.shadow.sample.api.hello;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.widget.TextView;
 
 import com.tencent.shadow.dialog.TestDialog;
@@ -15,20 +15,30 @@ import com.tencent.shadow.dialog.TestDialog;
  * @usage null
  */
 public class SampleHelloWorld implements IHelloWorldImpl {
+    private final Context apkContext;
     public SampleHelloWorld(Context context) {
-
+        apkContext = context;
     }
 
     @Override
-    public void sayHelloWorld(Context context, TextView textView) {
-        TestDialog.sContetx = context;
+    public void sayHelloWorld(Context activityContext, TextView textView) {
         String text = "这是apk中的实现：" + SampleHelloWorld.class.toString();
         if (textView == null) {
             return;
         }
         textView.setText(text);
 
-        new TestDialog(context).show();
+        ContextThemeWrapper mixContext = new ContextThemeWrapper(apkContext, android.R.style.Theme_DeviceDefault) {
+            @Override
+            public Object getSystemService(String name) {
+                if (WINDOW_SERVICE.equals(name)) {
+                    return activityContext.getSystemService(name);
+                } else {
+                    return super.getSystemService(name);
+                }
+            }
+        };
+        new TestDialog(mixContext).show();
     }
 
     @Override

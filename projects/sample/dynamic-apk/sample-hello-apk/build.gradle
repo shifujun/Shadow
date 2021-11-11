@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion project.COMPILE_SDK_VERSION
+    compileSdkVersion 28
     defaultConfig {
         //region hello.apk 演示
         applicationId 'com.tencent.shadow.sample.hello.host' // 必须保证和 host 的 applicationId 一致
