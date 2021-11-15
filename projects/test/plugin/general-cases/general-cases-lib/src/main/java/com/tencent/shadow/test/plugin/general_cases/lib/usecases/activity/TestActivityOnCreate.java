@@ -19,8 +19,11 @@
 package com.tencent.shadow.test.plugin.general_cases.lib.usecases.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.tencent.shadow.test.plugin.general_cases.lib.R;
 import com.tencent.shadow.test.plugin.general_cases.lib.gallery.util.ToastUtil;
@@ -28,16 +31,25 @@ import com.tencent.shadow.test.plugin.general_cases.lib.gallery.util.ToastUtil;
 public class TestActivityOnCreate extends Activity {
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+
+        Resources resources = getResources();
+        String appName = resources.getString(R.string.app_name);
+        Log.d("TestActivityOnCreate", "appName==" + appName);
+        super.attachBaseContext(newBase);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_activity_lifecycle);
-        ToastUtil.showToast(this,"onCreate");
+        ToastUtil.showToast(this, "onCreate");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        ToastUtil.showToast(this,"onStart");
+        ToastUtil.showToast(this, "onStart");
     }
 
     @Override
