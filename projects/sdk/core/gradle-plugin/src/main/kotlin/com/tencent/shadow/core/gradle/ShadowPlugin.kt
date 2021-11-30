@@ -18,8 +18,10 @@
 
 package com.tencent.shadow.core.gradle
 
+import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.tasks.ProcessMultiApkApplicationManifest
 import com.tencent.shadow.core.gradle.extensions.PackagePluginExtension
 import com.tencent.shadow.core.transform.ShadowTransform
 import com.tencent.shadow.core.transform_kit.AndroidClassPoolBuilder
@@ -61,6 +63,20 @@ class ShadowPlugin : Plugin<Project> {
             initAndroidClassPoolBuilder(baseExtension, project)
 
             createPackagePluginTasks(project)
+
+            val appExtension: AppExtension = it.extensions.getByType(AppExtension::class.java)
+            appExtension.applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    val processManifestTask = output.processManifestProvider.get()
+                    processManifestTask.doLast {
+                        val manifestFile = File(
+                            (processManifestTask as ProcessMultiApkApplicationManifest).multiApkManifestOutputDirectory.get().asFile,
+                            "AndroidManifest.xml"
+                        )
+                        rebuildManifest(manifestFile)
+                    }
+                }
+            }
         }
     }
 
