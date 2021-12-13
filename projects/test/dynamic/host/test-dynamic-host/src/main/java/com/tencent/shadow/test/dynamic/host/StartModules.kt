@@ -5,6 +5,7 @@
  */
 package com.tencent.shadow.test.dynamic.host
 
+import com.tencent.cloudgamepluginbaseactivity.SplashViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

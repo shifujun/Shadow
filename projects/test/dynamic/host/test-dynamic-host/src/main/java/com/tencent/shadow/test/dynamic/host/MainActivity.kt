@@ -24,6 +24,7 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.tencent.cloudgamepluginbaseactivity.SplashViewModel
 import com.tencent.shadow.test.lib.constant.Constant
 import com.tencent.shadow.test.lib.custom_view.TestViewConstructorCacheView
 import org.koin.android.ext.android.get
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        System.out.println("bokeyhuang watch. host model=$splashViewModel")
         setTheme(R.style.TestHostTheme)
         val rootView = LinearLayout(this)
         rootView.orientation = LinearLayout.VERTICAL

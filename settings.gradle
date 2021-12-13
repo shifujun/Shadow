@@ -27,7 +27,8 @@ def includeTest() {
             'androidx-cases-app',
             'test-plugin-androidx-cases',
             'plugin-service-for-host',
-            'test-none-dynamic-host'
+            'test-none-dynamic-host',
+            'cloudgamepluginbaseactivity'
     project(':test-dynamic-host').projectDir = file('projects/test/dynamic/host/test-dynamic-host')
     project(':test-dynamic-manager').projectDir = file('projects/test/dynamic/manager/test-dynamic-manager')
     project(':test-dynamic-loader').projectDir = file('projects/test/dynamic/plugin/test-dynamic-loader')
@@ -40,6 +41,7 @@ def includeTest() {
     project(':androidx-cases-lib').projectDir = file('projects/test/plugin/androidx-cases/androidx-cases-lib')
     project(':androidx-cases-app').projectDir = file('projects/test/plugin/androidx-cases/androidx-cases-app')
     project(':test-plugin-androidx-cases').projectDir = file('projects/test/plugin/androidx-cases/test-plugin-androidx-cases')
+    project(':cloudgamepluginbaseactivity').projectDir = file('projects/test/plugin/androidx-cases/cloudgamepluginbaseactivity')
     project(':test-plugin-general-cases').projectDir = file('projects/test/plugin/general-cases/test-plugin-general-cases')
     project(':general-cases-app').projectDir = file('projects/test/plugin/general-cases/general-cases-app')
     project(':plugin-service-for-host').projectDir = file('projects/test/plugin/particular-cases/plugin-service-for-host')
