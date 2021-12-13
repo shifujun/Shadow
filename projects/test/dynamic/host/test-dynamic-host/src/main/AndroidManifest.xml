@@ -72,7 +72,7 @@
         android:allowBackup="true"
         android:label="Shadow Dyanamic测试宿主App"
         android:name=".HostApplication"
-        android:theme="@android:style/Theme.DeviceDefault"
+        android:theme="@style/Theme.Android"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity">
             <intent-filter>

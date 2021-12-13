@@ -27,24 +27,37 @@ import com.tencent.shadow.core.common.LoggerFactory;
 import com.tencent.shadow.dynamic.host.DynamicRuntime;
 import com.tencent.shadow.dynamic.host.PluginManager;
 import com.tencent.shadow.test.dynamic.host.manager.Shadow;
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 import java.io.File;
+import kotlin.properties.Delegates
 
-public class HostApplication extends Application {
-    private static HostApplication sApp;
+open class HostApplication :
+    Application() {
+    companion object {
+        var sApp: HostApplication by Delegates.notNull()
+    }
 
-    private PluginManager mPluginManager;
+    var mPluginManager: PluginManager? = null
 
-    final public SimpleIdlingResourceImpl mIdlingResource = new SimpleIdlingResourceImpl();
+    val mIdlingResource: SimpleIdlingResourceImpl  = SimpleIdlingResourceImpl()
 
-    @Override
-    public void onCreate() {
+    override fun onCreate() {
         super.onCreate();
         sApp = this;
 
+        startKoin {
+            androidContext(sApp)
+            androidLogger(if (BuildConfig.DEBUG) Level.DEBUG else Level.INFO)
+            modules(startModules)
+        }
+
         detectNonSdkApiUsageOnAndroidP();
 
-        LoggerFactory.setILoggerFactory(new AndroidLogLoggerFactory());
+        LoggerFactory.setILoggerFactory(AndroidLogLoggerFactory())
 
         //在全动态架构中，Activity组件没有打包在宿主而是位于被动态加载的runtime，
         //为了防止插件crash后，系统自动恢复crash前的Activity组件，此时由于没有加载runtime而发生classNotFound异常，导致二次crash
@@ -60,36 +73,39 @@ public class HostApplication extends Application {
         }
     }
 
-    private static void detectNonSdkApiUsageOnAndroidP() {
+    private fun detectNonSdkApiUsageOnAndroidP() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             return;
         }
-        boolean isRunningEspressoTest;
-        try {
-            Class.forName("androidx.test.espresso.Espresso");
-            isRunningEspressoTest = true;
-        } catch (Exception ignored) {
-            isRunningEspressoTest = false;
+        val isRunningEspressoTest = kotlin.run {
+            try {
+                Class.forName("androidx.test.espresso.Espresso");
+                true
+            } catch (e :Exception) {
+                false
+            }
         }
+
         if (isRunningEspressoTest) {
             return;
         }
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+
+        val builder = StrictMode.VmPolicy.Builder();
         builder.detectNonSdkApiUsage();
         StrictMode.setVmPolicy(builder.build());
     }
 
-    public static HostApplication getApp() {
+    open fun getApp() : HostApplication {
         return sApp;
     }
 
-    public void loadPluginManager(File apk) {
+    open fun loadPluginManager(apk : File?) {
         if (mPluginManager == null) {
             mPluginManager = Shadow.getPluginManager(apk);
         }
     }
 
-    public PluginManager getPluginManager() {
+    open fun getPluginManager() : PluginManager? {
         return mPluginManager;
     }
 }

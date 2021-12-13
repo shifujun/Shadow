@@ -5,6 +5,12 @@
 buildscript {
     ext.kotlin_version = '1.5.31'
     ext.build_gradle_version = '7.0.3'
+    ext.koin_version = '2.0.1'
+    ext.room_version = '2.3.0-alpha04'
+    ext.build_android_phone = 'true'
+    ext.kotlinx_serialization_json_version = '1.0.1'
+    ext.anko_version = '0.10.8'
+
     repositories {
         if (!System.getenv().containsKey("DISABLE_TENCENT_MAVEN_MIRROR")) {
             maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
