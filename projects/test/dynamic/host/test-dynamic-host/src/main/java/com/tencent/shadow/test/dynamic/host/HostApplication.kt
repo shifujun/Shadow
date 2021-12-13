@@ -18,21 +18,21 @@
 
 package com.tencent.shadow.test.dynamic.host;
 
-import android.app.Application;
-import android.os.Build;
-import android.os.StrictMode;
-import android.webkit.WebView;
-
-import com.tencent.shadow.core.common.LoggerFactory;
-import com.tencent.shadow.dynamic.host.DynamicRuntime;
-import com.tencent.shadow.dynamic.host.PluginManager;
-import com.tencent.shadow.test.dynamic.host.manager.Shadow;
+import android.app.Activity
+import android.app.Application
+import android.os.Build
+import android.os.Bundle
+import android.os.StrictMode
+import android.webkit.WebView
+import com.tencent.shadow.core.common.LoggerFactory
+import com.tencent.shadow.dynamic.host.DynamicRuntime
+import com.tencent.shadow.dynamic.host.PluginManager
+import com.tencent.shadow.test.dynamic.host.manager.Shadow
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
-
-import java.io.File;
+import java.io.File
 import kotlin.properties.Delegates
 
 open class HostApplication :
@@ -99,13 +99,68 @@ open class HostApplication :
         return sApp;
     }
 
-    open fun loadPluginManager(apk : File?) {
+    open fun loadPluginManager(apk: File?) {
         if (mPluginManager == null) {
             mPluginManager = Shadow.getPluginManager(apk);
         }
     }
 
-    open fun getPluginManager() : PluginManager? {
+    open fun getPluginManager(): PluginManager? {
         return mPluginManager;
+    }
+
+    override fun registerActivityLifecycleCallbacks(callback: ActivityLifecycleCallbacks) {
+
+        val pluginFilterCallback = object : ActivityLifecycleCallbacks {
+
+            fun Activity.isPluginContainerActivity(): Boolean {
+                return this.javaClass.name.startsWith("com.tencent.shadow.test.dynamic.runtime.container")
+            }
+
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                if (activity.isPluginContainerActivity().not()) {
+                    callback.onActivityCreated(activity, savedInstanceState)
+                }
+            }
+
+            override fun onActivityStarted(activity: Activity) {
+                if (activity.isPluginContainerActivity().not()) {
+                    callback.onActivityStarted(activity)
+                }
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+                if (activity.isPluginContainerActivity().not()) {
+                    callback.onActivityResumed(activity)
+                }
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+                if (activity.isPluginContainerActivity().not()) {
+                    callback.onActivityPaused(activity)
+                }
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+                if (activity.isPluginContainerActivity().not()) {
+                    callback.onActivityStopped(activity)
+                }
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+                if (activity.isPluginContainerActivity().not()) {
+                    callback.onActivitySaveInstanceState(activity, outState)
+                }
+            }
+
+            override fun onActivityDestroyed(activity: Activity) {
+                if (activity.isPluginContainerActivity().not()) {
+                    callback.onActivityDestroyed(activity)
+                }
+            }
+
+        }
+
+        super.registerActivityLifecycleCallbacks(pluginFilterCallback)
     }
 }
