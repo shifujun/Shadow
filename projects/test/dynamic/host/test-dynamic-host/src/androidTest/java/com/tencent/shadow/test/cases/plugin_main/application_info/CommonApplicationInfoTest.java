@@ -10,7 +10,7 @@ import com.tencent.shadow.test.lib.test_manager.TestManager;
 import org.junit.Test;
 
 abstract class CommonApplicationInfoTest extends PluginMainAppTest {
-    private static final String PLUGIN_APK_FILENAME = "test-plugin-general-cases-plugin-debug.apk";
+    private static final String PLUGIN_APK_FILENAME = "test-plugin-androidx-cases-plugin-debug.apk";
 
     protected abstract String getTag();
 
@@ -20,7 +20,7 @@ abstract class CommonApplicationInfoTest extends PluginMainAppTest {
         String packageName = ApplicationProvider.getApplicationContext().getPackageName();
         pluginIntent.setClassName(
                 packageName,
-                "com.tencent.shadow.test.plugin.general_cases.lib.usecases.application.TestGetApplicationInfoActivity"
+                "com.tencent.shadow.test.plugin.androidx_cases.lib.AppCompatTestActivity"
         );
         return pluginIntent;
     }

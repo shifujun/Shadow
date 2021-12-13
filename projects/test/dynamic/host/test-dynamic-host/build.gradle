@@ -86,15 +86,13 @@ def generateAssets(generateAssetsTask, buildType) {
 
     def pluginZip = file("${getRootProject().getBuildDir()}/plugin-${buildType}.zip")
     generateAssetsTask.dependsOn createCopyTask(
-            ':test-plugin-general-cases',
+            ':test-plugin-androidx-cases',
             buildType,
             'plugin-zip',
             "plugin-${buildType}.zip",
             pluginZip,
-            "package${buildType.capitalize()}Plugin"
+            "packagePlugin${buildType.capitalize()}"
     )
-
-
 }
 
 tasks.whenTaskAdded { task ->
