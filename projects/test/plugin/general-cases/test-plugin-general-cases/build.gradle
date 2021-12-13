@@ -102,6 +102,12 @@ shadow {
                         buildTask = ':test-plugin-androidx-cases:assemblePluginDebug'
                         apkName = 'test-plugin-androidx-cases-plugin-debug.apk'
                         apkPath = 'projects/test/plugin/androidx-cases/test-plugin-androidx-cases/build/outputs/apk/plugin/debug/test-plugin-androidx-cases-plugin-debug.apk'
+                        hostWhiteList = ["kotlin",
+                                         "kotlin.**",
+                                         "org.koin",
+                                         "org.koin.**",
+                                         "com.tencent.cloudgamepluginbaseactivity",
+                                         "com.tencent.cloudgamepluginbaseactivity.**"]
                     }
                 }
             }
