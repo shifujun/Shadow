@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
                 intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, partKey);
                 switch (partKey) {
                     case Constant.PART_KEY_PLUGIN_ANDROIDX:
-                        intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.test.plugin.general_cases.lib.usecases.application.TestApplicationActivity");
+                        intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.test.plugin.androidx_cases.lib.AppCompatTestActivity");
                         break;
                 }
                 startActivity(intent);
