@@ -48,6 +48,7 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    implementation 'androidx.room:room-common:2.3.0'
 
     // Koin for Kotlin
     compileOnly "org.koin:koin-core:$koin_version"
@@ -56,6 +57,10 @@ dependencies {
     // Koin for AndroidX (based on koin-android)
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
