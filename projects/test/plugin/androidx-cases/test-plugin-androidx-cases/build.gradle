@@ -72,6 +72,7 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     compileOnly project(':cloudgamepluginbaseactivity')
+    implementation project(':cloudgamepluginbaseactivity2')
 }
 
 buildscript {
