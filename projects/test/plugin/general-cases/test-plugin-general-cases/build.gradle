@@ -107,9 +107,7 @@ shadow {
                                          "org.koin",
                                          "org.koin.**",
                                          "com.tencent.cloudgamepluginbaseactivity",
-                                         "com.tencent.cloudgamepluginbaseactivity.**",
-                                         "androidx.lifecycle",
-                                         "androidx.lifecycle.**"]
+                                         "com.tencent.cloudgamepluginbaseactivity.**"]
                     }
                 }
             }
