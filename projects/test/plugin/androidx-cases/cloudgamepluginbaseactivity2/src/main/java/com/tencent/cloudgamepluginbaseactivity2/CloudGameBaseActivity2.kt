@@ -7,11 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.tencent.cloudgamepluginbaseactivity.*
 import org.koin.android.ext.android.get
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 open class CloudGameBaseActivity2 : AppCompatActivity(), ComponentCallbacks2,
     Observer<DataResource<GameInfo>> {
 
-    var _splashViewModel: SplashViewModel = get()
+    val _splashViewModel: SplashViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
