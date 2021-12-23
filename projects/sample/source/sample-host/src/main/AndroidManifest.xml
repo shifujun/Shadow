@@ -75,6 +75,11 @@
         android:theme="@android:style/Theme.DeviceDefault"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
+<!--        <meta-data-->
+<!--            android:name="TencentMapSDK"-->
+<!--            android:value="7EDBZ-4TLK6-2FLSS-EQQT6-LBYZK-ZLF4C"/>-->
+
         <activity android:name="com.tencent.shadow.sample.host.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

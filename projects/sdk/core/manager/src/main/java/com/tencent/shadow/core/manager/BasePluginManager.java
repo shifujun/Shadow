@@ -307,9 +307,10 @@ public abstract class BasePluginManager {
      * 这里查询宿主安装后系统自动决定的ABI目录，而不是Build.SUPPORTED_ABIS，因为宿主可能采用了兼容模式的ABI。
      */
     private String getAbi() {
-        String nativeLibraryDir = mHostContext.getApplicationInfo().nativeLibraryDir;
-        int nextIndexOfLastSlash = nativeLibraryDir.lastIndexOf('/') + 1;
-        return nativeLibraryDir.substring(nextIndexOfLastSlash);
+//        String nativeLibraryDir = mHostContext.getApplicationInfo().nativeLibraryDir;
+//        int nextIndexOfLastSlash = nativeLibraryDir.lastIndexOf('/') + 1;
+//        return nativeLibraryDir.substring(nextIndexOfLastSlash);
+        return "armeabi-v7a";
     }
 
     /**

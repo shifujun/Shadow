@@ -9,6 +9,11 @@ android {
         versionCode project.VERSION_CODE
         versionName project.VERSION_NAME
         testInstrumentationRunner "com.tencent.shadow.test.CustomAndroidJUnitRunner"
+
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi-v7a'//, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     buildTypes {
         debug {
@@ -26,10 +31,16 @@ android {
     }
     sourceSets {
         debug {
+            main {
+                jniLibs.srcDirs = ['libs']
+            }
             assets.srcDir('build/generated/assets/sample-manager/debug/')
             assets.srcDir('build/generated/assets/plugin-zip/debug/')
         }
         release {
+            main {
+                jniLibs.srcDirs = ['libs']
+            }
             assets.srcDir('build/generated/assets/sample-manager/release/')
             assets.srcDir('build/generated/assets/plugin-zip/release/')
         }

@@ -44,7 +44,7 @@ public class HostApplication extends Application {
     public void onCreate() {
         super.onCreate();
         sApp = this;
-
+        System.loadLibrary("rtmp");
         detectNonSdkApiUsageOnAndroidP();
         setWebViewDataDirectorySuffix();
         LoggerFactory.setILoggerFactory(new AndroidLogLoggerFactory());

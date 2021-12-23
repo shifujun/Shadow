@@ -19,15 +19,20 @@
 package com.tencent.shadow.sample.plugin.app.lib.usecases.activity;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.Toast;
 
 import com.tencent.shadow.sample.plugin.app.lib.R;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
-import com.tencent.shadow.sample.plugin.app.lib.gallery.util.ToastUtil;
+import com.tencent.tencentmap.mapsdk.maps.MapView;
+import com.tencent.tencentmap.mapsdk.maps.TencentMap;
 
 public class TestActivityOnCreate extends Activity {
-
+    private MapView mapView;
     public static class Case extends UseCase{
         @Override
         public String getName() {
@@ -49,48 +54,56 @@ public class TestActivityOnCreate extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_activity_lifecycle);
-        ToastUtil.showToast(this,"onCreate");
+        mapView = findViewById(R.id.mapview);
+
+        getApplicationInfo(null);
+        //获取地图实例
+        TencentMap mTencentMap = mapView.getMap();
+        //第一次渲染成功的回调
+        mTencentMap.addOnMapLoadedCallback(new TencentMap.OnMapLoadedCallback() {
+            public void onMapLoaded() {
+                //地图正常显示
+            }
+        });
+    }
+
+    public void getApplicationInfo(View v){
+        try {
+            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo(getPackageName(),0);
+            String result = "\nmetaData:"+applicationInfo.metaData;
+            Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        ToastUtil.showToast(this,"onStart");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        ToastUtil.showToast(this,"onRestart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        ToastUtil.showToast(this,"onResume");
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        ToastUtil.showToast(this,"onSaveInstanceState");
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        ToastUtil.showToast(this,"onRestoreInstanceState");
+        mapView.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        ToastUtil.showToast(this,"onStop");
+        mapView.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ToastUtil.showToast(this,"onDestroy");
+        mapView.onDestroy();
     }
 }
