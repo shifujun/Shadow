@@ -3,6 +3,7 @@ package com.tencent.shadow.sample.plugin.app.lib;
 import static com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager.useCases;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
@@ -29,10 +30,12 @@ import com.tencent.shadow.sample.plugin.app.lib.usecases.receiver.TestReceiverAc
 import com.tencent.shadow.sample.plugin.app.lib.usecases.webview.WebViewActivity;
 
 public class UseCaseApplication extends Application {
+    public static final String TAG = "UseCaseApplication";
     @Override
     public void onCreate() {
         super.onCreate();
         initCase();
+        Log.e(TAG, "onCreate");
     }
 
     private static void initCase() {

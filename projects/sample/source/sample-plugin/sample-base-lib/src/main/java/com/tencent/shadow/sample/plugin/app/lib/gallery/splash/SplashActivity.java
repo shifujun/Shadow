@@ -25,6 +25,8 @@ import android.support.annotation.Nullable;
 
 import com.tencent.shadow.sample.plugin.app.lib.base.R;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.MainActivity;
+import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager;
+import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
 
 public class SplashActivity extends Activity {
 
@@ -43,7 +45,14 @@ public class SplashActivity extends Activity {
             public void onAnimationEnd() {
                 finish();
 
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                UseCase item = UseCaseManager.useCases.get(0).caseList[0];
+                Intent intent = new Intent(SplashActivity.this, item.getPageClass());
+                if (item.getPageParams() != null) {
+                    intent.putExtras(item.getPageParams());
+                }
+                startActivity(intent);
+
+//                startActivity(new Intent(SplashActivity.this, MainActivity.class));
             }
         });
     }

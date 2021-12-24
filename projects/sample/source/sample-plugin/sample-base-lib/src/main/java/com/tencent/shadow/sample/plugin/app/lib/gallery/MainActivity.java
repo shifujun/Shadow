@@ -21,6 +21,7 @@ package com.tencent.shadow.sample.plugin.app.lib.gallery;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -84,7 +85,6 @@ public class MainActivity extends Activity implements
 
         stickyLayout.setOnGiveUpTouchEventListener(this);
         slidingMenu.showMenu();
-
     }
 
 

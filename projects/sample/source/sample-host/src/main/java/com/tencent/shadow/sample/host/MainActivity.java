@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -46,59 +47,8 @@ public class MainActivity extends Activity {
 
         LinearLayout rootView = new LinearLayout(this);
         rootView.setOrientation(LinearLayout.VERTICAL);
-
-        TextView infoTextView = new TextView(this);
-        infoTextView.setText(R.string.main_activity_info);
-        rootView.addView(infoTextView);
-
-        final Spinner partKeySpinner = new Spinner(this);
-        ArrayAdapter<String> partKeysAdapter = new ArrayAdapter<>(this, R.layout.part_key_adapter);
-        partKeysAdapter.addAll(
-                Constant.PART_KEY_PLUGIN_MAIN_APP,
-                Constant.PART_KEY_PLUGIN_ANOTHER_APP
-        );
-        partKeySpinner.setAdapter(partKeysAdapter);
-
-        rootView.addView(partKeySpinner);
-
-        Button startPluginButton = new Button(this);
-        startPluginButton.setText(R.string.start_plugin);
-        startPluginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String partKey = (String) partKeySpinner.getSelectedItem();
-                Intent intent = new Intent(MainActivity.this, PluginLoadActivity.class);
-                switch (partKey) {
-                    //为了演示多进程多插件，其实两个插件内容完全一样，除了所在进程
-                    case Constant.PART_KEY_PLUGIN_MAIN_APP:
-                        intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, PART_KEY_PLUGIN_BASE);
-                        break;
-                    case Constant.PART_KEY_PLUGIN_ANOTHER_APP:
-                        intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, partKey);
-                        ;
-                        break;
-                }
-
-                switch (partKey) {
-                    //为了演示多进程多插件，其实两个插件内容完全一样，除了所在进程
-                    case Constant.PART_KEY_PLUGIN_MAIN_APP:
-                    case Constant.PART_KEY_PLUGIN_ANOTHER_APP:
-                        intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.gallery.splash.SplashActivity");
-                        break;
-
-                }
-                startActivity(intent);
-            }
-        });
-        rootView.addView(startPluginButton);
-
-        Button startHostAddPluginViewActivityButton = new Button(this);
-        startHostAddPluginViewActivityButton.setText("宿主添加插件View");
-        startHostAddPluginViewActivityButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, HostAddPluginViewActivity.class);
-            startActivity(intent);
-        });
-        rootView.addView(startHostAddPluginViewActivityButton);
+        ProgressBar bar = new ProgressBar(this);
+        rootView.addView(bar);
 
         setContentView(rootView);
 
@@ -107,8 +57,15 @@ public class MainActivity extends Activity {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
         }
+        loadPlugin();
+    }
 
-
+    private void loadPlugin() {
+        Intent intent = new Intent(MainActivity.this, PluginLoadActivity.class);
+        intent.putExtra(Constant.KEY_PLUGIN_PART_KEY, PART_KEY_PLUGIN_BASE);
+        intent.putExtra(Constant.KEY_ACTIVITY_CLASSNAME, "com.tencent.shadow.sample.plugin.app.lib.usecases.activity.TestActivityOnCreate");
+        startActivity(intent);
+        finish();
     }
 
     @Override
