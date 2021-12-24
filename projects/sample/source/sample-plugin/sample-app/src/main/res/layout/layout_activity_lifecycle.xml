@@ -23,6 +23,11 @@
     android:background="@android:color/white"
     android:orientation="horizontal">
 
+    <com.tencent.tencentmap.mapsdk.maps.MapView
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="#ff0000" />
 
     <TextView
         android:id="@+id/tv_msg"
