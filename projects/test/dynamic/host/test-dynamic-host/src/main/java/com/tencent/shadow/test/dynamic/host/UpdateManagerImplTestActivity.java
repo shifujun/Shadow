@@ -8,7 +8,11 @@ import com.tencent.shadow.dynamic.host.DynamicPluginManager;
 import com.tencent.shadow.dynamic.host.PluginManagerUpdater;
 import com.tencent.shadow.test.lib.constant.Constant;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +54,6 @@ class DumbUpdater implements PluginManagerUpdater {
 
     final private File dumbManagerApk;
     final private File workedManagerApk;
-    private boolean updated = false;
 
     DumbUpdater(File dumbManagerApk, File workedManagerApk) {
         this.dumbManagerApk = dumbManagerApk;
@@ -65,42 +68,17 @@ class DumbUpdater implements PluginManagerUpdater {
 
     @Override
     public Future<File> update() {
-        updated = true;
-        return new Future<File>() {
-            @Override
-            public boolean cancel(boolean mayInterruptIfRunning) {
-                return false;
-            }
-
-            @Override
-            public boolean isCancelled() {
-                return false;
-            }
-
-            @Override
-            public boolean isDone() {
-                return true;
-            }
-
-            @Override
-            public File get() throws ExecutionException, InterruptedException {
-                return workedManagerApk;
-            }
-
-            @Override
-            public File get(long timeout, TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
-                return workedManagerApk;
-            }
-        };
+        try {
+            FileUtils.copyInputStreamToFile(new FileInputStream(workedManagerApk), dumbManagerApk);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public File getLatest() {
-        if (!updated) {
-            return dumbManagerApk;
-        } else {
-            return workedManagerApk;
-        }
+        return dumbManagerApk;
     }
 
     @Override
