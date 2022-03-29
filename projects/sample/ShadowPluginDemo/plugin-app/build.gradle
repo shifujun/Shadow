@@ -24,14 +24,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions "app"
+    flavorDimensions(*flavorDimensionList, 'app')
     // 将插件applicationId设置为和宿主相同
     productFlavors {
         plugin {
             applicationId "com.leelu.shadow"
-            dimension "app"
         }
-        normal {
+        app1 {
             dimension "app"
         }
     }

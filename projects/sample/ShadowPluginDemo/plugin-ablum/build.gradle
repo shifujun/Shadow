@@ -38,4 +38,5 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$appcompat_version"
     implementation "com.google.android.material:material:$material_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
+    pluginCompileOnly "com.tencent.shadow.core:runtime:$shadow_version"
 }
