@@ -61,7 +61,7 @@ public class InstalledDao {
             }
             //把最后一次uuid的插件安装时间作为所有相同uuid的插件的安装时间
             ContentValues values = new ContentValues();
-            values.put(InstalledPluginDBHelper.COLUMN_INSTALL_TIME, pluginConfig.storageDir.lastModified());
+            values.put(InstalledPluginDBHelper.COLUMN_INSTALL_TIME, System.currentTimeMillis());
             db.update(InstalledPluginDBHelper.TABLE_NAME_MANAGER, values, InstalledPluginDBHelper.COLUMN_UUID + " = ?", new String[]{pluginConfig.UUID});
 
             db.setTransactionSuccessful();
@@ -244,8 +244,9 @@ public class InstalledDao {
         uuidRow.filePath = pluginConfig.UUID;
         installedRows.add(uuidRow);
         List<ContentValues> contentValues = new ArrayList<>();
+        long currentTimeMillis = System.currentTimeMillis();
         for (InstalledRow row : installedRows) {
-            row.installedTime = pluginConfig.storageDir.lastModified();
+            row.installedTime = currentTimeMillis;
             row.UUID = pluginConfig.UUID;
             row.version = pluginConfig.UUID_NickName;
             contentValues.add(row.toContentValues());

@@ -56,10 +56,6 @@ public class PluginConfig {
      * 业务插件 key: partKey value:文件信息
      */
     public Map<String, PluginFileInfo> plugins = new HashMap<>();
-    /**
-     * 插件的存储目录
-     */
-    public File storageDir;
 
     public boolean isUnpacked() {
         boolean pluginLoaderUnpacked = true;
@@ -106,7 +102,24 @@ public class PluginConfig {
         }
     }
 
-    public static PluginConfig parseFromJson(JSONObject configJson, File storageDir) throws JSONException {
+    public static PluginConfig parseFromJson(JSONObject configJson, final File storageDir) throws JSONException {
+        FileInfoBuilder fileInfoBuilder = new FileInfoBuilder() {
+            @Override
+            public FileInfo build(String apkName, String hash) {
+                return new FileInfo(new File(storageDir, apkName), hash);
+            }
+        };
+        PluginConfigBuilder pluginConfigBuilder = new PluginConfigBuilder() {
+
+            @Override
+            public PluginConfig build(JSONObject jsonObject, FileInfoBuilder fileInfoBuilder) throws JSONException {
+                return parseCommon(jsonObject, fileInfoBuilder);
+            }
+        };
+        return pluginConfigBuilder.build(configJson, fileInfoBuilder);
+    }
+
+    private static PluginConfig parseCommon(JSONObject configJson, FileInfoBuilder fileInfoBuilder) throws JSONException {
         PluginConfig pluginConfig = new PluginConfig();
         pluginConfig.version = configJson.getInt("version");
         JSONArray compact_version_json = configJson.optJSONArray("compact_version");
@@ -122,12 +135,12 @@ public class PluginConfig {
 
         JSONObject loaderJson = configJson.optJSONObject("pluginLoader");
         if (loaderJson != null) {
-            pluginConfig.pluginLoader = getFileInfo(loaderJson, storageDir);
+            pluginConfig.pluginLoader = getFileInfo(loaderJson, fileInfoBuilder);
         }
 
         JSONObject runtimeJson = configJson.optJSONObject("runtime");
         if (runtimeJson != null) {
-            pluginConfig.runTime = getFileInfo(runtimeJson, storageDir);
+            pluginConfig.runTime = getFileInfo(runtimeJson, fileInfoBuilder);
         }
 
         JSONArray pluginArray = configJson.optJSONArray("plugins");
@@ -135,23 +148,22 @@ public class PluginConfig {
             for (int i = 0; i < pluginArray.length(); i++) {
                 JSONObject plugin = pluginArray.getJSONObject(i);
                 String partKey = plugin.getString("partKey");
-                pluginConfig.plugins.put(partKey, getPluginFileInfo(plugin, storageDir));
+                pluginConfig.plugins.put(partKey, getPluginFileInfo(plugin, fileInfoBuilder));
             }
         }
 
-        pluginConfig.storageDir = storageDir;
         return pluginConfig;
     }
 
-    private static FileInfo getFileInfo(JSONObject jsonObject, File storageDir) throws JSONException {
+    private static FileInfo getFileInfo(JSONObject jsonObject, FileInfoBuilder fileInfoBuilder) throws JSONException {
         String name = jsonObject.getString("apkName");
         String hash = jsonObject.getString("hash");
-        return new FileInfo(new File(storageDir, name), hash);
+        return fileInfoBuilder.build(name, hash);
     }
 
-    private static PluginFileInfo getPluginFileInfo(JSONObject jsonObject, File storageDir) throws JSONException {
+    private static PluginFileInfo getPluginFileInfo(JSONObject jsonObject, FileInfoBuilder fileInfoBuilder) throws JSONException {
         String businessName = jsonObject.optString("businessName", "");
-        FileInfo fileInfo = getFileInfo(jsonObject, storageDir);
+        FileInfo fileInfo = getFileInfo(jsonObject, fileInfoBuilder);
         String[] dependsOn = getArrayStringByName(jsonObject, "dependsOn");
         String[] hostWhiteList = getArrayStringByName(jsonObject, "hostWhiteList");
         return new PluginFileInfo(businessName, fileInfo, dependsOn, hostWhiteList);
@@ -170,4 +182,13 @@ public class PluginConfig {
         }
         return dependsOn;
     }
+
+    interface FileInfoBuilder {
+        FileInfo build(String apkName, String hash);
+    }
+
+    interface PluginConfigBuilder {
+        PluginConfig build(JSONObject jsonObject, FileInfoBuilder fileInfoBuilder) throws JSONException;
+    }
+
 }
