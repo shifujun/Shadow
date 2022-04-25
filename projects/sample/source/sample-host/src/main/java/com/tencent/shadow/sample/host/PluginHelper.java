@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class PluginHelper {
 
@@ -42,7 +44,7 @@ public class PluginHelper {
 
     public File pluginManagerFile;
 
-    public File pluginZipFile;
+    public File unpackedPlugin;
 
     public ExecutorService singlePool = Executors.newSingleThreadExecutor();
 
@@ -59,7 +61,6 @@ public class PluginHelper {
 
     public void init(Context context) {
         pluginManagerFile = new File(context.getFilesDir(), sPluginManagerName);
-        pluginZipFile = new File(context.getFilesDir(), sPluginZip);
 
         mContext = context.getApplicationContext();
 
@@ -77,9 +78,20 @@ public class PluginHelper {
             InputStream is = mContext.getAssets().open(sPluginManagerName);
             FileUtils.copyInputStreamToFile(is, pluginManagerFile);
 
-            InputStream zip = mContext.getAssets().open(sPluginZip);
-            FileUtils.copyInputStreamToFile(zip, pluginZipFile);
+            unpackedPlugin = new File(mContext.getFilesDir(), "unpackedPlugin");
+            FileUtils.forceMkdir(unpackedPlugin);
+            FileUtils.cleanDirectory(unpackedPlugin);
 
+            InputStream zip = mContext.getAssets().open(sPluginZip);
+            ZipInputStream zin = new ZipInputStream(zip);
+            ZipEntry ze;
+            while ((ze = zin.getNextEntry()) != null) {
+                String name = ze.getName();
+                File outputFile = new File(unpackedPlugin, name);
+                FileUtils.copyToFile(zin, outputFile);
+                zin.closeEntry();
+            }
+            zin.close();
         } catch (IOException e) {
             throw new RuntimeException("从assets中复制apk出错", e);
         }

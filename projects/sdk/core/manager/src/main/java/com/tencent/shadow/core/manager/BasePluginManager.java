@@ -93,8 +93,11 @@ public abstract class BasePluginManager {
      * @param dir 文件夹路径
      * @return PluginConfig
      */
-    public final PluginConfig installPluginFromDir(File dir) {
-        throw new UnsupportedOperationException("TODO");
+    public final PluginConfig installPluginFromDir(File dir) throws IOException, JSONException {
+        JSONObject configJson = mUnpackManager.getConfigJsonInDir(dir);
+        PluginConfig pluginConfig = PluginConfig.parseFromJson(configJson, dir);
+        pluginConfig.verifyFilesExist();
+        return pluginConfig;
     }
 
     /**
@@ -116,7 +119,7 @@ public abstract class BasePluginManager {
         PluginConfig pluginConfig = PluginConfig.parseFromJson(configJson, pluginUnpackDir);
 
         if (!pluginConfig.isUnpacked()) {
-            mUnpackManager.unpackPlugin(zip, pluginUnpackDir);
+            UnpackManager.unzip(zip, pluginUnpackDir);
         }
 
         return pluginConfig;

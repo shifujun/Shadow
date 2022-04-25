@@ -57,8 +57,8 @@ public abstract class FastPluginManager extends PluginManagerThatUseDynamicLoade
     }
 
 
-    public InstalledPlugin installPlugin(String zip, String hash, boolean odex) throws IOException, JSONException, InterruptedException, ExecutionException {
-        final PluginConfig pluginConfig = installPluginFromZip(new File(zip), hash);
+    public InstalledPlugin installPlugin(String unpackedPluginPath, boolean odex) throws IOException, JSONException, InterruptedException, ExecutionException {
+        final PluginConfig pluginConfig = installPluginFromDir(new File(unpackedPluginPath));
         final String uuid = pluginConfig.UUID;
         List<Future> futures = new LinkedList<>();
         List<Future<Pair<String, String>>> extractSoFutures = new LinkedList<>();

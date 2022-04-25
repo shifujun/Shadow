@@ -54,7 +54,7 @@ public class PluginLoadActivity extends Activity {
                 HostApplication.getApp().loadPluginManager(PluginHelper.getInstance().pluginManagerFile);
 
                 Bundle bundle = new Bundle();
-                bundle.putString(Constant.KEY_PLUGIN_ZIP_PATH, PluginHelper.getInstance().pluginZipFile.getAbsolutePath());
+                bundle.putString(Constant.KEY_UNPACKED_PLUGIN_PATH, PluginHelper.getInstance().unpackedPlugin.getAbsolutePath());
                 bundle.putString(Constant.KEY_PLUGIN_PART_KEY, getIntent().getStringExtra(Constant.KEY_PLUGIN_PART_KEY));
                 bundle.putString(Constant.KEY_ACTIVITY_CLASSNAME, getIntent().getStringExtra(Constant.KEY_ACTIVITY_CLASSNAME));
 

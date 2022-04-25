@@ -103,7 +103,7 @@ public class SamplePluginManager extends FastPluginManager {
     }
 
     private void onStartActivity(final Context context, Bundle bundle, final EnterCallback callback) {
-        final String pluginZipPath = bundle.getString(Constant.KEY_PLUGIN_ZIP_PATH);
+        final String unpackedPluginPath = bundle.getString(Constant.KEY_UNPACKED_PLUGIN_PATH);
         final String partKey = bundle.getString(Constant.KEY_PLUGIN_PART_KEY);
         final String className = bundle.getString(Constant.KEY_ACTIVITY_CLASSNAME);
         if (className == null) {
@@ -120,7 +120,7 @@ public class SamplePluginManager extends FastPluginManager {
             @Override
             public void run() {
                 try {
-                    InstalledPlugin installedPlugin = installPlugin(pluginZipPath, null, true);
+                    InstalledPlugin installedPlugin = installPlugin(unpackedPluginPath, true);
 
                     loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_BASE);
                     loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_MAIN_APP);

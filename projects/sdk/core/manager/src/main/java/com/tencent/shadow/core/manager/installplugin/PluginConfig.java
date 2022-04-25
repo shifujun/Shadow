@@ -23,7 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PluginConfig {
@@ -57,22 +60,42 @@ public class PluginConfig {
      */
     public Map<String, PluginFileInfo> plugins = new HashMap<>();
 
-    public boolean isUnpacked() {
-        boolean pluginLoaderUnpacked = true;
-        if (pluginLoader != null) {
-            pluginLoaderUnpacked = pluginLoader.file.exists();
-        }
-
-        boolean runtimeUnpacked = true;
-        if (runTime != null) {
-            runtimeUnpacked = runTime.file.exists();
-        }
-
-        boolean pluginsUnpacked = true;
+    /**
+     * 获取当前PluginConfig中指向的所有文件
+     */
+    private List<File> allFiles() {
+        ArrayList<File> files = new ArrayList<>(plugins.size() + 2);
+        if (pluginLoader != null) files.add(pluginLoader.file);
+        if (runTime != null) files.add(runTime.file);
         for (PluginFileInfo pluginFileInfo : plugins.values()) {
-            pluginsUnpacked = pluginsUnpacked && pluginFileInfo.file.exists();
+            files.add(pluginFileInfo.file);
         }
-        return pluginLoaderUnpacked && runtimeUnpacked && pluginsUnpacked;
+        return files;
+    }
+
+    /**
+     * 验证当前PluginConfig中的文件是否都在本地已经存在了
+     *
+     * @throws FileNotFoundException 遇到第一个不存在的文件时抛出，其余文件不会被检查。
+     */
+    public void verifyFilesExist() throws FileNotFoundException {
+        List<File> files = allFiles();
+        for (File file : files) {
+            if (!file.exists()) {
+                throw new FileNotFoundException(file.getAbsolutePath());
+            }
+        }
+    }
+
+    public boolean isUnpacked() {
+        boolean isUnpacked;
+        try {
+            verifyFilesExist();
+            isUnpacked = true;
+        } catch (FileNotFoundException ignored) {
+            isUnpacked = false;
+        }
+        return isUnpacked;
     }
 
     public static class FileInfo {

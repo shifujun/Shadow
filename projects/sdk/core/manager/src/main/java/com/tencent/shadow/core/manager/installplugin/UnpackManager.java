@@ -28,6 +28,8 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,7 +42,7 @@ public class UnpackManager {
 
     private static final Logger mLogger = LoggerFactory.getLogger(UnpackManager.class);
 
-    private static final String CONFIG_FILENAME = "config.json";//todo #28 json的格式需要沉淀文档。
+    public static final String CONFIG_FILENAME = "config.json";//todo #28 json的格式需要沉淀文档。
     private static final String DEFAULT_STORE_DIR_NAME = "ShadowPluginManager";
 
     private final File mPluginUnpackedDir;
@@ -103,24 +105,44 @@ public class UnpackManager {
         }
     }
 
+    public JSONObject getConfigJsonInDir(File dir) throws IOException, JSONException {
+        File configJsonFile = new File(dir, UnpackManager.CONFIG_FILENAME);
+        if (!configJsonFile.exists()) {
+            throw new FileNotFoundException(UnpackManager.CONFIG_FILENAME + "文件不存在："
+                    + configJsonFile.getAbsolutePath());
+        }
+
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(
+                        new FileInputStream(configJsonFile)
+                )
+        )) {
+            for (String line; (line = br.readLine()) != null; ) {
+                sb.append(line);
+            }
+        }
+        return new JSONObject(sb.toString());
+    }
+
     /**
-     * 解包一个下载好的插件
+     * 创建解压目录，清空解压目录，然后解压文件到目录中。
      *
-     * @param target          插件包
-     * @param pluginUnpackDir 解压目录
+     * @param zip       zip压缩包
+     * @param outputDir 解压目录
      */
-    public void unpackPlugin(File target, File pluginUnpackDir) throws IOException {
-        pluginUnpackDir.mkdirs();
-        MinFileUtils.cleanDirectory(pluginUnpackDir);
+    public static void unzip(File zip, File outputDir) throws IOException {
+        outputDir.mkdirs();
+        MinFileUtils.cleanDirectory(outputDir);
 
         ZipFile zipFile = null;
         try {
-            zipFile = new SafeZipFile(target);
+            zipFile = new SafeZipFile(zip);
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
                 if (!entry.isDirectory()) {
-                    MinFileUtils.writeOutZipEntry(zipFile, entry, pluginUnpackDir, entry.getName());
+                    MinFileUtils.writeOutZipEntry(zipFile, entry, outputDir, entry.getName());
                 }
             }
         } finally {
