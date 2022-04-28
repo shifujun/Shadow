@@ -107,6 +107,7 @@ public abstract class BasePluginManager {
      * @param hash 压缩包hash
      * @return PluginConfig
      */
+    @Deprecated //解压由业务自己进行，未来进一步去掉内置的解压能力，以便更好支持config.json中描述的apk文件跨版本复用
     public final PluginConfig installPluginFromZip(File zip, String hash) throws IOException, JSONException {
         String zipHash;
         if (hash != null) {
