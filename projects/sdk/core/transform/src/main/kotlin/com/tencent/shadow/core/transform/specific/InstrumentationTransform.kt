@@ -23,7 +23,6 @@ import com.tencent.shadow.core.transform_kit.SpecificTransform
 import com.tencent.shadow.core.transform_kit.TransformStep
 import javassist.CodeConverter
 import javassist.CtClass
-import javassist.CtMethod
 
 class InstrumentationTransform : SpecificTransform() {
     companion object {
@@ -39,7 +38,8 @@ class InstrumentationTransform : SpecificTransform() {
         val newShadowActivityMethod = shadowInstrumentation.getDeclaredMethod("newShadowActivity")
 
         newStep(object : TransformStep {
-            override fun filter(allInputClass: Set<CtClass>) = allInputClass
+            override fun filter(allInputClass: Set<CtClass>) =
+                    filterRefClasses(allInputClass, listOf(AndroidInstrumentationClassname))
 
             override fun transform(ctClass: CtClass) {
                 ReplaceClassName.replaceClassName(
@@ -50,7 +50,8 @@ class InstrumentationTransform : SpecificTransform() {
             }
         })
         newStep(object : TransformStep {
-            override fun filter(allInputClass: Set<CtClass>) = allInputClass
+            override fun filter(allInputClass: Set<CtClass>) =
+                    filterRefClasses(allInputClass, listOf(AndroidInstrumentationClassname))
 
             override fun transform(ctClass: CtClass) {
                 ctClass.defrost()

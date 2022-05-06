@@ -52,7 +52,8 @@ class DialogSupportTransform : SpecificTransform() {
                         arrayOf(androidDialog)))
 
         newStep(object : TransformStep {
-            override fun filter(allInputClass: Set<CtClass>) = allInputClass
+            override fun filter(allInputClass: Set<CtClass>) =
+                    filterRefClasses(allInputClass, listOf(AndroidDialogClassname))
 
             override fun transform(ctClass: CtClass) {
                 ctClass.defrost()

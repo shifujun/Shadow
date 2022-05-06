@@ -88,16 +88,32 @@ class FragmentSupportTransform : SpecificTransform() {
          * 调用插件Fragment的Activity相关方法时将ContainerActivity转换成ShadowActivity
          */
         newStep(object : TransformStep {
-            override fun filter(allInputClass: Set<CtClass>) = allInputClass
+            override fun filter(allInputClass: Set<CtClass>) =
+                filterRefClasses(allInputClass, listOf(AndroidFragmentClassname))
 
             override fun transform(ctClass: CtClass) {
                 ctClass.defrost()
                 val codeConverter = CodeConverterExtension()
-                codeConverter.redirectMethodCallToStaticMethodCall(getActivityMethod, fragmentGetActivityMethod)
-                codeConverter.redirectMethodCallToStaticMethodCall(getContextMethod, fragmentGetContextMethod)
-                codeConverter.redirectMethodCallToStaticMethodCall(getHostMethod, fragmentGetHostMethod)
-                codeConverter.redirectMethodCallToStaticMethodCall(startActivityMethod1, fragmentStartActivityMethod1)
-                codeConverter.redirectMethodCallToStaticMethodCall(startActivityMethod2, fragmentStartActivityMethod2)
+                codeConverter.redirectMethodCallToStaticMethodCall(
+                    getActivityMethod,
+                    fragmentGetActivityMethod
+                )
+                codeConverter.redirectMethodCallToStaticMethodCall(
+                    getContextMethod,
+                    fragmentGetContextMethod
+                )
+                codeConverter.redirectMethodCallToStaticMethodCall(
+                    getHostMethod,
+                    fragmentGetHostMethod
+                )
+                codeConverter.redirectMethodCallToStaticMethodCall(
+                    startActivityMethod1,
+                    fragmentStartActivityMethod1
+                )
+                codeConverter.redirectMethodCallToStaticMethodCall(
+                    startActivityMethod2,
+                    fragmentStartActivityMethod2
+                )
                 try {
                     ctClass.instrument(codeConverter)
                 } catch (e: Exception) {
