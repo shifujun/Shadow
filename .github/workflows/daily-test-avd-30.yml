@@ -1,0 +1,12 @@
+name: daily-test-avd-30
+
+on:
+  schedule:
+    - cron: '0 18 * * *'
+
+jobs:
+  job1:
+    uses: ./.github/workflows/avd-test.yml
+    with:
+      api-level: 30
+      arch: x86_64
