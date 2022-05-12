@@ -38,7 +38,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ inputs.api-level }}
-          emulator-build: 8420304
+          emulator-build: 7425822
           target: default
           arch: ${{ inputs.arch }}
           profile: pixel_xl
