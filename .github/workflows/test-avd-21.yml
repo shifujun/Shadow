@@ -1,0 +1,12 @@
+name: test-avd-21
+
+on:
+  push:
+    branches: [ test-avd-21 ]
+
+jobs:
+  job1:
+    uses: ./.github/workflows/avd-test.yml
+    with:
+      api-level: 21
+      arch: x86_64

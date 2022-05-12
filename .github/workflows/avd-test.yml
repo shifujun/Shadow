@@ -42,6 +42,6 @@ jobs:
           target: default
           arch: ${{ inputs.arch }}
           profile: pixel_xl
-          script: echo done
+          script: ./gradlew :test-dynamic-host:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.tencent.shadow.test.cases.plugin_main.ApplicationContextSubDirTest#testGetExternalFilesDir
       - name: stop gradle deamon for actions/cache
         run: ./gradlew --stop
