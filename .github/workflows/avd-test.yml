@@ -44,6 +44,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ inputs.api-level }}
+          sdcard-path-or-size: 100M
           emulator-build: 8420304
           target: default
           arch: ${{ inputs.arch }}
