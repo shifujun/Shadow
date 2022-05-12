@@ -48,7 +48,7 @@ jobs:
           emulator-build: 8420304
           target: default
           arch: ${{ inputs.arch }}
-          profile: pixel_xl
+          profile: pixel_2
           script: ./gradlew androidTestSdk
       - name: stop gradle deamon for actions/cache
         run: ./gradlew --stop
