@@ -39,6 +39,7 @@ jobs:
         with:
           api-level: ${{ inputs.api-level }}
           emulator-build: 7425822
+          sdcard-path-or-size: 100M
           target: default
           arch: ${{ inputs.arch }}
           profile: pixel_xl
