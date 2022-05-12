@@ -29,6 +29,7 @@ import androidx.test.core.app.ApplicationProvider;
 
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
@@ -40,6 +41,20 @@ abstract class SubDirContextThemeWrapperTest extends PluginMainAppTest {
     private static final String PREFIX = "ShadowPlugin";
     private static final String BUSINESS_NAME = "general-cases";
     private static final String EXPECT_NAME = PREFIX + "_" + BUSINESS_NAME;
+
+    @BeforeClass
+    public static void waitForExternalStorageMounted() throws InterruptedException {
+        File externalFilesDir = null;
+        for (int i = 0; i < 10; i++) {
+            if (externalFilesDir == null) {
+                Thread.sleep(1000);
+                externalFilesDir = ApplicationProvider.getApplicationContext().getExternalFilesDir(null);
+            } else {
+                break;
+            }
+        }
+        Assert.assertNotNull(externalFilesDir);
+    }
 
     @Test
     public void testGetDataDir() {
