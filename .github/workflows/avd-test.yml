@@ -34,12 +34,6 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: revert gradle wrapper mirror setting
         run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-7.0.2-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
-      - name: buildSdk
-        run: ./gradlew buildSdk -S
-      - name: build sample/source
-        run: ./gradlew build
-      - name: unit test
-        run: ./gradlew jvmTestSdk -S
       - name: run androidTestSdk
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -48,6 +42,6 @@ jobs:
           target: default
           arch: ${{ inputs.arch }}
           profile: pixel_xl
-          script: ./gradlew androidTestSdk
+          script: echo done
       - name: stop gradle deamon for actions/cache
         run: ./gradlew --stop

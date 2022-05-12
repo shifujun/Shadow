@@ -1,8 +1,8 @@
-name: daily-test-avd-19
+name: test-avd-19
 
 on:
-  schedule:
-    - cron: '0 18 * * *'
+  push:
+    branches: [ test-avd-19 ]
 
 jobs:
   job1:
