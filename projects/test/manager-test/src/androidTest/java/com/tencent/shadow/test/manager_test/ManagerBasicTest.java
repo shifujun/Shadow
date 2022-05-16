@@ -27,11 +27,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ManagerBasicTest {
+   private TestCoreManager testCoreManager;
 
    @Before
    public void setUp() throws IOException {
       Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
       FileUtils.cleanDirectory(targetContext.getFilesDir().getParentFile());
+   }
+
+   @Before
+   public void initTestCoreManager() {
+      Context applicationContext = ApplicationProvider.getApplicationContext();
+      testCoreManager = new TestCoreManager(applicationContext);
    }
 
    @Test
@@ -42,27 +49,47 @@ public class ManagerBasicTest {
       Assert.assertTrue(installedPlugins.isEmpty());
    }
 
-   @Test
-   public void installPlugin() throws JSONException, IOException {
-      File pluginZip = mockAPluginZip();
-
-      Context applicationContext = ApplicationProvider.getApplicationContext();
-      TestCoreManager testCoreManager = new TestCoreManager(applicationContext);
-
-      PluginConfig pluginConfig = testCoreManager.installPluginFromZip(pluginZip, null);
+   private void sameInstallTest(PluginConfig pluginConfig) {
       testCoreManager.onInstallCompleted(pluginConfig, Collections.emptyMap());
 
       List<InstalledPlugin> installedPlugins = testCoreManager.getInstalledPlugins(1);
       InstalledPlugin installedPlugin = installedPlugins.get(0);
       Assert.assertEquals("ManagerBasicTest", installedPlugin.UUID_NickName);
+
+      Assert.assertTrue(installedPlugin.runtimeFile.pluginFile.exists());
    }
 
-   static JSONObject mockConfigJson() throws JSONException {
+   @Test
+   public void installPluginFromZip() throws JSONException, IOException {
+      File pluginZip = mockAPluginZip();
+      PluginConfig pluginConfig = testCoreManager.installPluginFromZip(pluginZip, null);
+      sameInstallTest(pluginConfig);
+   }
+
+   @Test
+   public void installPluginFromDir() throws JSONException, IOException {
+      File pluginDir = mockAPluginDir();
+      PluginConfig pluginConfig = testCoreManager.installPluginFromDir(pluginDir);
+      sameInstallTest(pluginConfig);
+   }
+
+   static JSONObject mockConfigJson(File runtimeApkFile) throws JSONException {
       JSONObject config = new JSONObject();
       config.put("version", 4);
       config.put("UUID", UUID.randomUUID().toString());
       config.put("UUID_NickName", "ManagerBasicTest");
+
+      JSONObject runtimeJson = mockApkFileJson(runtimeApkFile.getName(), "runtime-hash");
+      config.put("runtime", runtimeJson);
+
       return config;
+   }
+
+   static JSONObject mockApkFileJson(String apkName, String hash) throws JSONException {
+      JSONObject json = new JSONObject();
+      json.put("apkName", apkName);
+      json.put("hash", hash);
+      return json;
    }
 
    static File mockAPluginZip() throws JSONException, IOException {
@@ -86,7 +113,10 @@ public class ManagerBasicTest {
       File dir = Files.createTempDirectory(applicationContext.getFilesDir().toPath(), "mockAPluginDir").toFile();
       dir.deleteOnExit();
 
-      JSONObject configJson = mockConfigJson();
+      File runtimeApkFile = new File(dir, "runtime.apk");
+      runtimeApkFile.createNewFile();
+
+      JSONObject configJson = mockConfigJson(runtimeApkFile);
       File configJsonFile = new File(dir, "config.json");
       FileUtils.writeStringToFile(configJsonFile, configJson.toString(), StandardCharsets.UTF_8);
 
