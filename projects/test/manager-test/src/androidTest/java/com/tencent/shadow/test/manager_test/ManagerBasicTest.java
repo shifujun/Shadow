@@ -73,6 +73,23 @@ public class ManagerBasicTest {
       sameInstallTest(pluginConfig);
    }
 
+   @Test
+   public void deleteInstalledPlugin() throws JSONException, IOException {
+      File pluginZip = mockAPluginZip();
+      PluginConfig pluginConfig = testCoreManager.installPluginFromZip(pluginZip, null);
+      testCoreManager.onInstallCompleted(pluginConfig, Collections.emptyMap());
+
+      List<InstalledPlugin> installedPlugins = testCoreManager.getInstalledPlugins(1);
+      InstalledPlugin installedPlugin = installedPlugins.get(0);
+      Assert.assertEquals("ManagerBasicTest", installedPlugin.UUID_NickName);
+      Assert.assertTrue(installedPlugin.runtimeFile.pluginFile.exists());
+
+      testCoreManager.deleteInstalledPlugin(installedPlugin.UUID);
+      List<InstalledPlugin> getAfterDelete = testCoreManager.getInstalledPlugins(1);
+      Assert.assertTrue(getAfterDelete.isEmpty());
+      Assert.assertFalse(installedPlugin.runtimeFile.pluginFile.exists());
+   }
+
    static JSONObject mockConfigJson(File runtimeApkFile) throws JSONException {
       JSONObject config = new JSONObject();
       config.put("version", 4);
