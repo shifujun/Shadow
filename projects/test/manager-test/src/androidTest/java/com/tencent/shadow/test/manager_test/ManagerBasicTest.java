@@ -26,6 +26,10 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 基本场景：单个zip插件包，单个zip插件包解压对应的dir，两种安装方式，
+ * 安装之后能找到文件，删除插件后apk文件被删除了。
+ */
 public class ManagerBasicTest {
    private TestCoreManager testCoreManager;
 
