@@ -61,6 +61,14 @@
         android:onClick="TestUnregisterDynamicBraodcast"
         android:text="测试动态广播注销" />
 
+    <Button
+        android:id="@+id/button_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="button_wait_for_host"
+        android:onClick="waitForHost"
+        android:text="等待宿主广播" />
+
 
     <TextView
         android:id="@+id/content"

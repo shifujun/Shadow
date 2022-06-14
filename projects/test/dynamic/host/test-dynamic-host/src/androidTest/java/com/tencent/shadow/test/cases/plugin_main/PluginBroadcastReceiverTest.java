@@ -1,5 +1,6 @@
 package com.tencent.shadow.test.cases.plugin_main;
 
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -59,6 +60,26 @@ public class PluginBroadcastReceiverTest extends PluginMainAppTest {
     public void testStaticBroadcastReceiver() {
         //测试静态广播可以正常收到，并且action，extra，以及context都是正确的
         Espresso.onView(ViewMatchers.withTagValue(Matchers.<Object>is("button_static"))).
+                perform(ViewActions.click());
+
+        matchTextWithViewTag("text",
+                String.format("action:%s msg:%s isShadowContext:%s", INTENT_NORMAL_ACTION,
+                        MSG_NORMAL, "true"));
+    }
+
+    /**
+     * 宿主通过设定ComponentName发送广播给插件接收
+     */
+    @Test
+    public void testSendBroadcastFromHostToPlugin() {
+        Context context = ApplicationProvider.getApplicationContext();
+
+        Intent intent = new Intent();
+        intent.setPackage(context.getPackageName());
+        intent.setClassName(context.getPackageName(), "com.tencent.shadow.core.runtime.BroadcastReceiverWrapper");
+        intent.setAction("com.tencent.test.action.DYNAMIC");
+        context.sendBroadcast(intent);
+        Espresso.onView(ViewMatchers.withTagValue(Matchers.is("button_wait_for_host"))).
                 perform(ViewActions.click());
 
         matchTextWithViewTag("text",

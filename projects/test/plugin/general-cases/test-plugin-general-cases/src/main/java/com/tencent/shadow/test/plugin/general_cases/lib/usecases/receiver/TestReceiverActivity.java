@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -100,6 +101,15 @@ public class TestReceiverActivity extends WithIdlingResourceActivity {
                 mIdlingResource.setIdleState(true);
             }
         }, 2000);
+    }
+
+    /**
+     * 供自动化测试调用，让这个Activity等待宿主发送广播
+     */
+    public void waitForHost(View view) {
+        if (TextUtils.isEmpty(mTextView.getText())) {
+            mIdlingResource.setIdleState(false);
+        }
     }
 
     private class DynamicBroadcastReceiver extends BroadcastReceiver {

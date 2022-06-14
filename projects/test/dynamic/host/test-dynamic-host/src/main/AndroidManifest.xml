@@ -66,6 +66,12 @@
             android:hardwareAccelerated="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />
         <!--dynamic activity注册 end -->
+
+        <receiver android:name="com.tencent.shadow.core.runtime.BroadcastReceiverWrapper">
+            <intent-filter>
+                <action android:name="com.tencent.test.action.DYNAMIC" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
