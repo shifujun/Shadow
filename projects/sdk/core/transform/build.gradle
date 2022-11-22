@@ -4,6 +4,7 @@ dependencies {
     api project(':transform-kit')
     testImplementation "junit:junit:$junit_version"
     testImplementation project(path: ':transform-kit', configuration: 'tests')
+    testImplementation 'com.tencent.shadow.coding:android-jar'
 }
 
 compileKotlin {

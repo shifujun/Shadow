@@ -6,10 +6,6 @@ dependencies {
     implementation "org.javassist:javassist:$javassist_version"
     implementation "junit:junit:$junit_version"
 
-    //不能直接用project(':android-jar')，因为project依赖的处理有特殊逻辑，不会从jar取类，
-    //会直接访问它的build目录。但是':android-jar'的类不是java文件编译出来的，所以gradle不会在build
-    //目录中找到预期的class文件。
-    var androidJar = project(':android-jar').getTasksByName('jar', false).archivePath
-    compileOnly files(androidJar)
-    testImplementation files(androidJar)
+    compileOnly project(':android-jar')
+    testImplementation project(':android-jar')
 }

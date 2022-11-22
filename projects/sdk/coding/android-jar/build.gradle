@@ -7,14 +7,18 @@ java {
 
 evaluationDependsOn(':get-android-jar')
 
+/**
+ * 从android.jar中解压出android包的类到这个模块到编译产物目录，伪装成是这个模块java源码编译出的结果。
+ *
+ * 解压时排除其中包含的JDK类，避免直接依赖android.jar时引入和JDK中重复的类。
+ */
 task copyAndroidPackages(type: Copy) {
     def androidJarPath = project(':get-android-jar').androidJarPath
     from zipTree(androidJarPath)
     include('android/')
-    into 'build/copyAndroidPackages'
+    into 'build/classes/java/main'
 }
 
-jar {
+compileJava {
     dependsOn copyAndroidPackages
-    from copyAndroidPackages.destinationDir
 }

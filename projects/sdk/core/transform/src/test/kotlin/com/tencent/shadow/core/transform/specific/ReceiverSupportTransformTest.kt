@@ -1,6 +1,7 @@
 package com.tencent.shadow.core.transform.specific
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import com.tencent.shadow.core.transform_kit.AbstractTransformTest
 import javassist.ClassPool
@@ -52,7 +53,7 @@ class ReceiverSupportTransformTest : AbstractTransformTest() {
         val log = clazz.getDeclaredField("log")
         log.trySetAccessible()
         val receiver = constructor.newInstance(mutableListOf<String>())
-        val context = Context()
+        val context = ContextWrapper(null)
         val intent = Intent()
         onReceive.invoke(receiver, context, intent)
         val logList: List<String> = log.get(receiver) as List<String>
