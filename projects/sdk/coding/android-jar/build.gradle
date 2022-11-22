@@ -6,7 +6,15 @@ java {
 }
 
 evaluationDependsOn(':get-android-jar')
-dependencies {
+
+task copyAndroidPackages(type: Copy) {
     def androidJarPath = project(':get-android-jar').androidJarPath
-    api files(androidJarPath)
+    from zipTree(androidJarPath)
+    include('android/')
+    into 'build/copyAndroidPackages'
+}
+
+jar {
+    dependsOn copyAndroidPackages
+    from copyAndroidPackages.destinationDir
 }
