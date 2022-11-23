@@ -19,15 +19,16 @@
 package test;
 
 import android.content.ComponentName;
+import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 
 public class TestPackageManager {
 
-    void test1() {
-        PackageManager packageManager = new PackageManager();
+    void test1() throws PackageManager.NameNotFoundException {
+        PackageManager packageManager = new ContextWrapper(null).getPackageManager();
 
         packageManager.getApplicationInfo("test", 0);
-        packageManager.getActivityInfo(new ComponentName(), 0);
+        packageManager.getActivityInfo(new ComponentName("A", "B"), 0);
     }
 
 
@@ -35,19 +36,26 @@ public class TestPackageManager {
         new Inner() {
             @Override
             void run() {
-                PackageManager packageManager = new PackageManager();
+                PackageManager packageManager = new ContextWrapper(null).getPackageManager();
 
-                packageManager.getApplicationInfo("test", 0);
-                packageManager.getActivityInfo(new ComponentName(), 0);
+                try {
+                    packageManager.getApplicationInfo("test", 0);
+                    packageManager.getActivityInfo(new ComponentName("A", "B"), 0);
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
 
                 new Inner() {
                     @Override
                     void run() {
-                        PackageManager packageManager = new PackageManager();
+                        PackageManager packageManager = new ContextWrapper(null).getPackageManager();
 
-                        packageManager.getApplicationInfo("test", 0);
-                        packageManager.getActivityInfo(new ComponentName(), 0);
-
+                        try {
+                            packageManager.getApplicationInfo("test", 0);
+                            packageManager.getActivityInfo(new ComponentName("A", "B"), 0);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
                     }
                 };
             }

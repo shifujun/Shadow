@@ -6,6 +6,7 @@ import android.content.Intent
 import com.tencent.shadow.core.transform_kit.AbstractTransformTest
 import javassist.ClassPool
 import javassist.Loader
+import javassist.NotFoundException
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -38,10 +39,17 @@ class ReceiverSupportTransformTest : AbstractTransformTest() {
     }
 
     private fun commonTestLogic(testClassName: String, expectLog: Array<String>) {
+//        try {
+//            dLoader["android.content.BroadcastReceiver"]
+//        } catch (ignored: NotFoundException) {
+//            dLoader.makeClass("android.content.BroadcastReceiver")
+//        }
+
         //加载修改后的类对象
         val ctClass = dLoader[testClassName]
         val loader = Loader(this.javaClass.classLoader, dLoader)
-        loader.delegateLoadingOf("android.content.")
+//        loader.delegateLoadingOf("android.content.Context")
+//        loader.delegateLoadingOf("android.content.Intent")
         val clazz = ctClass.toClass(loader)
 
         //构造实例，调用onReceive方法，检查log记录的字符串List是否符合预期

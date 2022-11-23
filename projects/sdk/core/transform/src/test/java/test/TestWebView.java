@@ -33,6 +33,6 @@ public class TestWebView extends WebView {
     }
 
     void testNewWebView() {
-        WebView webView = new WebView(new Context());
+        WebView webView = new WebView(null);
     }
 }

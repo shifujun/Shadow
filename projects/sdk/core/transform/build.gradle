@@ -1,9 +1,13 @@
+import com.tencent.shadow.coding.common_jar_settings.AndroidJar
+
 apply plugin: 'kotlin'
 
 dependencies {
     api project(':transform-kit')
     testImplementation "junit:junit:$junit_version"
     testImplementation project(path: ':transform-kit', configuration: 'tests')
+    testImplementation project(':runtime')
+    testRuntimeOnly files(AndroidJar.ANDROID_JAR_PATH)// for IDE index
     testImplementation 'com.tencent.shadow.coding:android-jar'
 }
 
