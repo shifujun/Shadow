@@ -1,11 +1,9 @@
 package com.tencent.shadow.core.transform.specific
 
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
 import com.tencent.shadow.core.transform_kit.AbstractTransformTest
 import javassist.ClassPool
 import javassist.Loader
+import javassist.Modifier
 import javassist.NotFoundException
 import org.junit.Assert
 import org.junit.Before
@@ -39,30 +37,33 @@ class ReceiverSupportTransformTest : AbstractTransformTest() {
     }
 
     private fun commonTestLogic(testClassName: String, expectLog: Array<String>) {
-//        try {
-//            dLoader["android.content.BroadcastReceiver"]
-//        } catch (ignored: NotFoundException) {
-//            dLoader.makeClass("android.content.BroadcastReceiver")
-//        }
+        dLoader["android.content.BroadcastReceiver"].declaredConstructors[0].setBody(null)
+        dLoader["android.content.Context"].declaredConstructors[0].setBody(null)
+        dLoader["android.content.ContextWrapper"].declaredConstructors[0].setBody(null)
+        dLoader["android.view.ContextThemeWrapper"].declaredConstructors[0].setBody("super(null);")
+        dLoader["android.content.Intent"].declaredConstructors[0].setBody(null)
 
         //加载修改后的类对象
         val ctClass = dLoader[testClassName]
         val loader = Loader(this.javaClass.classLoader, dLoader)
-//        loader.delegateLoadingOf("android.content.Context")
-//        loader.delegateLoadingOf("android.content.Intent")
         val clazz = ctClass.toClass(loader)
 
         //构造实例，调用onReceive方法，检查log记录的字符串List是否符合预期
         val constructor = clazz.getDeclaredConstructor(List::class.java)
         constructor.trySetAccessible()
-        val onReceive =
-            clazz.getMethod("onReceive", Context::class.java, Intent::class.java)
+        val onReceive = clazz.getMethod(
+            "onReceive",
+            loader.loadClass("android.content.Context"),
+            loader.loadClass("android.content.Intent")
+        )
         onReceive.trySetAccessible()
         val log = clazz.getDeclaredField("log")
         log.trySetAccessible()
         val receiver = constructor.newInstance(mutableListOf<String>())
-        val context = ContextWrapper(null)
-        val intent = Intent()
+        val context =
+            loader.loadClass("android.view.ContextThemeWrapper").getDeclaredConstructor().newInstance()
+        val intent =
+            loader.loadClass("android.content.Intent").getDeclaredConstructor().newInstance()
         onReceive.invoke(receiver, context, intent)
         val logList: List<String> = log.get(receiver) as List<String>
         Assert.assertArrayEquals(expectLog, logList.toTypedArray())
