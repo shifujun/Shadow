@@ -54,7 +54,11 @@ object LoadPluginBloc {
         } else {
             val buildClassLoader = executorService.submit(Callable {
                 lock.withLock {
-                    LoadApkBloc.loadPlugin(installedApk, loadParameters, pluginPartsMap)
+                    if (hostAppContext.applicationInfo.sourceDir.equals(installedApk.apkFilePath)) {
+                        hostAppContext.classLoader
+                    } else {
+                        LoadApkBloc.loadPlugin(installedApk, loadParameters, pluginPartsMap)
+                    }
                 }
             })
 

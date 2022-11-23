@@ -20,12 +20,18 @@ package com.tencent.shadow.test.robolectric;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
+import android.os.AsyncTask;
+import android.os.Parcel;
 
 import com.tencent.shadow.core.common.InstalledApk;
 import com.tencent.shadow.core.common.LoggerFactory;
+import com.tencent.shadow.core.load_parameters.LoadParameters;
 import com.tencent.shadow.core.loader.ShadowPluginLoader;
 import com.tencent.shadow.core.runtime.container.ContentProviderDelegateProviderHolder;
 import com.tencent.shadow.core.runtime.container.DelegateProviderHolder;
+
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class HostApplication extends Application {
     private static Application sApp;
@@ -39,37 +45,49 @@ public class HostApplication extends Application {
     private ShadowPluginLoader mPluginLoader;
 
     private InstalledApk makePluginInHostInstalledApk() {
+        LoadParameters loadParameters = new LoadParameters(null,
+                PART_MAIN,
+                null,
+                new String[0]);
+        Parcel parcel = Parcel.obtain();
+        loadParameters.writeToParcel(parcel, 0);
         ApplicationInfo applicationInfo = getApplicationInfo();
         String apkFilePath = applicationInfo.sourceDir;
         String oDexPath = null;
         String libraryPath = applicationInfo.nativeLibraryDir;
-        return new InstalledApk(apkFilePath, oDexPath, libraryPath);
+        InstalledApk installedApk = new InstalledApk(apkFilePath,
+                oDexPath,
+                libraryPath,
+                parcel.marshall());
+        parcel.recycle();
+        return installedApk;
     }
 
     public void loadPlugin(final String partKey, final Runnable completeRunnable) {
+        InstalledApk installedApk = makePluginInHostInstalledApk();
         if (mPluginLoader.getPluginParts(partKey) == null) {
-//            new AsyncTask<Void, Void, Void>() {
-//                @Override
-//                protected Void doInBackground(Void... voids) {
-//                    ShadowPluginLoader pluginLoader = mPluginLoader;
-//                    Future<?> future = null;
-//                    try {
-//                        future = pluginLoader.loadPlugin(plugin);
-//                        future.get(10, TimeUnit.SECONDS);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        throw new RuntimeException("加载失败", e);
-//                    }
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Void aVoid) {
-//                    super.onPostExecute(aVoid);
-//                    mPluginLoader.callApplicationOnCreate(partKey);
-//                    completeRunnable.run();
-//                }
-//            }.execute();
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    ShadowPluginLoader pluginLoader = mPluginLoader;
+                    Future<?> future = null;
+                    try {
+                        future = pluginLoader.loadPlugin(installedApk);
+                        future.get(10, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new RuntimeException("加载失败", e);
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    mPluginLoader.callApplicationOnCreate(partKey);
+                    completeRunnable.run();
+                }
+            }.execute();
         } else {
             completeRunnable.run();
         }
@@ -85,8 +103,16 @@ public class HostApplication extends Application {
         DelegateProviderHolder.setDelegateProvider(loader.getDelegateProviderKey(), loader);
         ContentProviderDelegateProviderHolder.setContentProviderDelegateProvider(loader);
 
-//        InstalledApk installedApk = sPluginPrepareBloc.preparePlugin(this.getApplicationContext());
-//        mPluginMap.put(PART_MAIN, installedApk);
+        Future<?> future = null;
+        try {
+            InstalledApk installedApk = makePluginInHostInstalledApk();
+            future = mPluginLoader.loadPlugin(installedApk);
+            future.get(10, TimeUnit.SECONDS);
+            mPluginLoader.callApplicationOnCreate(PART_MAIN);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("加载失败", e);
+        }
     }
 
     public static Application getApp() {
