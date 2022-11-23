@@ -22,7 +22,6 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.res.Resources
 import com.tencent.shadow.core.load_parameters.LoadParameters
-import com.tencent.shadow.core.loader.classloaders.PluginClassLoader
 import com.tencent.shadow.core.loader.exceptions.CreateApplicationException
 import com.tencent.shadow.core.loader.managers.ComponentManager
 import com.tencent.shadow.core.runtime.PluginManifest
@@ -37,7 +36,7 @@ import com.tencent.shadow.core.runtime.ShadowApplication
 object CreateApplicationBloc {
     @Throws(CreateApplicationException::class)
     fun createShadowApplication(
-        pluginClassLoader: PluginClassLoader,
+        pluginClassLoader: ClassLoader,
         loadParameters: LoadParameters,
         pluginManifest: PluginManifest,
         resources: Resources,

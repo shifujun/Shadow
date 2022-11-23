@@ -19,7 +19,6 @@
 package com.tencent.shadow.core.loader.delegates
 
 import android.content.res.Resources
-import com.tencent.shadow.core.loader.classloaders.PluginClassLoader
 import com.tencent.shadow.core.loader.managers.ComponentManager
 import com.tencent.shadow.core.runtime.ShadowAppComponentFactory
 import com.tencent.shadow.core.runtime.ShadowApplication
@@ -34,7 +33,7 @@ abstract class ShadowDelegate() {
         _appComponentFactory = appComponentFactory
     }
 
-    fun inject(pluginClassLoader: PluginClassLoader) {
+    fun inject(pluginClassLoader: ClassLoader) {
         _pluginClassLoader = pluginClassLoader
     }
 
@@ -48,7 +47,7 @@ abstract class ShadowDelegate() {
 
     private lateinit var _appComponentFactory: ShadowAppComponentFactory
     private lateinit var _pluginApplication: ShadowApplication
-    private lateinit var _pluginClassLoader: PluginClassLoader
+    private lateinit var _pluginClassLoader: ClassLoader
     private lateinit var _pluginResources: Resources
     private lateinit var _componentManager: ComponentManager
 
@@ -56,7 +55,7 @@ abstract class ShadowDelegate() {
         get() = _appComponentFactory
     protected val mPluginApplication: ShadowApplication
         get() = _pluginApplication
-    protected val mPluginClassLoader: PluginClassLoader
+    protected val mPluginClassLoader: ClassLoader
         get() = _pluginClassLoader
     protected val mPluginResources: Resources
         get() = _pluginResources

@@ -45,7 +45,7 @@ object LoadApkBloc {
         installedApk: InstalledApk,
         loadParameters: LoadParameters,
         pluginPartsMap: MutableMap<String, PluginParts>
-    ): PluginClassLoader {
+    ): ClassLoader {
         val apk = File(installedApk.apkFilePath)
         val odexDir = if (installedApk.oDexPath == null) null else File(installedApk.oDexPath)
         val dependsOn = loadParameters.dependsOn

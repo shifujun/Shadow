@@ -114,7 +114,7 @@ class PluginClassLoader(
 
     internal fun loadPluginManifest(): PluginManifest {
         try {
-            val clazz = findClass("com.tencent.shadow.core.manifest_parser.PluginManifest")
+            val clazz = findClass(PluginManifestClassName)
             return PluginManifest::class.java.cast(clazz.newInstance())
         } catch (e: ClassNotFoundException) {
             throw Error(
@@ -125,6 +125,8 @@ class PluginClassLoader(
     }
 
 }
+
+const val PluginManifestClassName = "com.tencent.shadow.core.manifest_parser.PluginManifest"
 
 private fun String.subStringBeforeDot() = substringBeforeLast('.', "")
 

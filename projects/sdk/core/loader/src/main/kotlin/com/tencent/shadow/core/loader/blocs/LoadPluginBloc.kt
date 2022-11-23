@@ -21,10 +21,13 @@ package com.tencent.shadow.core.loader.blocs
 import android.content.Context
 import com.tencent.shadow.core.common.InstalledApk
 import com.tencent.shadow.core.load_parameters.LoadParameters
+import com.tencent.shadow.core.loader.classloaders.PluginClassLoader
+import com.tencent.shadow.core.loader.classloaders.PluginManifestClassName
 import com.tencent.shadow.core.loader.exceptions.LoadPluginException
 import com.tencent.shadow.core.loader.infos.PluginParts
 import com.tencent.shadow.core.loader.managers.ComponentManager
 import com.tencent.shadow.core.loader.managers.PluginPackageManagerImpl
+import com.tencent.shadow.core.runtime.PluginManifest
 import com.tencent.shadow.core.runtime.PluginPartInfo
 import com.tencent.shadow.core.runtime.PluginPartInfoManager
 import com.tencent.shadow.core.runtime.ShadowAppComponentFactory
@@ -57,7 +60,13 @@ object LoadPluginBloc {
 
             val buildPluginManifest = executorService.submit(Callable {
                 val pluginClassLoader = buildClassLoader.get()
-                val pluginManifest = pluginClassLoader.loadPluginManifest()
+                val pluginManifest =
+                    if (pluginClassLoader is PluginClassLoader) {
+                        pluginClassLoader.loadPluginManifest()
+                    } else {
+                        val clazz = pluginClassLoader.loadClass(PluginManifestClassName)
+                        PluginManifest::class.java.cast(clazz.newInstance())
+                    }
                 CheckPackageNameBloc.check(pluginManifest, hostAppContext)
                 pluginManifest
             })

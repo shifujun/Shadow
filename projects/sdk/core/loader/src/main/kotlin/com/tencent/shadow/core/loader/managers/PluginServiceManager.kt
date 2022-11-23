@@ -28,7 +28,6 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import com.tencent.shadow.core.loader.ShadowPluginLoader
-import com.tencent.shadow.core.loader.classloaders.PluginClassLoader
 import com.tencent.shadow.core.loader.delegates.ShadowDelegate
 import com.tencent.shadow.core.runtime.ShadowApplication
 import com.tencent.shadow.core.runtime.ShadowService
@@ -341,7 +340,7 @@ private class TmpShadowDelegate : ShadowDelegate() {
 
     fun getPluginApplication(): ShadowApplication = mPluginApplication
     fun getAppComponentFactory() = mAppComponentFactory
-    fun getPluginClassLoader(): PluginClassLoader = mPluginClassLoader
+    fun getPluginClassLoader(): ClassLoader = mPluginClassLoader
     fun getPluginResources(): Resources = mPluginResources
     fun getComponentManager(): ComponentManager = mComponentManager
 }
