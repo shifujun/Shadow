@@ -28,7 +28,8 @@ def includeTest() {
             'androidx-cases-app',
             'test-plugin-androidx-cases',
             'plugin-service-for-host',
-            'test-none-dynamic-host'
+            'test-none-dynamic-host',
+            'robolectric'
     project(':test-dynamic-host').projectDir = file('projects/test/dynamic/host/test-dynamic-host')
     project(':test-dynamic-manager').projectDir = file('projects/test/dynamic/manager/test-dynamic-manager')
     project(':test-dynamic-loader').projectDir = file('projects/test/dynamic/plugin/test-dynamic-loader')
@@ -46,6 +47,7 @@ def includeTest() {
     project(':general-cases-app').projectDir = file('projects/test/plugin/general-cases/general-cases-app')
     project(':plugin-service-for-host').projectDir = file('projects/test/plugin/particular-cases/plugin-service-for-host')
     project(':test-none-dynamic-host').projectDir = file('projects/test/none-dynamic/host/test-none-dynamic-host')
+    project(':robolectric').projectDir = file('projects/test/robolectric')
 }
 
 def includeSample() {
