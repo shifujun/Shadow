@@ -20,7 +20,6 @@ package com.tencent.shadow.test.robolectric;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
-import android.os.AsyncTask;
 
 import com.tencent.shadow.core.common.InstalledApk;
 import com.tencent.shadow.core.common.LoggerFactory;
@@ -28,17 +27,12 @@ import com.tencent.shadow.core.loader.ShadowPluginLoader;
 import com.tencent.shadow.core.runtime.container.ContentProviderDelegateProviderHolder;
 import com.tencent.shadow.core.runtime.container.DelegateProviderHolder;
 
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
 public class HostApplication extends Application {
     private static Application sApp;
 
     public final static String PART_MAIN = "partMain";
 
     static {
-        detectNonSdkApiUsageOnAndroidP();
-
         LoggerFactory.setILoggerFactory(AndroidLogLoggerFactory.getInstance());
     }
 
@@ -54,28 +48,28 @@ public class HostApplication extends Application {
 
     public void loadPlugin(final String partKey, final Runnable completeRunnable) {
         if (mPluginLoader.getPluginParts(partKey) == null) {
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    ShadowPluginLoader pluginLoader = mPluginLoader;
-                    Future<?> future = null;
-                    try {
-                        future = pluginLoader.loadPlugin(plugin);
-                        future.get(10, TimeUnit.SECONDS);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("加载失败", e);
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                    mPluginLoader.callApplicationOnCreate(partKey);
-                    completeRunnable.run();
-                }
-            }.execute();
+//            new AsyncTask<Void, Void, Void>() {
+//                @Override
+//                protected Void doInBackground(Void... voids) {
+//                    ShadowPluginLoader pluginLoader = mPluginLoader;
+//                    Future<?> future = null;
+//                    try {
+//                        future = pluginLoader.loadPlugin(plugin);
+//                        future.get(10, TimeUnit.SECONDS);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        throw new RuntimeException("加载失败", e);
+//                    }
+//                    return null;
+//                }
+//
+//                @Override
+//                protected void onPostExecute(Void aVoid) {
+//                    super.onPostExecute(aVoid);
+//                    mPluginLoader.callApplicationOnCreate(partKey);
+//                    completeRunnable.run();
+//                }
+//            }.execute();
         } else {
             completeRunnable.run();
         }
