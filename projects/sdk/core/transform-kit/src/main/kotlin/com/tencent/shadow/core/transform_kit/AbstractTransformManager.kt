@@ -25,20 +25,25 @@ abstract class AbstractTransformManager(
     ctClassInputMap: Map<CtClass, InputClass>,
     private val classPool: ClassPool
 ) {
-    private val allInputClass = ctClassInputMap.keys
+    protected val allInputClass = ctClassInputMap.keys
+
+    /**
+     * 实际上会被修改的输入类
+     */
+    abstract val filteredInputClass: Set<CtClass>
 
     abstract val mTransformList: List<SpecificTransform>
 
     fun setupAll() {
         mTransformList.forEach {
             it.mClassPool = classPool
-            it.setup(allInputClass)
+            it.setup(filteredInputClass)
         }
     }
 
     fun fireAll() {
         mTransformList.flatMap { it.list }.forEach { transform ->
-            transform.filter(allInputClass).forEach {
+            transform.filter(filteredInputClass).forEach {
                 transform.transform(it)
             }
         }

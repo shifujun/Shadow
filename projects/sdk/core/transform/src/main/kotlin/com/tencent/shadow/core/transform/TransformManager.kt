@@ -32,6 +32,14 @@ class TransformManager(
 ) : AbstractTransformManager(ctClassInputMap, classPool) {
 
     /**
+     * 过滤掉Shadow的类被打包到插件中的情况
+     */
+    override val filteredInputClass: Set<CtClass>
+        get() = allInputClass.filter {
+            it.packageName.startsWith("com.tencent.shadow.core").not()
+        }.toSet()
+
+    /**
      * 按这个列表的顺序应用各子Transform逻辑。
      *
      * 注意这个列表的顺序是有关系的，
