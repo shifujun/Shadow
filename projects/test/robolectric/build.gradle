@@ -25,7 +25,19 @@ android {
         targetSdkVersion project.TARGET_SDK_VERSION
         versionCode project.VERSION_CODE
         versionName project.VERSION_NAME
-        testInstrumentationRunner "com.tencent.shadow.test.none_dynamic.host.CustomAndroidJUnitRunner"
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+        if (!System.getenv().containsKey("DISABLE_TENCENT_MAVEN_MIRROR")) {
+            unitTests.all {
+                systemProperty 'robolectric.dependency.repo.url', 'https://mirrors.tencent.com/nexus/repository/maven-public/'
+                systemProperty 'robolectric.dependency.repo.id', 'tencentMirror'
+            }
+        }
+
     }
 }
 
@@ -33,6 +45,9 @@ dependencies {
     implementation 'com.tencent.shadow.core:common'
     implementation 'com.tencent.shadow.core:loader'
     implementation 'com.tencent.shadow.core:activity-container'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.8'
 }
 
 afterEvaluate {
