@@ -1,4 +1,21 @@
+import com.tencent.shadow.core.manifest_parser.ManifestParserKt
+
 apply plugin: 'com.android.application'
+
+buildscript {
+    repositories {
+        if (!System.getenv().containsKey("DISABLE_TENCENT_MAVEN_MIRROR")) {
+            maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
+        } else {
+            google()
+            mavenCentral()
+        }
+    }
+
+    dependencies {
+        classpath 'com.tencent.shadow.core:manifest-parser'
+    }
+}
 
 android {
     compileSdkVersion project.COMPILE_SDK_VERSION
@@ -16,4 +33,37 @@ dependencies {
     implementation 'com.tencent.shadow.core:common'
     implementation 'com.tencent.shadow.core:loader'
     implementation 'com.tencent.shadow.core:activity-container'
+}
+
+afterEvaluate {
+    android.applicationVariants.each {
+        def manifestProcessorTask = it.outputs.first().processManifestProvider.get()
+        def manifestXmlFile = manifestProcessorTask.mainMergedManifest.get().getAsFile()
+        def variantName = it.name
+        def outputDir = project.file("build/generated/source/pluginManifest/${variantName}")
+
+        def generatePluginManifestTask =
+                project.tasks.register("generate${variantName.capitalize()}PluginManifest") {
+                    it.dependsOn(manifestProcessorTask)
+                    it.inputs.file(manifestXmlFile)
+                    it.outputs.dir(outputDir).withPropertyName("outputDir")
+
+                    def packageForR = "com.tencent.shadow.test.robolectric"
+
+                    it.doLast {
+                        ManifestParserKt.generatePluginManifest(
+                                manifestXmlFile,
+                                outputDir,
+                                "com.tencent.shadow.core.manifest_parser",
+                                packageForR
+                        )
+                    }
+                }
+
+        def javacTask = project.tasks.getByName("compile${variantName.capitalize()}JavaWithJavac")
+        javacTask.dependsOn(generatePluginManifestTask)
+
+        def relativePath = project.projectDir.toPath().relativize(outputDir.toPath()).toString()
+        javacTask.source(project.fileTree(relativePath))
+    }
 }
