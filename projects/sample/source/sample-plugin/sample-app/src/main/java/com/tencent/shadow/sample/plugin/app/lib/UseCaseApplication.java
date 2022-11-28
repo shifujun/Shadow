@@ -2,8 +2,10 @@ package com.tencent.shadow.sample.plugin.app.lib;
 
 import static com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager.useCases;
 
+import android.app.AlertDialog;
 import android.app.Application;
 
+import com.tencent.shadow.sample.host.lib.DialogPlugin;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCaseCategory;
@@ -33,6 +35,16 @@ public class UseCaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initCase();
+
+        // 向宿主注入DialogPlugin实现
+        {
+            DialogPlugin.Impl.impl = context -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("show from DialogPlugin");
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            };
+        }
     }
 
     private static void initCase() {

@@ -68,6 +68,7 @@
             android:name="com.tencent.shadow.sample.plugin.app.lib.usecases.provider.TestProvider" />
 
         <service android:name=".usecases.service.HostAddPluginViewService" />
+        <service android:name=".usecases.service.ShowDialogService" />
     </application>
 
 </manifest>

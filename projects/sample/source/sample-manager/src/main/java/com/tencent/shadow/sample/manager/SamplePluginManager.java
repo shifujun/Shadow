@@ -83,10 +83,26 @@ public class SamplePluginManager extends FastPluginManager {
             close();
         } else if (fromId == Constant.FROM_ID_LOAD_VIEW_TO_HOST) {
             loadViewToHost(context, bundle);
+        } else if (fromId == Constant.FROM_ID_SHOW_DIALOG) {
+            showDialog(context);
         } else {
             throw new IllegalArgumentException("不认识的fromId==" + fromId);
         }
     }
+
+    private void showDialog(final Context context) {
+        Intent pluginIntent = new Intent();
+        pluginIntent.setClassName(
+                context.getPackageName(),
+                "com.tencent.shadow.sample.plugin.app.lib.usecases.service.ShowDialogService"
+        );
+        try {
+            mPluginLoader.startPluginService(pluginIntent);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     private void loadViewToHost(final Context context, Bundle bundle) {
         Intent pluginIntent = new Intent();

@@ -31,6 +31,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tencent.shadow.sample.constant.Constant;
+import com.tencent.shadow.sample.host.lib.DialogPlugin;
+import com.tencent.shadow.sample.host.lib.ObjectHolder;
 import com.tencent.shadow.sample.host.plugin_view.HostAddPluginViewActivity;
 
 
@@ -96,6 +98,33 @@ public class MainActivity extends Activity {
             startActivity(intent);
         });
         rootView.addView(startHostAddPluginViewActivityButton);
+
+        // 方法一：通过插件Service打开Dialog，参数通过静态域传递
+        {
+            Button button = new Button(this);
+            button.setText("通过插件Service打开Dialog");
+            button.setOnClickListener(v -> {
+                // 启动Activity、Service等接口都只接收可跨进程的可序列化对象作为参数
+                // 因此把不能序列化的对象暂存到静态域中，可供同进程的代码取出
+                // 这个key可以通过bundle传递，这里hardcode了
+                ObjectHolder.map.put("MainActivity.this", MainActivity.this);
+
+                HostApplication.getApp().getPluginManager().enter(this, Constant.FROM_ID_SHOW_DIALOG, null, null);
+            });
+            rootView.addView(button);
+        }
+
+        // 方法二：通过插件实现宿主接口打开Dialog
+        {
+            Button button = new Button(this);
+            button.setText("通过插件实现宿主接口打开Dialog");
+            button.setOnClickListener(v -> {
+                DialogPlugin dialogPlugin = DialogPlugin.Impl.impl;
+                dialogPlugin.showDialog(MainActivity.this);
+            });
+            rootView.addView(button);
+        }
+
 
         setContentView(rootView);
 
