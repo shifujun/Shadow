@@ -51,6 +51,7 @@ def generateCode = tasks.register('generateCode') {
     inputs.property('androidJarPath', androidJarPath)
     outputs.dir(layout.buildDirectory.dir('generateCode'))
             .withPropertyName('outputDir')
+    def buildDir = project.getBuildDir()
     doLast {
         def androidJarPathField
                 = FieldSpec.builder(String, "ANDROID_JAR_PATH", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
@@ -61,7 +62,7 @@ def generateCode = tasks.register('generateCode') {
                 .addField(androidJarPathField).build()
 
         JavaFile.builder("com.tencent.shadow.coding.common_jar_settings", androidJarClass)
-                .build().writeTo(new File(project.getBuildDir(), 'generateCode'))
+                .build().writeTo(new File(buildDir, 'generateCode'))
     }
 }
 
