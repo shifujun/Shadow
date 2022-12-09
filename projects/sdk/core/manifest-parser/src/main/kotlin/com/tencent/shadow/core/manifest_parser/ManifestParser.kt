@@ -18,6 +18,6 @@ fun generatePluginManifest(
     packageForR: String
 ) {
     val androidManifest = AndroidManifestReader().read(xmlFile)
-    val generator = PluginManifestGenerator(packageForR)
+    val generator = PluginManifestGenerator()
     generator.generate(androidManifest, outputDir, packageName)
 }
