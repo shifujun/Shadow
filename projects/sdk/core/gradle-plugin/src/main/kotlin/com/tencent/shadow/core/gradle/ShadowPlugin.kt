@@ -30,6 +30,7 @@ import com.tencent.shadow.core.transform_kit.ClassPoolBuilder
 import org.gradle.api.*
 import org.gradle.api.tasks.compile.JavaCompile
 import java.io.File
+import java.net.URLClassLoader
 
 class ShadowPlugin : Plugin<Project> {
 
@@ -132,6 +133,26 @@ class ShadowPlugin : Plugin<Project> {
         val output = pluginVariant.outputs.first()
 
         val processManifestTask = agpCompat.getProcessManifestTask(output)
+
+        // 找出ap_文件
+        val processResourcesTask = agpCompat.getProcessResourcesTask(output)
+//        val processedResOutputDir =
+//            processResourcesTask.outputs.files.files
+//                .first { it.name.equals("out")  }
+
+        // 找出apk
+        val jar =
+            appExtension.sdkDirectory.walk().filter { it.name.equals("apkanalyzer.jar") }.first()
+        val apkClassLoader = URLClassLoader(arrayOf(jar.toURL()), contextClassLoader)
+        val binaryXmlParserClass =
+            apkClassLoader.loadClass("com.android.tools.apk.analyzer.BinaryXmlParser")
+        val decodeXmlMethod = binaryXmlParserClass.getDeclaredMethod(
+            "decodeXml",
+            String::class.java,
+            ByteArray::class.java
+        )
+        decodeXmlMethod.invoke(null, "abc", "aaa".toByteArray())
+
         val manifestFile = agpCompat.getManifestFile(processManifestTask)
         val variantName = pluginVariant.name
         val outputDir = File(project.buildDir, "generated/source/pluginManifest/$variantName")
