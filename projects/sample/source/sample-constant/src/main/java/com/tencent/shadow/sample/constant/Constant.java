@@ -26,6 +26,7 @@ final public class Constant {
     public static final String PART_KEY_PLUGIN_MAIN_APP = "sample-plugin-app";
     public static final String PART_KEY_PLUGIN_ANOTHER_APP = "sample-plugin-app2";
     public static final String PART_KEY_PLUGIN_BASE = "sample-base";
+    public static final String PART_KEY_PLUGIN_SHARED_SUPPORT = "shared-support-plugin";
 
     public static final int FROM_ID_NOOP = 1000;
     public static final int FROM_ID_START_ACTIVITY = 1002;

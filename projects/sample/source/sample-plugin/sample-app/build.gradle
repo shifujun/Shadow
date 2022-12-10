@@ -142,6 +142,7 @@ shadow {
                         buildTask = ':sample-base:assemblePluginDebug'
                         apkPath = 'projects/sample/source/sample-plugin/sample-base/build/outputs/apk/plugin/debug/sample-base-plugin-debug.apk'
                         hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                        dependsOn = ['shared-support-plugin']
                     }
                     sharedSupportPlugin {
                         businessName = 'sample-plugin-app'

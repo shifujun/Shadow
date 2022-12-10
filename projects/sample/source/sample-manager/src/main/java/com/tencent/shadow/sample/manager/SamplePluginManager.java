@@ -21,6 +21,7 @@ package com.tencent.shadow.sample.manager;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_ANOTHER_APP;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_BASE;
 import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_MAIN_APP;
+import static com.tencent.shadow.sample.constant.Constant.PART_KEY_PLUGIN_SHARED_SUPPORT;
 
 import android.content.Context;
 import android.content.Intent;
@@ -67,6 +68,8 @@ public class SamplePluginManager extends FastPluginManager {
             return "com.tencent.shadow.sample.host.PluginProcessPPS";
         } else if (PART_KEY_PLUGIN_ANOTHER_APP.equals(partKey)) {
             return "com.tencent.shadow.sample.host.Plugin2ProcessPPS";//在这里支持多个插件
+        } else if (PART_KEY_PLUGIN_SHARED_SUPPORT.equals(partKey)) {
+            return "com.tencent.shadow.sample.host.PluginProcessPPS";
         } else {
             //如果有默认PPS，可用return代替throw
             throw new IllegalArgumentException("unexpected plugin load request: " + partKey);
@@ -122,6 +125,7 @@ public class SamplePluginManager extends FastPluginManager {
                 try {
                     InstalledPlugin installedPlugin = installPlugin(pluginZipPath, null, true);
 
+                    loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_SHARED_SUPPORT);
                     loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_BASE);
                     loadPlugin(installedPlugin.UUID, PART_KEY_PLUGIN_MAIN_APP);
                     callApplicationOnCreate(PART_KEY_PLUGIN_BASE);
