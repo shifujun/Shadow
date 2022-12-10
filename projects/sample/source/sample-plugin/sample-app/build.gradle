@@ -65,6 +65,15 @@ dependencies {
     pluginCompileOnly project(":sample-base-lib")
     normalImplementation project(":sample-base-lib")
 
+    pluginCompileOnly "com.android.support:support-annotations:$android_support_annotations_version"
+    normalImplementation "com.android.support:support-annotations:$android_support_annotations_version"
+
+    pluginCompileOnly "com.android.support:support-v4:$android_support_version"
+    normalImplementation "com.android.support:support-v4:$android_support_version"
+
+    pluginCompileOnly "com.android.support:appcompat-v7:$android_support_version"
+    normalImplementation "com.android.support:appcompat-v7:$android_support_version"
+
     //Shadow Transform后业务代码会有一部分实际引用runtime中的类
     //如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
     pluginCompileOnly 'com.tencent.shadow.core:runtime'
@@ -134,6 +143,12 @@ shadow {
                         apkPath = 'projects/sample/source/sample-plugin/sample-base/build/outputs/apk/plugin/debug/sample-base-plugin-debug.apk'
                         hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
                     }
+                    sharedSupportPlugin {
+                        businessName = 'sample-plugin-app'
+                        partKey = 'shared-support-plugin'
+                        buildTask = ':shared-support-plugin:assemblePluginRelease'
+                        apkPath = 'projects/sample/source/sample-plugin/shared-support-plugin/build/outputs/apk/plugin/release/shared-support-plugin-plugin-release.apk'
+                    }
                 }
             }
 
@@ -163,6 +178,13 @@ shadow {
                         buildTask = ':sample-base:assemblePluginRelease'
                         apkPath = 'projects/sample/source/sample-plugin/sample-base/build/outputs/apk/plugin/release/sample-base-plugin-release.apk'
                         hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                        dependsOn = ['shared-support-plugin']
+                    }
+                    sharedSupportPlugin {
+                        businessName = 'sample-plugin-app'
+                        partKey = 'shared-support-plugin'
+                        buildTask = ':shared-support-plugin:assemblePluginRelease'
+                        apkPath = 'projects/sample/source/sample-plugin/shared-support-plugin/build/outputs/apk/plugin/release/shared-support-plugin-plugin-release.apk'
                     }
                 }
             }

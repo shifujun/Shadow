@@ -50,6 +50,9 @@ android {
     // 将插件的资源ID分区改为和宿主0x7F不同的值
     aaptOptions {
         additionalParameters "--package-id", "0x7E", "--allow-reserved-package-id"
+
+        def sharedSupportPlugin = file("../shared-support-plugin/build/outputs/apk/plugin/release/shared-support-plugin-plugin-release.apk")
+        additionalParameters "-I", sharedSupportPlugin.absolutePath
     }
 
     lintOptions {
@@ -63,4 +66,23 @@ dependencies {
     //Shadow Transform后业务代码会有一部分实际引用runtime中的类
     //如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
     pluginCompileOnly 'com.tencent.shadow.core:runtime'
+
+    normalImplementation "com.android.support:support-v4:$android_support_version"
+    normalImplementation "com.android.support:appcompat-v7:$android_support_version"
+
+    pluginCompileOnly "com.android.support:support-v4:$android_support_version"
+    pluginCompileOnly "com.android.support:appcompat-v7:$android_support_version"
+}
+
+// 编译资源依赖于shared-support-plugin的apk先构建出来
+evaluationDependsOn(':shared-support-plugin')
+afterEvaluate {
+    android.applicationVariants.forEach {
+        if (it.name.contains("plugin")) {
+            tasks.getByName("process${it.name.capitalize()}Resources")
+                    .dependsOn(
+                            project(":shared-support-plugin").tasks
+                                    .getByName("assemblePluginRelease"))
+        }
+    }
 }

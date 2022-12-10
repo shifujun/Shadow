@@ -16,7 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.tencent.shadow.sample.plugin.app.lib.gallery.MainActivity" />
+        <activity
+            android:name="com.tencent.shadow.sample.plugin.app.lib.gallery.MainActivity"
+            android:theme="@style/Theme.AppCompat" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
