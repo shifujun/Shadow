@@ -26,14 +26,28 @@ public class PluginPartInfoManager {
 
     private static Map<ClassLoader, PluginPartInfo> sPluginInfos = new HashMap<>();
 
-    public static void addPluginInfo(ClassLoader classLoader, PluginPartInfo pluginPartInfo) {
+    /**
+     * key: partKey
+     */
+    private static Map<String, PluginPartInfo> sPartKeyMap = new HashMap<>();
+
+    public static void addPluginInfo(String partKey, ClassLoader classLoader, PluginPartInfo pluginPartInfo) {
         sPluginInfos.put(classLoader, pluginPartInfo);
+        sPartKeyMap.put(partKey, pluginPartInfo);
     }
 
     public static PluginPartInfo getPluginInfo(ClassLoader classLoader) {
         PluginPartInfo pluginPartInfo = sPluginInfos.get(classLoader);
         if (pluginPartInfo == null) {
             throw new RuntimeException("没有找到classLoader对应的pluginInfo classLoader:" + classLoader);
+        }
+        return pluginPartInfo;
+    }
+
+    public static PluginPartInfo getPluginInfo(String partKey) {
+        PluginPartInfo pluginPartInfo = sPartKeyMap.get(partKey);
+        if (pluginPartInfo == null) {
+            throw new RuntimeException("没有找到partKey对应的pluginInfo partKey:" + partKey);
         }
         return pluginPartInfo;
     }

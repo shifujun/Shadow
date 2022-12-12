@@ -25,6 +25,7 @@ import com.tencent.shadow.core.loader.exceptions.LoadPluginException
 import com.tencent.shadow.core.loader.infos.PluginParts
 import com.tencent.shadow.core.loader.managers.ComponentManager
 import com.tencent.shadow.core.loader.managers.PluginPackageManagerImpl
+import com.tencent.shadow.core.runtime.PackageItemInfoMap
 import com.tencent.shadow.core.runtime.PluginPartInfo
 import com.tencent.shadow.core.runtime.PluginPartInfoManager
 import com.tencent.shadow.core.runtime.ShadowAppComponentFactory
@@ -133,7 +134,9 @@ object LoadPluginBloc {
                         loadParameters,
                         installedApk.apkFilePath,
                     )
-                    pluginPartsMap[loadParameters.partKey] = PluginParts(
+                    val partKey = loadParameters.partKey
+                    PackageItemInfoMap.load(partKey, pluginManifest)
+                    pluginPartsMap[partKey] = PluginParts(
                         appComponentFactory,
                         shadowApplication,
                         pluginClassLoader,
@@ -141,7 +144,9 @@ object LoadPluginBloc {
                         pluginPackageManager
                     )
                     PluginPartInfoManager.addPluginInfo(
-                        pluginClassLoader, PluginPartInfo(
+                        partKey,
+                        pluginClassLoader,
+                        PluginPartInfo(
                             shadowApplication, resources,
                             pluginClassLoader, pluginPackageManager
                         )

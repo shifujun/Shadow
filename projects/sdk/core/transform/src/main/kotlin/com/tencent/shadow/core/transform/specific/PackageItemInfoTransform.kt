@@ -18,11 +18,12 @@
 
 package com.tencent.shadow.core.transform.specific
 
-import com.tencent.shadow.core.transform.ShadowTransform.Companion.SelfClassNamePlaceholder
 import com.tencent.shadow.core.transform_kit.SpecificTransform
 import com.tencent.shadow.core.transform_kit.TransformStep
-import javassist.*
-import java.util.*
+import javassist.CodeConverter
+import javassist.CtClass
+import javassist.CtMethod
+import javassist.bytecode.Descriptor
 
 class PackageItemInfoTransform : SpecificTransform() {
     companion object {
@@ -42,6 +43,20 @@ class PackageItemInfoTransform : SpecificTransform() {
     ) {
         val targetMethods = getTargetMethods(targetClassNames, targetMethodName)
         targetMethods.forEach { targetMethod ->
+            val targetClass = mClassPool[redirectRule.first]
+            val redirectClass = mClassPool[redirectRule.second]
+
+            val redirectMethod = redirectClass.getMethod(
+                targetMethod.name,
+                Descriptor.ofMethod(
+                    targetMethod.returnType,
+                    arrayOf(
+                        targetClass,
+                        *targetMethod.parameterTypes
+                    )
+                )
+            )
+
             newStep(object : TransformStep {
                 override fun filter(allInputClass: Set<CtClass>) =
                     filterRefClasses(
@@ -50,49 +65,9 @@ class PackageItemInfoTransform : SpecificTransform() {
                     ).filter { matchMethodCallInClass(targetMethod, it) }.toSet()
 
                 override fun transform(ctClass: CtClass) {
-                    System.out.println(ctClass.name + " matchMethodCallInClass :" + targetMethod.methodInfo.name + "  =================")
                     try {
-                        val targetClass = mClassPool[redirectRule.first]
-                        val redirectClassName = redirectRule.second
-                        val parameterTypes: Array<CtClass> =
-                            Array(targetMethod.parameterTypes.size + 1) { index ->
-                                if (index == 0) {
-                                    targetClass
-                                } else {
-                                    targetMethod.parameterTypes[index - 1]
-                                }
-                            }
-                        val newMethod = CtNewMethod.make(
-                            Modifier.PUBLIC or Modifier.STATIC,
-                            targetMethod.returnType,
-                            targetMethod.name + "_shadow",
-                            parameterTypes,
-                            targetMethod.exceptionTypes,
-                            null,
-                            ctClass
-                        )
-                        val newBodyBuilder = StringBuilder()
-                        newBodyBuilder
-                            .append("return ")
-                            .append(redirectClassName)
-                            .append(".")
-                            .append(targetMethod.methodInfo.name)
-                            .append("(")
-                            .append(SelfClassNamePlaceholder)
-                            .append(".class.getClassLoader(),")
-                        for (i in 1..newMethod.parameterTypes.size) {
-                            if (i > 1) {
-                                newBodyBuilder.append(',')
-                            }
-                            newBodyBuilder.append("\$${i}")
-                        }
-                        newBodyBuilder.append(");")
-
-                        newMethod.setBody(newBodyBuilder.toString())
-                        ctClass.addMethod(newMethod)
-                        ctClass.replaceClassName(SelfClassNamePlaceholder, ctClass.name)
                         val codeConverter = CodeConverter()
-                        codeConverter.redirectMethodCallToStatic(targetMethod, newMethod)
+                        codeConverter.redirectMethodCallToStatic(targetMethod, redirectMethod)
                         ctClass.instrument(codeConverter)
                     } catch (e: Exception) {
                         System.err.println("处理" + ctClass.name + "时出错:" + e)
