@@ -19,17 +19,16 @@
         </activity>
         <activity
             android:name=".plugin_view.HostAddPluginViewActivity"
-            android:process=":plugin" />
+            />
 
         <provider
             android:authorities="${applicationId}.contentprovider.authority.dynamic"
             android:name="com.tencent.shadow.core.runtime.container.PluginContainerContentProvider"
-            android:grantUriPermissions="true"
-            android:process=":plugin" />
+            android:grantUriPermissions="true" />
 
         <service
             android:name="com.tencent.shadow.sample.host.PluginProcessPPS"
-            android:process=":plugin" />
+             />
         <service
             android:name="com.tencent.shadow.sample.host.Plugin2ProcessPPS"
             android:process=":plugin2" />
