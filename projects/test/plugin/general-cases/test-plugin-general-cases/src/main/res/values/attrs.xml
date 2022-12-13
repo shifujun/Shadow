@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="TestDeclareStyleable">
+        <attr name="testRefAttr" format="reference" />
+    </declare-styleable>
+</resources>

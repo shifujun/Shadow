@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tencent.shadow.test.plugin.general_cases.lib.usecases.resources.TestAttrView xmlns:TestDeclareStyleable="http://schemas.android.com/apk/res-auto"
+    layout_height="1dp"
+    layout_width="1dp"
+    TestDeclareStyleable:testRefAttr="@+id/testRefAttr">
+
+</com.tencent.shadow.test.plugin.general_cases.lib.usecases.resources.TestAttrView>
