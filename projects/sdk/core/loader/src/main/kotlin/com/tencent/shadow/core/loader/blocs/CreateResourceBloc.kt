@@ -33,6 +33,8 @@ import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.webkit.WebView
+import com.tencent.shadow.core.load_parameters.LoadParameters
+import com.tencent.shadow.core.loader.infos.PluginParts
 import java.util.concurrent.CountDownLatch
 
 object CreateResourceBloc {
@@ -51,7 +53,12 @@ object CreateResourceBloc {
      */
     const val MAX_API_FOR_MIX_RESOURCES = Build.VERSION_CODES.O_MR1
 
-    fun create(archiveFilePath: String, hostAppContext: Context): Resources {
+    fun create(
+        archiveFilePath: String,
+        hostAppContext: Context,
+        loadParameters: LoadParameters,
+        pluginPartsMap: MutableMap<String, PluginParts>
+    ): Resources {
         triggerWebViewHookResources(hostAppContext)
 
         val packageManager = hostAppContext.packageManager
@@ -61,7 +68,13 @@ object CreateResourceBloc {
         applicationInfo.uid = hostApplicationInfo.uid
 
         if (Build.VERSION.SDK_INT > MAX_API_FOR_MIX_RESOURCES) {
-            fillApplicationInfoForNewerApi(applicationInfo, hostApplicationInfo, archiveFilePath)
+            val dependsApksList = makeDependsApksList(loadParameters, pluginPartsMap)
+            fillApplicationInfoForNewerApi(
+                applicationInfo,
+                hostApplicationInfo,
+                archiveFilePath,
+                dependsApksList
+            )
         } else {
             fillApplicationInfoForLowerApi(applicationInfo, hostApplicationInfo, archiveFilePath)
         }
@@ -105,7 +118,8 @@ object CreateResourceBloc {
     private fun fillApplicationInfoForNewerApi(
         applicationInfo: ApplicationInfo,
         hostApplicationInfo: ApplicationInfo,
-        pluginApkPath: String
+        pluginApkPath: String,
+        dependsApksList: Array<String>
     ) {
         /**
          * 这里虽然sourceDir和sharedLibraryFiles中指定的apk都会进入Resources对象，
@@ -128,11 +142,12 @@ object CreateResourceBloc {
         val hostSharedLibraryFiles = hostApplicationInfo.sharedLibraryFiles
         val otherApksAddToResources =
             if (hostSharedLibraryFiles == null)
-                arrayOf(pluginApkPath)
+                arrayOf(pluginApkPath, *dependsApksList)
             else
                 arrayOf(
                     *hostSharedLibraryFiles,
-                    pluginApkPath
+                    pluginApkPath,
+                    *dependsApksList,
                 )
 
         applicationInfo.sharedLibraryFiles = otherApksAddToResources
@@ -149,6 +164,24 @@ object CreateResourceBloc {
         applicationInfo.publicSourceDir = pluginApkPath
         applicationInfo.sourceDir = pluginApkPath
         applicationInfo.sharedLibraryFiles = hostApplicationInfo.sharedLibraryFiles
+    }
+
+    private fun makeDependsApksList(
+        loadParameters: LoadParameters,
+        pluginPartsMap: MutableMap<String, PluginParts>
+    ): Array<String> {
+        val dependsOn = loadParameters.dependsOn
+        return if (dependsOn == null || dependsOn.isEmpty()) {
+            emptyArray()
+        } else {
+            dependsOn.flatMap {
+                val pluginParts = pluginPartsMap[it] ?: throw Error("partKey: $it 没有加载")
+                arrayOf(
+                    pluginParts.installedApk.apkFilePath,
+                    *pluginParts.dependsOnResourcesApks
+                ).asIterable()
+            }.toTypedArray()
+        }
     }
 }
 
