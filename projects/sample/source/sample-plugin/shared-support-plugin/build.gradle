@@ -48,8 +48,7 @@ android {
 
     // 将插件的资源ID分区改为和宿主0x7F不同的值
     aaptOptions {
-        additionalParameters "--package-id", "0x7D",
-                "--allow-reserved-package-id",
+        additionalParameters "--package-id", "0x81",
                 "--emit-ids", file("build/emit-ids.txt").absolutePath,
                 "--stable-ids", file("stable-ids.txt").absolutePath
     }

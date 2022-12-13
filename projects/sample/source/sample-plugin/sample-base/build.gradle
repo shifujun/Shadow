@@ -49,7 +49,7 @@ android {
 
     // 将插件的资源ID分区改为和宿主0x7F不同的值
     aaptOptions {
-        additionalParameters "--package-id", "0x7E", "--allow-reserved-package-id"
+        additionalParameters "--package-id", "0x80"
 
         def sharedSupportPlugin = file("../shared-support-plugin/build/outputs/apk/plugin/release/shared-support-plugin-plugin-release.apk")
         additionalParameters "-I", sharedSupportPlugin.absolutePath

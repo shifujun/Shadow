@@ -36,7 +36,7 @@ android {
 
     // 将插件的资源ID分区改为和宿主0x7F不同的值
     aaptOptions {
-        additionalParameters "--package-id", "0x7E", "--allow-reserved-package-id"
+        additionalParameters "--package-id", "0x80"
     }
 }
 
