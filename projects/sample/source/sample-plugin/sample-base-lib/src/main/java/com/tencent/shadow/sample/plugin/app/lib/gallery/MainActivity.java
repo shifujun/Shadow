@@ -18,10 +18,10 @@
 
 package com.tencent.shadow.sample.plugin.app.lib.gallery;
 
+import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -45,7 +45,7 @@ import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCaseCate
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends Activity implements
         ExpandableListView.OnChildClickListener,
         ExpandableListView.OnGroupClickListener,
         OnHeaderUpdateListener, OnGiveUpTouchEventListener {
