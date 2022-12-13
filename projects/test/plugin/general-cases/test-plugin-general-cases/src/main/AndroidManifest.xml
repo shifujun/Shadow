@@ -100,7 +100,9 @@
         <activity android:name=".lib.usecases.context.ContextGetPackageCodePathTestActivity" />
         <activity android:name=".lib.usecases.view.TestViewIdActivity" />
         <activity android:name=".lib.usecases.view.TestNullRefInXmlActivity" />
-        <activity android:name=".lib.usecases.resources.TestDeclareStyleableActivity" />
+        <activity
+            android:name=".lib.usecases.resources.TestDeclareStyleableActivity"
+            android:theme="@style/Theme.AppCompat" />
 
         <provider
             android:name=".lib.usecases.provider.TestProvider"

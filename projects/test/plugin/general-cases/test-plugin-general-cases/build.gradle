@@ -43,6 +43,7 @@ android {
 dependencies {
     implementation "com.android.support:support-annotations:$android_support_annotations_version"
     implementation "com.android.support:support-v4:$android_support_version"
+    implementation "com.android.support:appcompat-v7:$android_support_version"
     implementation project(':custom-view')
     pluginCompileOnly "androidx.test.espresso:espresso-idling-resource:$espresso_version"
     normalImplementation "androidx.test.espresso:espresso-idling-resource:$espresso_version"

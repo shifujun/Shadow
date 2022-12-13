@@ -1,14 +1,14 @@
 package com.tencent.shadow.test.plugin.general_cases.lib.usecases.resources;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
 import com.tencent.shadow.test.plugin.general_cases.R;
 import com.tencent.shadow.test.plugin.general_cases.lib.gallery.util.UiUtil;
 
-public class TestDeclareStyleableActivity extends Activity {
+public class TestDeclareStyleableActivity extends AppCompatActivity {
     private ViewGroup mItemViewGroup;
 
     @Override
