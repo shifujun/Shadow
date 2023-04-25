@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
 import android.content.Intent;
 
+import tshadow.app.Activity;
+
 public class ShadowAppComponentFactory {
 
     public ShadowApplication instantiateApplication(ClassLoader cl,
@@ -12,10 +14,10 @@ public class ShadowAppComponentFactory {
         return (ShadowApplication) cl.loadClass(className).newInstance();
     }
 
-    public ShadowActivity instantiateActivity(ClassLoader cl, String className,
-                                              Intent intent)
+    public Activity instantiateActivity(ClassLoader cl, String className,
+                                        Intent intent)
             throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        return (ShadowActivity) cl.loadClass(className).newInstance();
+        return (Activity) cl.loadClass(className).newInstance();
     }
 
     public BroadcastReceiver instantiateReceiver(ClassLoader cl,

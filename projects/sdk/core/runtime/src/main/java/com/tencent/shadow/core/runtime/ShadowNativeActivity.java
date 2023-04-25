@@ -7,7 +7,9 @@ import android.view.ViewTreeObserver;
 import com.tencent.shadow.core.runtime.container.HostActivityDelegator;
 import com.tencent.shadow.core.runtime.container.HostNativeActivityDelegator;
 
-public class ShadowNativeActivity extends ShadowActivity implements SurfaceHolder.Callback2,
+import tshadow.app.Activity;
+
+public class ShadowNativeActivity extends Activity implements SurfaceHolder.Callback2,
         InputQueue.Callback, ViewTreeObserver.OnGlobalLayoutListener {
 
     private HostNativeActivityDelegator hostNativeActivityDelegator;

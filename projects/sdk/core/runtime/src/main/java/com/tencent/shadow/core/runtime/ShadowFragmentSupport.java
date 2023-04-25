@@ -8,10 +8,12 @@ import android.os.Bundle;
 
 import com.tencent.shadow.core.runtime.container.PluginContainerActivity;
 
+import tshadow.app.Activity;
+
 @SuppressLint("NewApi")
 public class ShadowFragmentSupport {
 
-    public static ShadowActivity fragmentGetActivity(Fragment fragment) {
+    public static Activity fragmentGetActivity(Fragment fragment) {
         PluginContainerActivity pluginContainerActivity
                 = (PluginContainerActivity) fragment.getActivity();
         // When a fragment is not attached or has already been detached, 
@@ -19,7 +21,7 @@ public class ShadowFragmentSupport {
         if (pluginContainerActivity == null) {
             return null;
         }
-        return (ShadowActivity) PluginActivity.get(pluginContainerActivity);
+        return (Activity) PluginActivity.get(pluginContainerActivity);
     }
 
     public static Context fragmentGetContext(Fragment fragment) {

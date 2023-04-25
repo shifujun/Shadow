@@ -18,7 +18,6 @@
 
 package com.tencent.shadow.core.runtime;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.Instrumentation;
 import android.content.Context;
@@ -27,10 +26,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PersistableBundle;
 
+import tshadow.app.Activity;
+
 public class ShadowInstrumentation extends Instrumentation {
 
-    public void callActivityOnDestroy(ShadowActivity activity) {
-        Activity hostActivity = (Activity) activity.hostActivityDelegator.getHostActivity();
+    public void callActivityOnDestroy(Activity activity) {
+        android.app.Activity hostActivity = (android.app.Activity) activity.hostActivityDelegator.getHostActivity();
         super.callActivityOnDestroy(hostActivity);
     }
 
@@ -62,9 +63,9 @@ public class ShadowInstrumentation extends Instrumentation {
      * 因为参数签名和newActivity一样,但是返回值不一样,所以无法override
      * 只能通过transform,让newActivity转移到newShadowActivity上来
      */
-    public ShadowActivity newShadowActivity(ClassLoader cl, String className, Intent intent)
+    public Activity newShadowActivity(ClassLoader cl, String className, Intent intent)
             throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        return (ShadowActivity) cl.loadClass(className).newInstance();
+        return (Activity) cl.loadClass(className).newInstance();
     }
 
     public void callApplicationOnCreate(ShadowApplication app) {
@@ -79,11 +80,11 @@ public class ShadowInstrumentation extends Instrumentation {
      * 像com.didi.virtualapk是用自定义的Instrumentation做了一层代理,替换intent中合适的activity
      * 但是shadow的activity不是这样启动的,这个方法也不会执行,仅仅保证编译通过,能正常打出插件包,而virtualapk其实是完全失效的
      */
-    public ActivityResult execStartActivity(Context who, IBinder contextThread, IBinder token, ShadowActivity target, Intent intent, int requestCode) {
+    public ActivityResult execStartActivity(Context who, IBinder contextThread, IBinder token, Activity target, Intent intent, int requestCode) {
         return new ActivityResult(requestCode, intent);
     }
 
-    public ActivityResult execStartActivity(Context who, IBinder contextThread, IBinder token, ShadowActivity target, Intent intent, int requestCode, Bundle options) {
+    public ActivityResult execStartActivity(Context who, IBinder contextThread, IBinder token, Activity target, Intent intent, int requestCode, Bundle options) {
         return new ActivityResult(requestCode, intent);
     }
 
@@ -99,10 +100,10 @@ public class ShadowInstrumentation extends Instrumentation {
      * 同execStartActivity方法一样,其实插件中并不会调用到这里
      * 而且这个方法里面都大量的UnsupportedAppUsage方法调用,如果重写并不符合shadow零反射的原则
      */
-    public void callActivityOnCreate(ShadowActivity activity, Bundle icicle) {
+    public void callActivityOnCreate(Activity activity, Bundle icicle) {
     }
 
-    public void callActivityOnCreate(ShadowActivity activity, Bundle icicle, PersistableBundle persistentState) {
+    public void callActivityOnCreate(Activity activity, Bundle icicle, PersistableBundle persistentState) {
     }
 
 

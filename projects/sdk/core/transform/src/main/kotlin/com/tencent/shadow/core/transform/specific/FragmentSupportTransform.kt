@@ -20,13 +20,19 @@ package com.tencent.shadow.core.transform.specific
 
 import com.tencent.shadow.core.transform_kit.SpecificTransform
 import com.tencent.shadow.core.transform_kit.TransformStep
-import javassist.*
+import javassist.CodeConverter
+import javassist.CtClass
+import javassist.CtMethod
+import javassist.CtNewMethod
+import javassist.EnhancedCodeConverter
+import javassist.Modifier
+import javassist.NotFoundException
 import javassist.bytecode.Descriptor
 
 class FragmentSupportTransform : SpecificTransform() {
     companion object {
         const val ObjectClassname = "java.lang.Object"
-        const val ShadowActivityClassname = "com.tencent.shadow.core.runtime.ShadowActivity"
+        const val ShadowActivityClassname = "tshadow.app.Activity"
         const val AndroidActivityClassname = "android.app.Activity"
         const val AndroidFragmentClassname = "android.app.Fragment"
         const val AndroidIntentClassname = "android.content.Intent"

@@ -26,7 +26,7 @@ import javassist.bytecode.Descriptor
 
 class DialogSupportTransform : SpecificTransform() {
     companion object {
-        const val ShadowActivityClassname = "com.tencent.shadow.core.runtime.ShadowActivity"
+        const val ShadowActivityClassname = "tshadow.app.Activity"
         const val AndroidDialogClassname = "android.app.Dialog"
         const val DialogSupportTransformClassname =
             "com.tencent.shadow.core.runtime.ShadowDialogSupport"

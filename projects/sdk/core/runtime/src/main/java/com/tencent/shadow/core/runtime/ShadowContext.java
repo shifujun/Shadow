@@ -34,8 +34,8 @@ import android.view.LayoutInflater;
 import com.tencent.shadow.core.runtime.container.GeneratedHostActivityDelegator;
 
 public class ShadowContext extends SubDirContextThemeWrapper {
-    PluginComponentLauncher mPluginComponentLauncher;
-    ClassLoader mPluginClassLoader;
+    protected PluginComponentLauncher mPluginComponentLauncher;
+    protected ClassLoader mPluginClassLoader;
     ShadowApplication mShadowApplication;
     Resources mPluginResources;
     LayoutInflater mLayoutInflater;

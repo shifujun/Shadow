@@ -18,7 +18,6 @@
 
 package com.tencent.shadow.core.runtime;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -28,6 +27,8 @@ import android.view.Window;
 import com.tencent.shadow.core.runtime.container.HostActivityDelegator;
 import com.tencent.shadow.core.runtime.container.PluginContainerActivity;
 
+import tshadow.app.Activity;
+
 public abstract class PluginActivity extends GeneratedPluginActivity {
 
     static PluginActivity get(PluginContainerActivity pluginContainerActivity) {
@@ -36,15 +37,15 @@ public abstract class PluginActivity extends GeneratedPluginActivity {
             return (PluginActivity) o;
         } else {
             //在遇到IllegalIntent时hostActivityDelegate==null。需要返回一个空的Activity避免Crash。
-            return new ShadowActivity();
+            return new Activity();
         }
     }
 
-    HostActivityDelegator hostActivityDelegator;
+    protected HostActivityDelegator hostActivityDelegator;
 
-    ShadowApplication mPluginApplication;
+    protected ShadowApplication mPluginApplication;
 
-    ComponentName mCallingActivity;
+    protected ComponentName mCallingActivity;
 
     public void registerActivityLifecycleCallbacks(
             ShadowActivityLifecycleCallbacks callback) {
@@ -86,17 +87,17 @@ public abstract class PluginActivity extends GeneratedPluginActivity {
     }
 
     //TODO: 对齐原手工代码，这个方法签名实际上不对，应该传入ShadowActivity
-    public void onChildTitleChanged(Activity childActivity, CharSequence title) {
+    public void onChildTitleChanged(android.app.Activity childActivity, CharSequence title) {
         hostActivityDelegator.superOnChildTitleChanged(childActivity, title);
     }
 
     @Override
-    public boolean onNavigateUpFromChild(ShadowActivity arg0) {
+    public boolean onNavigateUpFromChild(Activity arg0) {
         throw new UnsupportedOperationException("Unsupported Yet");
     }
 
     @Override
-    public void onChildTitleChanged(ShadowActivity arg0, CharSequence arg1) {
+    public void onChildTitleChanged(Activity arg0, CharSequence arg1) {
         throw new UnsupportedOperationException("Unsupported Yet");
     }
 

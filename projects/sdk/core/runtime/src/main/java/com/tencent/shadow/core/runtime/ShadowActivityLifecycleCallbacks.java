@@ -18,7 +18,6 @@
 
 package com.tencent.shadow.core.runtime;
 
-import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
@@ -32,67 +31,69 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import tshadow.app.Activity;
+
 public interface ShadowActivityLifecycleCallbacks {
 
-    void onActivityPreCreated(ShadowActivity activity, Bundle savedInstanceState);
+    void onActivityPreCreated(Activity activity, Bundle savedInstanceState);
 
-    void onActivityCreated(ShadowActivity activity, Bundle savedInstanceState);
+    void onActivityCreated(Activity activity, Bundle savedInstanceState);
 
-    void onActivityPostCreated(ShadowActivity activity, Bundle savedInstanceState);
-
-
-    void onActivityPreStarted(ShadowActivity activity);
+    void onActivityPostCreated(Activity activity, Bundle savedInstanceState);
 
 
-    void onActivityStarted(ShadowActivity activity);
+    void onActivityPreStarted(Activity activity);
 
 
-    void onActivityPostStarted(ShadowActivity activity);
+    void onActivityStarted(Activity activity);
 
 
-    void onActivityPreResumed(ShadowActivity activity);
+    void onActivityPostStarted(Activity activity);
 
 
-    void onActivityResumed(ShadowActivity activity);
+    void onActivityPreResumed(Activity activity);
 
 
-    void onActivityPostResumed(ShadowActivity activity);
+    void onActivityResumed(Activity activity);
 
 
-    void onActivityPrePaused(ShadowActivity activity);
+    void onActivityPostResumed(Activity activity);
 
 
-    void onActivityPaused(ShadowActivity activity);
+    void onActivityPrePaused(Activity activity);
 
 
-    void onActivityPostPaused(ShadowActivity activity);
+    void onActivityPaused(Activity activity);
 
 
-    void onActivityPreStopped(ShadowActivity activity);
+    void onActivityPostPaused(Activity activity);
 
 
-    void onActivityStopped(ShadowActivity activity);
+    void onActivityPreStopped(Activity activity);
 
 
-    void onActivityPostStopped(ShadowActivity activity);
+    void onActivityStopped(Activity activity);
 
 
-    void onActivityPreSaveInstanceState(ShadowActivity activity, Bundle outState);
+    void onActivityPostStopped(Activity activity);
 
 
-    void onActivitySaveInstanceState(ShadowActivity activity, Bundle outState);
+    void onActivityPreSaveInstanceState(Activity activity, Bundle outState);
 
 
-    void onActivityPostSaveInstanceState(ShadowActivity activity, Bundle outState);
+    void onActivitySaveInstanceState(Activity activity, Bundle outState);
 
 
-    void onActivityPreDestroyed(ShadowActivity activity);
+    void onActivityPostSaveInstanceState(Activity activity, Bundle outState);
 
 
-    void onActivityDestroyed(ShadowActivity activity);
+    void onActivityPreDestroyed(Activity activity);
 
 
-    void onActivityPostDestroyed(ShadowActivity activity);
+    void onActivityDestroyed(Activity activity);
+
+
+    void onActivityPostDestroyed(Activity activity);
 
     class Wrapper implements Application.ActivityLifecycleCallbacks {
 
@@ -105,76 +106,76 @@ public interface ShadowActivityLifecycleCallbacks {
             this.runtimeObject = runtimeObject;
         }
 
-        private ShadowActivity getPluginActivity(Activity activity) {
+        private Activity getPluginActivity(android.app.Activity activity) {
             if (activity instanceof PluginContainerActivity) {
-                return (ShadowActivity) PluginActivity.get((PluginContainerActivity) activity);
+                return (Activity) PluginActivity.get((PluginContainerActivity) activity);
             } else {
                 return null;
             }
         }
 
         @Override
-        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityCreated(android.app.Activity activity, Bundle savedInstanceState) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 shadowActivityLifecycleCallbacks.onActivityCreated(pluginActivity, savedInstanceState);
             }
         }
 
         @Override
-        public void onActivityStarted(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityStarted(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 shadowActivityLifecycleCallbacks.onActivityStarted(pluginActivity);
             }
         }
 
         @Override
-        public void onActivityResumed(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityResumed(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 shadowActivityLifecycleCallbacks.onActivityResumed(pluginActivity);
             }
         }
 
         @Override
-        public void onActivityPaused(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPaused(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 shadowActivityLifecycleCallbacks.onActivityPaused(pluginActivity);
             }
         }
 
         @Override
-        public void onActivityStopped(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityStopped(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 shadowActivityLifecycleCallbacks.onActivityStopped(pluginActivity);
             }
         }
 
         @Override
-        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivitySaveInstanceState(android.app.Activity activity, Bundle outState) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 shadowActivityLifecycleCallbacks.onActivitySaveInstanceState(pluginActivity, outState);
             }
         }
 
         @Override
-        public void onActivityDestroyed(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityDestroyed(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 shadowActivityLifecycleCallbacks.onActivityDestroyed(pluginActivity);
             }
         }
 
         @Override
-        public void onActivityPreCreated(Activity activity, Bundle savedInstanceState) {
+        public void onActivityPreCreated(android.app.Activity activity, Bundle savedInstanceState) {
             //此时PluginActivity尚未构造。改由onPluginActivityPreCreated通知。
         }
 
-        public void onPluginActivityPreCreated(ShadowActivity pluginActivity, Bundle savedInstanceState) {
+        public void onPluginActivityPreCreated(Activity pluginActivity, Bundle savedInstanceState) {
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPreCreated(pluginActivity, savedInstanceState);
@@ -185,8 +186,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPostCreated(Activity activity, Bundle savedInstanceState) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPostCreated(android.app.Activity activity, Bundle savedInstanceState) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPostCreated(pluginActivity, savedInstanceState);
@@ -197,8 +198,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPreStarted(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPreStarted(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPreStarted(pluginActivity);
@@ -209,8 +210,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPostStarted(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPostStarted(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPostStarted(pluginActivity);
@@ -221,8 +222,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPreResumed(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPreResumed(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPreResumed(pluginActivity);
@@ -233,8 +234,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPostResumed(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPostResumed(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPostResumed(pluginActivity);
@@ -245,8 +246,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPrePaused(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPrePaused(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPrePaused(pluginActivity);
@@ -257,8 +258,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPostPaused(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPostPaused(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPostPaused(pluginActivity);
@@ -269,8 +270,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPreStopped(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPreStopped(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPreStopped(pluginActivity);
@@ -281,8 +282,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPostStopped(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPostStopped(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPostStopped(pluginActivity);
@@ -293,8 +294,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPreSaveInstanceState(Activity activity, Bundle outState) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPreSaveInstanceState(android.app.Activity activity, Bundle outState) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPreSaveInstanceState(pluginActivity, outState);
@@ -305,8 +306,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPostSaveInstanceState(Activity activity, Bundle outState) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPostSaveInstanceState(android.app.Activity activity, Bundle outState) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPostSaveInstanceState(pluginActivity, outState);
@@ -317,8 +318,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPreDestroyed(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPreDestroyed(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPreDestroyed(pluginActivity);
@@ -329,8 +330,8 @@ public interface ShadowActivityLifecycleCallbacks {
         }
 
         @Override
-        public void onActivityPostDestroyed(Activity activity) {
-            final ShadowActivity pluginActivity = getPluginActivity(activity);
+        public void onActivityPostDestroyed(android.app.Activity activity) {
+            final Activity pluginActivity = getPluginActivity(activity);
             if (checkOwnerActivity(pluginActivity)) {
                 try {
                     shadowActivityLifecycleCallbacks.onActivityPostDestroyed(pluginActivity);
@@ -374,7 +375,7 @@ public interface ShadowActivityLifecycleCallbacks {
         final private Map<ShadowActivityLifecycleCallbacks.Wrapper, Object>
                 mAllShadowActivityLifecycleCallbackWrappers = new WeakHashMap<>();
 
-        public void notifyPluginActivityPreCreated(ShadowActivity pluginActivity,
+        public void notifyPluginActivityPreCreated(Activity pluginActivity,
                                                    Bundle savedInstanceState) {
             synchronized (mShadowActivityLifecycleCallbacksWrapperMap) {
                 //onPluginActivityPreCreated中可能会再次调用registerActivityLifecycleCallbacks，

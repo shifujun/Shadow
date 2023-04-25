@@ -104,7 +104,6 @@ class ActivityCodeGenerator {
             ctClass.name = name
 
             mapOf(
-                Activity::class to "ShadowActivity",
                 Application::class to "ShadowApplication"
             ).forEach {
                 val newClassName = "$RUNTIME_PACKAGE.${it.value}"
@@ -113,6 +112,18 @@ class ActivityCodeGenerator {
 
                 newClassNames.add(newClassName)
             }
+
+            /**
+             * 临时测试ShadowActivity改名效果
+             */
+            fun temp() {
+                val newClassName = "tshadow.app.Activity"
+                renameMap[Descriptor.toJvmName(Activity::class.java.name)] =
+                    Descriptor.toJvmName(newClassName)
+
+                newClassNames.add(newClassName)
+            }
+            temp()
 
             ctClass.replaceClassName(renameMap)
             return ctClass.toClass()

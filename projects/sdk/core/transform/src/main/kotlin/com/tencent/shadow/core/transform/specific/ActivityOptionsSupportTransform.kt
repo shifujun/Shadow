@@ -35,7 +35,7 @@ class ActivityOptionsSupportTransform : SpecificTransform() {
         const val ActivityOptionsSupportClassname =
             "com.tencent.shadow.core.runtime.ActivityOptionsSupport"
         const val ActivityClassname = "android.app.Activity"
-        const val ShadowActivityClassname = "com.tencent.shadow.core.runtime.ShadowActivity"
+        const val ShadowActivityClassname = "tshadow.app.Activity"
         const val makeSceneTransitionAnimationMethodName = "makeSceneTransitionAnimation"
         fun makeSceneTransitionAnimationMethodSig1(activityClassname: String) =
             "(L${Descriptor.toJvmName(activityClassname)};" +

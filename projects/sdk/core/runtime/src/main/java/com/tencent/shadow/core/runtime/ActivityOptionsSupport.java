@@ -19,10 +19,11 @@
 package com.tencent.shadow.core.runtime;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ActivityOptions;
 import android.util.Pair;
 import android.view.View;
+
+import tshadow.app.Activity;
 
 /**
  * @see com.tencent.shadow.core.transform.specific.ActivityOptionsSupportTransform
@@ -31,10 +32,10 @@ import android.view.View;
 public class ActivityOptionsSupport {
 
     public static ActivityOptions makeSceneTransitionAnimation(
-            ShadowActivity shadowActivity,
+            Activity shadowActivity,
             View sharedElement,
             String sharedElementName) {
-        Activity activity = shadowActivity.hostActivityDelegator
+        android.app.Activity activity = shadowActivity.hostActivityDelegator
                 .getHostActivity().getImplementActivity();
         return ActivityOptions.makeSceneTransitionAnimation(
                 activity,
@@ -45,9 +46,9 @@ public class ActivityOptionsSupport {
 
     @SafeVarargs
     public static ActivityOptions makeSceneTransitionAnimation(
-            ShadowActivity shadowActivity,
+            Activity shadowActivity,
             Pair<View, String>... sharedElements) {
-        Activity activity = shadowActivity.hostActivityDelegator
+        android.app.Activity activity = shadowActivity.hostActivityDelegator
                 .getHostActivity().getImplementActivity();
         return ActivityOptions.makeSceneTransitionAnimation(
                 activity,

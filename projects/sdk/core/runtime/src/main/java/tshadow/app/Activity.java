@@ -16,7 +16,7 @@
  *
  */
 
-package com.tencent.shadow.core.runtime;
+package tshadow.app;
 
 import android.content.ComponentName;
 import android.content.Intent;
@@ -27,7 +27,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ShadowActivity extends PluginActivity {
+import com.tencent.shadow.core.runtime.PluginActivity;
+import com.tencent.shadow.core.runtime.ShadowApplication;
+import com.tencent.shadow.core.runtime.XmlPullParserUtil;
+
+public class Activity extends PluginActivity {
 
     @Override
     public void setContentView(int layoutResID) {
@@ -48,7 +52,7 @@ public class ShadowActivity extends PluginActivity {
     }
 
     @Override
-    public final ShadowActivity getParent() {
+    public final Activity getParent() {
         return null;
     }
 
@@ -115,27 +119,27 @@ public class ShadowActivity extends PluginActivity {
     }
 
     @Override
-    public void startIntentSenderFromChild(ShadowActivity arg0, IntentSender arg1, int arg2, Intent arg3, int arg4, int arg5, int arg6) throws IntentSender.SendIntentException {
+    public void startIntentSenderFromChild(Activity arg0, IntentSender arg1, int arg2, Intent arg3, int arg4, int arg5, int arg6) throws IntentSender.SendIntentException {
         throw new UnsupportedOperationException("Unsupported Yet");
     }
 
     @Override
-    public void startIntentSenderFromChild(ShadowActivity arg0, IntentSender arg1, int arg2, Intent arg3, int arg4, int arg5, int arg6, Bundle arg7) throws IntentSender.SendIntentException {
+    public void startIntentSenderFromChild(Activity arg0, IntentSender arg1, int arg2, Intent arg3, int arg4, int arg5, int arg6, Bundle arg7) throws IntentSender.SendIntentException {
         throw new UnsupportedOperationException("Unsupported Yet");
     }
 
     @Override
-    public boolean navigateUpToFromChild(ShadowActivity arg0, Intent arg1) {
+    public boolean navigateUpToFromChild(Activity arg0, Intent arg1) {
         throw new UnsupportedOperationException("Unsupported Yet");
     }
 
     @Override
-    public void finishFromChild(ShadowActivity arg0) {
+    public void finishFromChild(Activity arg0) {
         throw new UnsupportedOperationException("Unsupported Yet");
     }
 
     @Override
-    public void finishActivityFromChild(ShadowActivity arg0, int arg1) {
+    public void finishActivityFromChild(Activity arg0, int arg1) {
         throw new UnsupportedOperationException("Unsupported Yet");
     }
 
@@ -153,7 +157,7 @@ public class ShadowActivity extends PluginActivity {
      * 不计划支持这个方法了。
      */
     @Override
-    public void startActivityFromChild(ShadowActivity arg0, Intent arg1, int arg2) {
+    public void startActivityFromChild(Activity arg0, Intent arg1, int arg2) {
         throw new UnsupportedOperationException("Unsupported");
     }
 
@@ -166,7 +170,7 @@ public class ShadowActivity extends PluginActivity {
      * 不计划支持这个方法了。
      */
     @Override
-    public void startActivityFromChild(ShadowActivity arg0, Intent arg1, int arg2, Bundle arg3) {
+    public void startActivityFromChild(Activity arg0, Intent arg1, int arg2, Bundle arg3) {
         throw new UnsupportedOperationException("Unsupported");
     }
 }

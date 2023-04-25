@@ -18,7 +18,6 @@
 
 package com.tencent.shadow.core.loader.delegates
 
-import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -40,9 +39,9 @@ import com.tencent.shadow.core.loader.managers.ComponentManager.Companion.CM_LOA
 import com.tencent.shadow.core.loader.managers.ComponentManager.Companion.CM_PART_KEY
 import com.tencent.shadow.core.runtime.PluginActivity
 import com.tencent.shadow.core.runtime.PluginManifest
-import com.tencent.shadow.core.runtime.ShadowActivity
 import com.tencent.shadow.core.runtime.container.HostActivityDelegate
 import com.tencent.shadow.core.runtime.container.HostActivityDelegator
+import tshadow.app.Activity
 
 /**
  * 壳子Activity与插件Activity转调关系的实现类
@@ -285,7 +284,7 @@ open class ShadowActivityDelegate(private val mDI: DI) : GeneratedShadowActivity
     }
 
     private fun notifyPluginActivityPreCreated(
-        pluginActivity: ShadowActivity,
+        pluginActivity: tshadow.app.Activity,
         pluginSavedInstanceState: Bundle?
     ) {
         mPluginApplication.mActivityLifecycleCallbacksHolder.notifyPluginActivityPreCreated(
