@@ -4,6 +4,7 @@ import static com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseMana
 
 import android.app.Application;
 
+import com.nenly.nenlysdk.NenlyCloudGamingHelper;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCaseCategory;
@@ -33,6 +34,7 @@ public class UseCaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         initCase();
+        NenlyCloudGamingHelper.getHelper().initApplicationContext(this);
     }
 
     private static void initCase() {
