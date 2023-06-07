@@ -114,6 +114,13 @@ class ReceiverSupportTransform : SpecificTransform() {
                     ctClass.addField(it)
                 }
 
+                // 兼容javassist的insertAuxInitializer方法bug。它在判断maxstack是否够用时直接与
+                // 新增加的指令所需的stacksize相比较了。所以当执行新增指令时如果stack已经满了就会溢出
+                // 我们这里addField本身需要3个空间，所以这里直接加3
+                ctClass.declaredConstructors.map { it.methodInfo.codeAttribute }.forEach {
+                    it.maxStack += 3
+                }
+
                 // 添加新onReceive方法
                 val newOnReceiveMethod = CtMethod.make(
                     """
