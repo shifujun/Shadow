@@ -30,10 +30,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: revert gradle wrapper mirror setting
-        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
+        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-8.0.2-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
       - name: revert gradle wrapper mirror setting
         working-directory: projects/test/gradle-plugin-agp-compat-test
-        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
+        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-8.0.2-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
       - uses: actions/setup-java@v2
         with:
           distribution: 'temurin'
