@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.ryg.expandable.ui'
     compileSdkVersion project.COMPILE_SDK_VERSION
 
 

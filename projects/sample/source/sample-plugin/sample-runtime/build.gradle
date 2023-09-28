@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace 'com.tencent.shadow.sample.plugin.runtime'
     compileSdkVersion project.COMPILE_SDK_VERSION
     defaultConfig {
         applicationId project.SAMPLE_HOST_APP_APPLICATION_ID

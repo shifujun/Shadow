@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespacke 'com.jeremyfeinstein.slidingmenu.lib'
     compileSdkVersion project.COMPILE_SDK_VERSION
 
 

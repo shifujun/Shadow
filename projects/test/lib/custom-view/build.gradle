@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.tencent.shadow.test.lib.custom_view'
     compileSdkVersion project.COMPILE_SDK_VERSION
 
 

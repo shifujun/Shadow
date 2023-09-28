@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.tencent.shadow.coding.get_android_jar'
     compileSdkVersion project.COMPILE_SDK_VERSION
 }
 

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace 'com.tencent.shadow.sample.loader'
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.tencent.shadow.sample.loader"//applicationId不重要

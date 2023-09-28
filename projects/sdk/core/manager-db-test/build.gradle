@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.tencent.shadow.core.manager_aar'
     defaultConfig {
         compileSdkVersion project.COMPILE_SDK_VERSION
         minSdkVersion project.MIN_SDK_VERSION
