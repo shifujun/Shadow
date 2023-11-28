@@ -28,7 +28,14 @@ android {
         targetSdkVersion project.TARGET_SDK_VERSION
         versionCode project.VERSION_CODE
         versionName project.VERSION_NAME
+        multiDexEnabled true
+        multiDexKeepProguard file('multidex-config.pro')
     }
+
+    dexOptions {
+        additionalParameters += '--minimal-main-dex'//为了测试Multidex能力
+    }
+
 
     buildTypes {
         release {
@@ -68,6 +75,8 @@ dependencies {
     //Shadow Transform后业务代码会有一部分实际引用runtime中的类
     //如果不以compileOnly方式依赖，会导致其他Transform或者Proguard找不到这些类
     pluginCompileOnly 'com.tencent.shadow.core:runtime'
+
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
 
 preBuild.dependsOn(":sample-host-lib:jarDebugPackage")

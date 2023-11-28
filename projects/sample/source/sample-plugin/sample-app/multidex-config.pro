@@ -1,0 +1,2 @@
+-keep class androidx.multidex.**
+-keep class com.tencent.shadow.core.manifest_parser.PluginManifest

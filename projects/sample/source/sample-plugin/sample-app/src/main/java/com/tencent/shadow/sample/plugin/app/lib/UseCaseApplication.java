@@ -3,6 +3,9 @@ package com.tencent.shadow.sample.plugin.app.lib;
 import static com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager.useCases;
 
 import android.app.Application;
+import android.content.Context;
+
+import androidx.multidex.MultiDex;
 
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.UseCaseManager;
 import com.tencent.shadow.sample.plugin.app.lib.gallery.cases.entity.UseCase;
@@ -29,6 +32,13 @@ import com.tencent.shadow.sample.plugin.app.lib.usecases.receiver.TestReceiverAc
 import com.tencent.shadow.sample.plugin.app.lib.usecases.webview.WebViewActivity;
 
 public class UseCaseApplication extends Application {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
