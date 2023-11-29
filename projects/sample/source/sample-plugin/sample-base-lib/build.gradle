@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'com.tencent.shadow.sample.plugin.app.lib.base'
     compileSdkVersion project.COMPILE_SDK_VERSION
 
     defaultConfig {

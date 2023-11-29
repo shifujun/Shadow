@@ -20,6 +20,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.tencent.shadow.plugin'
 
 android {
+    namespace 'com.tencent.shadow.sample.plugin.app.lib'
     compileSdkVersion project.COMPILE_SDK_VERSION
 
     defaultConfig {

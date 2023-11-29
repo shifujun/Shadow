@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace 'com.tencent.shadow.test.dynamic.host'
     compileSdkVersion project.COMPILE_SDK_VERSION
     defaultConfig {
         applicationId project.TEST_HOST_APP_APPLICATION_ID

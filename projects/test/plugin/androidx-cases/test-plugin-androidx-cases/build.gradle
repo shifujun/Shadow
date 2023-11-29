@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.tencent.shadow.plugin'
 
 android {
+    namespace 'com.tencent.shadow.test.plugin.androidx_cases'
     compileSdkVersion project.COMPILE_SDK_VERSION
 
     defaultConfig {
