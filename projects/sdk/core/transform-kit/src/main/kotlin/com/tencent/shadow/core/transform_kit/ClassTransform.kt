@@ -19,10 +19,15 @@
 package com.tencent.shadow.core.transform_kit
 
 import com.android.SdkConstants
-import com.android.build.api.transform.*
+import com.android.build.api.transform.DirectoryInput
+import com.android.build.api.transform.Format
+import com.android.build.api.transform.JarInput
 import com.android.build.api.transform.QualifiedContent.ContentType
 import com.android.build.api.transform.QualifiedContent.Scope
-import com.android.build.gradle.internal.pipeline.TransformManager
+import com.android.build.api.transform.SecondaryFile
+import com.android.build.api.transform.Transform
+import com.android.build.api.transform.TransformInvocation
+import com.android.build.api.transform.TransformOutputProvider
 import com.android.utils.FileUtils
 import com.google.common.collect.ImmutableList
 import com.google.common.io.Files
@@ -160,11 +165,11 @@ abstract class ClassTransform(val project: Project) : Transform() {
 
     override fun getName(): String = this::class.simpleName!!
 
-    override fun getInputTypes(): MutableSet<ContentType> = TransformManager.CONTENT_CLASS
+    override fun getInputTypes(): MutableSet<ContentType> = mutableSetOf()
 
     override fun isIncremental(): Boolean = false
 
-    override fun getScopes(): MutableSet<in Scope> = TransformManager.SCOPE_FULL_PROJECT
+    override fun getScopes(): MutableSet<in Scope> = mutableSetOf()
 
     /**
      * 每一次执行transform前调用。在一次构建中可能有多个Variant，多个Variant会共用同一个
