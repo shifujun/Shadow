@@ -51,11 +51,11 @@ class ShadowPlugin : Plugin<Project> {
 
         val shadowExtension = project.extensions.create("shadow", ShadowExtension::class.java)
         if (!project.hasProperty("disable_shadow_transform")) {
-            baseExtension.registerTransform(ShadowTransform(
-                project,
-                lateInitBuilder,
-                { shadowExtension.transformConfig.useHostContext }
-            ))
+//            baseExtension.registerTransform(ShadowTransform(
+//                project,
+//                lateInitBuilder,
+//                { shadowExtension.transformConfig.useHostContext }
+//            ))
         }
 
         addFlavorForTransform(baseExtension)
