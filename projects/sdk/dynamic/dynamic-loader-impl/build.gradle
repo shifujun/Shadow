@@ -5,13 +5,12 @@ apply plugin: 'com.tencent.shadow.internal.common-jar-settings'
 apply plugin: 'kotlin'
 
 compileKotlin {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 
     kotlinOptions {
         jvmTarget = "1.8"
         noJdk = true
-        noStdlib = true
     }
 }
 
