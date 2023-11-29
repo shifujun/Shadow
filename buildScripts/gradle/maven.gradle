@@ -85,8 +85,8 @@ def sourceJar(String name, String path) {
         description = "package ${name} source to jar"
         from "$path/src/main/java"
         from "$path/src/main/kotlin"
-        destinationDir = file("$path/build/libs/")
-        classifier = 'sources'
+        destinationDirectory = file("$path/build/libs/")
+        archiveClassifier = 'sources'
     }
 }
 
