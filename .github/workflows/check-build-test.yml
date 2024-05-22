@@ -45,8 +45,32 @@ jobs:
     needs: [ check-commit-message, check-code-format ]
     name: 构建SDK
     runs-on: ubuntu-latest
+    env:
+      DISABLE_TENCENT_MAVEN_MIRROR: true
     steps:
-      - run: echo Hello world!
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      - name: checkout
+        uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: revert gradle wrapper mirror setting
+        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+      - name: buildSdk
+        run: ./gradlew buildSdk -S
+      - name: stop gradle deamon for actions/cache
+        run: ./gradlew --stop
   build-sample-maven:
     needs: [ check-commit-message, check-code-format ]
     name: 构建maven依赖SDK的sample
