@@ -45,51 +45,29 @@ jobs:
     needs: [ check-commit-message, check-code-format ]
     name: 构建SDK
     runs-on: ubuntu-latest
-    env:
-      DISABLE_TENCENT_MAVEN_MIRROR: true
     steps:
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v3.x
       - name: checkout
         uses: actions/checkout@v4
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: revert gradle wrapper mirror setting
-        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'gradle'
+      - name: pre-build
+        uses: ./.github/actions/pre-build
       - name: buildSdk
         run: ./gradlew buildSdk -S
-      - name: stop gradle deamon for actions/cache
-        run: ./gradlew --stop
+      - name: post-build
+        uses: ./.github/actions/post-build
   build-sample-maven:
     needs: [ check-commit-message, check-code-format ]
     name: 构建maven依赖SDK的sample
     runs-on: ubuntu-latest
-    env:
-      DISABLE_TENCENT_MAVEN_MIRROR: true
     steps:
-      - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v3.x
       - name: checkout
         uses: actions/checkout@v4
-      - uses: actions/cache@v4
+      - name: pre-build
+        uses: ./.github/actions/pre-build
+      - uses: actions/setup-java@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
       - name: revert gradle wrapper mirror setting for sample host-project
         working-directory: projects/sample/maven/host-project
         run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-6.6.1-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
@@ -108,23 +86,115 @@ jobs:
       - name: build sample/maven/plugin-project
         working-directory: projects/sample/maven/plugin-project
         run: ./gradlew assemble
-      - name: stop gradle deamon for actions/cache
-        run: ./gradlew --stop
-  build-sample-source:
+      - name: post-build
+        uses: ./.github/actions/post-build
+  build-all:
     needs: build-sdk
-    name: 构建源码依赖SDK的sample
+    name: 构建所有源码
     runs-on: ubuntu-latest
     steps:
-      - run: echo Hello world!
-  test-sdk-on-jvm:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: pre-build
+        uses: ./.github/actions/pre-build
+      - name: buildSdk
+        run: ./gradlew build
+      - name: post-build
+        uses: ./.github/actions/post-build
+  test-agp-compatibility:
     needs: build-sdk
-    name: JVM测试部分
+    name: AGP兼容性自动化测试
     runs-on: ubuntu-latest
     steps:
-      - run: echo Hello world!
-  test-sdk-on-AVD:
-    needs: test-sdk-on-jvm
-    name: 在AVD上测试SDK
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: pre-build
+        uses: ./.github/actions/pre-build
+      - name: revert gradle wrapper mirror setting
+        working-directory: projects/test/gradle-plugin-agp-compat-test
+        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-7.5-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+      - name: JDK17环境下AGP测试
+        working-directory: projects/test/gradle-plugin-agp-compat-test
+        run: ./test_JDK17.sh
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
+      - name: JDK11环境下AGP测试
+        working-directory: projects/test/gradle-plugin-agp-compat-test
+        run: ./test_JDK11.sh
+      - name: post-build
+        uses: ./.github/actions/post-build
+  test-sdk-jvm:
+    needs: build-all
+    name: 自动化测试-JVM部分
     runs-on: ubuntu-latest
     steps:
-      - run: echo Hello world!
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: pre-build
+        uses: ./.github/actions/pre-build
+      - name: jvmTestSdk
+        run: ./gradlew jvmTestSdk -S
+      - name: post-build
+        uses: ./.github/actions/post-build
+  test-sdk-avd:
+    needs: build-all
+    name: 自动化测试-AVD部分
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - api-level: 16 #16是最低支持的API
+            arch: x86
+          - api-level: 28 #28是项目长期使用的测试API
+            arch: x86
+          - api-level: 31 #31是目前最新的稳定API
+            arch: x86
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: pre-build
+        uses: ./.github/actions/pre-build
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+      - name: AVD cache
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+      - name: run AVD tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: ${{ matrix.arch }}
+          profile: pixel_xl
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew androidTestSdk
+      - name: post-build
+        uses: ./.github/actions/post-build
