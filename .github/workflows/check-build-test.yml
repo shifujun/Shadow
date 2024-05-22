@@ -1,0 +1,53 @@
+name: Check & Build & Test
+on:
+  workflow_call:
+  push:
+    branches:
+      - avd_on_linux
+
+jobs:
+  check-commit-message:
+    name: 提交日志格式化检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: ./.commitlintrc.yml
+  check-code-format:
+    name: 代码格式化检查
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Hello world!
+  build-sdk:
+    needs: [ check-commit-message, check-code-format ]
+    name: 构建SDK
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Hello world!
+  build-sample-maven:
+    needs: [ check-commit-message, check-code-format ]
+    name: 构建maven依赖SDK的sample
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Hello world!
+  build-sample-source:
+    needs: build-sdk
+    name: 构建源码依赖SDK的sample
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Hello world!
+  test-sdk-on-jvm:
+    needs: build-sdk
+    name: JVM测试部分
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Hello world!
+  test-sdk-on-AVD:
+    needs: test-sdk-on-jvm
+    name: 在AVD上测试SDK
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Hello world!
