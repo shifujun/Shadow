@@ -20,7 +20,27 @@ jobs:
     name: 代码格式化检查
     runs-on: ubuntu-latest
     steps:
-      - run: echo Hello world!
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Cache android-studio
+        id: cache-android-studio
+        uses: actions/cache@v4
+        with:
+          path: android-studio
+          key: ${{ runner.os }}-android-studio
+      - name: download android-studio
+        if: steps.cache-android-studio.outputs.cache-hit != 'true'
+        run: |
+          wget https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2023.3.1.19/android-studio-2023.3.1.19-linux.tar.gz
+          tar -xvzf android-studio-2023.3.1.19-linux.tar.gz
+          rm -rf android-studio-2023.3.1.19-linux.tar.gz
+      - name: use android-studio format all files
+        run: ./android-studio/bin/format.sh -s .idea/codeStyles/Project.xml -r -m \*.java,\*.kt,\*.xml .
+      - name: show diff for files not formated
+        run: |
+          if ! git diff --quiet; then
+            git diff --exit-code
+          fi
   build-sdk:
     needs: [ check-commit-message, check-code-format ]
     name: 构建SDK
