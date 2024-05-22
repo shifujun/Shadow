@@ -75,8 +75,41 @@ jobs:
     needs: [ check-commit-message, check-code-format ]
     name: 构建maven依赖SDK的sample
     runs-on: ubuntu-latest
+    env:
+      DISABLE_TENCENT_MAVEN_MIRROR: true
     steps:
-      - run: echo Hello world!
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      - name: checkout
+        uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: revert gradle wrapper mirror setting for sample host-project
+        working-directory: projects/sample/maven/host-project
+        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-6.6.1-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
+      - name: revert gradle wrapper mirror setting for sample manager-project
+        working-directory: projects/sample/maven/manager-project
+        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-6.6.1-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
+      - name: revert gradle wrapper mirror setting for sample plugin-project
+        working-directory: projects/sample/maven/plugin-project
+        run: echo 'distributionUrl=https\://services.gradle.org/distributions/gradle-6.6.1-bin.zip' >  gradle/wrapper/gradle-wrapper.properties
+      - name: build sample/maven/host-project
+        working-directory: projects/sample/maven/host-project
+        run: ./gradlew assemble
+      - name: build sample/maven/manager-project
+        working-directory: projects/sample/maven/manager-project
+        run: ./gradlew assemble
+      - name: build sample/maven/plugin-project
+        working-directory: projects/sample/maven/plugin-project
+        run: ./gradlew assemble
+      - name: stop gradle deamon for actions/cache
+        run: ./gradlew --stop
   build-sample-source:
     needs: build-sdk
     name: 构建源码依赖SDK的sample
