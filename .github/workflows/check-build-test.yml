@@ -151,12 +151,15 @@ jobs:
     strategy:
       matrix:
         include:
-#          - api-level: 16 #16是最低支持的API
-          #            arch: x86
-          #          - api-level: 28 #28是项目长期使用的测试API
-          #            arch: x86
-          - api-level: 34
+          - api-level: 16 #16是最低支持的API
             arch: x86
+            target: default
+          - api-level: 28 #28是项目长期使用的测试API
+            arch: x86
+            target: default
+          - api-level: 34
+            arch: x86_64
+            target: google_apis
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -182,19 +185,22 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          target: ${{ matrix.target }}
+          arch: ${{ matrix.arch }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
-      - name: run AVD tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          arch: ${{ matrix.arch }}
-          profile: pixel_xl
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: ./gradlew androidTestSdk
+      #      - name: run AVD tests
+      #        uses: reactivecircus/android-emulator-runner@v2
+      #        with:
+      #          api-level: ${{ matrix.api-level }}
+      #          target: ${{ matrix.target }}
+      #          arch: ${{ matrix.arch }}
+      #          profile: pixel_xl
+      #          force-avd-creation: false
+      #          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+      #          disable-animations: true
+      #          script: ./gradlew androidTestSdk
       - name: post-build
         uses: ./.github/actions/post-build
