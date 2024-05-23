@@ -132,7 +132,7 @@ jobs:
       - name: post-build
         uses: ./.github/actions/post-build
   test-sdk-jvm:
-    needs: build-all
+    needs: build-sdk
     name: 自动化测试-JVM部分
     runs-on: ubuntu-latest
     steps:
@@ -145,7 +145,7 @@ jobs:
       - name: post-build
         uses: ./.github/actions/post-build
   test-sdk-avd:
-    needs: build-all
+    needs: build-sdk
     name: 自动化测试-AVD部分
     runs-on: ubuntu-latest
     strategy:
