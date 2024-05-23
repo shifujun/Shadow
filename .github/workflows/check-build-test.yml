@@ -151,11 +151,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - api-level: 16 #16是最低支持的API
-            arch: x86
-          - api-level: 28 #28是项目长期使用的测试API
-            arch: x86
-          - api-level: 31 #31是目前最新的稳定API
+#          - api-level: 16 #16是最低支持的API
+          #            arch: x86
+          #          - api-level: 28 #28是项目长期使用的测试API
+          #            arch: x86
+          - api-level: 34
             arch: x86
     steps:
       - name: checkout
