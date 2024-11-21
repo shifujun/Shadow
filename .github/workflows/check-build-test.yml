@@ -48,6 +48,8 @@ jobs:
     name: 构建SDK
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: pre-build
         uses: ./.github/actions/pre-build
       - name: buildSdk
@@ -59,6 +61,8 @@ jobs:
     name: 构建maven依赖SDK的sample
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: pre-build
         uses: ./.github/actions/pre-build
       - uses: actions/setup-java@v4
@@ -91,6 +95,8 @@ jobs:
     name: 构建所有源码
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: pre-build
         uses: ./.github/actions/pre-build
       - name: buildSdk
@@ -102,6 +108,8 @@ jobs:
     name: AGP兼容性自动化测试
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: pre-build
         uses: ./.github/actions/pre-build
       - name: revert gradle wrapper mirror setting
@@ -130,6 +138,8 @@ jobs:
     name: 自动化测试-JVM部分
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: pre-build
         uses: ./.github/actions/pre-build
       - name: jvmTestSdk
@@ -153,6 +163,8 @@ jobs:
             arch: x86_64
             target: google_apis
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: pre-build
         uses: ./.github/actions/pre-build
       - name: Enable KVM

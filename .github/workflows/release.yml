@@ -16,6 +16,8 @@ jobs:
       PUBLISH_RELEASE: true
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: pre-build
         uses: ./.github/actions/pre-build
       - name: publish
