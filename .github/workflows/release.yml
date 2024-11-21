@@ -6,8 +6,6 @@ on:
       - published #https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
 
 jobs:
-  check-build-test:
-    uses: ./.github/workflows/check-build-test.yml
   publish:
     needs: check-build-test
     runs-on: ubuntu-latest
