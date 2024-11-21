@@ -165,6 +165,7 @@ jobs:
       - name: AVD cache
         uses: actions/cache@v4
         id: avd-cache
+        if: ${{ matrix.api-level }} != '28'
         with:
           path: |
             ~/.android/avd/*
