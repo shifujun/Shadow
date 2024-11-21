@@ -21,6 +21,8 @@ jobs:
   check-code-format:
     name: 代码格式化检查
     runs-on: ubuntu-latest
+    env:
+      AndroidStudioVersion: 2021.1.1.20
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -29,13 +31,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: android-studio
-          key: ${{ runner.os }}-android-studio
+          key: ${{ runner.os }}-android-studio--${{ env.AndroidStudioVersion }}
       - name: download android-studio
         if: steps.cache-android-studio.outputs.cache-hit != 'true'
         run: |
-          wget https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2021.1.1.20/android-studio-2021.1.1.20-linux.tar.gz
-          tar -xvzf android-studio-2021.1.1.20-linux.tar.gz
-          rm -rf android-studio-2021.1.1.20-linux.tar.gz
+          wget "https://redirector.gvt1.com/edgedl/android/studio/ide-zips/$AndroidStudioVersion/android-studio-$AndroidStudioVersion-linux.tar.gz"
+          tar -xvzf "android-studio-$AndroidStudioVersion-linux.tar.gz"
+          rm -rf "android-studio-$AndroidStudioVersion-linux.tar.gz"
       - name: use android-studio format all files
         run: ./android-studio/bin/format.sh -s .idea/codeStyles/Project.xml -r -m \*.java,\*.kt,\*.xml .
       - name: show diff for files not formated
