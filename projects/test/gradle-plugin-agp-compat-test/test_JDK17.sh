@@ -14,6 +14,8 @@ source ./test_prepare.sh
 # AGP release页面：https://developer.android.com/studio/releases/gradle-plugin
 # AGP Maven仓库：https://mvnrepository.com/artifact/com.android.tools.build/gradle
 # Gradle下载：https://services.gradle.org/distributions/
+setGradleVersion 8.11.1
+testUnderAGPVersion 8.9.0
 setGradleVersion 8.6
 testUnderAGPVersion 8.4.0-rc02
 setGradleVersion 8.4

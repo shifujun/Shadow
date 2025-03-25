@@ -1,13 +1,20 @@
 package com.tencent.shadow.core.gradle
 
+import com.android.SdkConstants
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.api.BaseVariantOutput
 import com.android.build.gradle.internal.dsl.ProductFlavor
 import com.android.build.gradle.internal.res.LinkApplicationAndroidResourcesTask
+import com.android.build.gradle.internal.scope.InternalArtifactType
 import com.android.sdklib.AndroidVersion.VersionCodes
 import org.gradle.api.Task
+import org.gradle.api.file.Directory
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
+import java.io.File
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.isAccessible
 
 internal class AGPCompatImpl : AGPCompat {
 
@@ -17,6 +24,58 @@ internal class AGPCompatImpl : AGPCompat {
         } catch (e: NoSuchMethodError) {
             output.processResources
         }
+
+    override fun getProcessResourcesFile(processResourcesTask: Task, variantName: String): File {
+        val capitalizeVariantName = variantName.capitalize()
+
+        return try {
+            File(
+                processResourcesTask.outputs.files.files.first { it.name.equals("out") },
+                "resources-$variantName.ap_"
+            )
+
+            // 使用 resPackageOutputFolder
+            // 获取的路径和上方路径一致
+            // 备选（不推荐）
+            /*File(
+                (processResourcesTask as LinkApplicationAndroidResourcesTask).resPackageOutputFolder.asFile.get(),
+                "resources-$variantName.ap_"
+            )*/
+        } catch (ignored: Exception) {
+            // 高版本 AGP
+            try {
+                // 通过反射获取 KProperty： linkedResourcesOutputDir、linkedResourcesArtifactType
+                val linkedResourcesOutputDir =
+                    LinkApplicationAndroidResourcesTask::class.declaredMemberProperties.first {
+                        it.name == "linkedResourcesOutputDir"
+                    }.let {
+                        it.isAccessible = true
+                        it.getter.call(processResourcesTask) as DirectoryProperty
+                    }
+
+                @Suppress("UNCHECKED_CAST")
+                val linkedResourcesArtifactType =
+                    LinkApplicationAndroidResourcesTask::class.declaredMemberProperties.first {
+                        it.name == "linkedResourcesArtifactType"
+                    }.let {
+                        it.isAccessible = true
+                        it.getter.call(processResourcesTask) as Property<InternalArtifactType<Directory>>
+                    }
+
+                File(
+                    linkedResourcesOutputDir.asFile.get(),
+                    linkedResourcesArtifactType.get().name().lowercase()
+                        .replace("_", "-") + "-" + variantName + SdkConstants.DOT_RES
+                )
+            } catch (ignored: Exception) {
+                // 反射获取出错，备用
+                File(
+                    processResourcesTask.outputs.files.files.first { it.name.equals("process${capitalizeVariantName}Resources") },
+                    "linked-resources-binary-format-$variantName.ap_"
+                )
+            }
+        }
+    }
 
     @Suppress("PrivateApi")
     override fun getAaptAdditionalParameters(processResourcesTask: Task): List<String> =
