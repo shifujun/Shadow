@@ -12,6 +12,7 @@ runs:
       shell: bash
       run: echo "DISABLE_TENCENT_MAVEN_MIRROR=true" >> $GITHUB_ENV
     - name: Install specific Android SDK platforms
+      shell: bash
       run: sdkmanager "platforms;android-33"
     - uses: actions/setup-java@v4
       with:
