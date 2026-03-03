@@ -11,6 +11,9 @@ runs:
     - name: revert gradle wrapper mirror setting
       shell: bash
       run: echo "DISABLE_TENCENT_MAVEN_MIRROR=true" >> $GITHUB_ENV
+    - name: Add cmdline-tools to PATH
+      shell: bash
+      run: echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"`
     - name: Install specific Android SDK platforms
       shell: bash
       run: sdkmanager "platforms;android-33"
